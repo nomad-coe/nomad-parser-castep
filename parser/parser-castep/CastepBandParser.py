@@ -25,7 +25,7 @@ class CastepParserContext(object):
 
 # Processing k points (given in fractional coordinates)
         #get cached values of castep_store_k_points
-        k_st = section.simpleValues['castep_store_k_points']
+        k_st = section['castep_store_k_points']
         self.k_count = len(k_st)
         self.k_nr   += 1
         for i in range(0, self.k_count):
@@ -40,7 +40,7 @@ class CastepParserContext(object):
         """trigger called when _section_eigenvalues"""
 
         #get cached values of castep_store_k_points
-        e_st = section.simpleValues['castep_store_eigenvalues']
+        e_st = section['castep_store_eigenvalues']
         self.e_nr = len(e_st)
         self.eigenvalues_eigenvalues.append(e_st)
 
@@ -52,8 +52,8 @@ class CastepParserContext(object):
         backend.addArrayValues('eigenvalues_kpoints', np.asarray(self.eigenvalues_kpoints))
         backend.addArrayValues('eigenvalues_eigenvalues', np.asarray(self.eigenvalues_eigenvalues))
 # Backend add the number of k points and eigenvalues
-        backend.addValue('eigenvalues_kpoints_number', self.k_nr)
-        backend.addValue('eigenvalues_eigenvalues_number', self.e_nr)
+        backend.addValue('number_of_eigenvalues_kpoints', self.k_nr)
+        backend.addValue('number_of_eigenvalues', self.e_nr)
 
 
 
@@ -158,11 +158,12 @@ parserInfo = {'name':'castep-parser', 'version': '1.0'}
 # adjust caching of metadata
 cachingLevelForMetaName = {'eigenvalues_kpoints': CachingLevel.Forward,
                            'eigenvalues_eigenvalues': CachingLevel.Forward,
-                           'eigenvalues_kpoints_number': CachingLevel.Forward,
-                           'eigenvalues_eigenvalues_number': CachingLevel.Forward,
+                           'number_of_eigenvalues_kpoints': CachingLevel.Forward,
+                           'number_of_eigenvalues': CachingLevel.Forward,
                            'castep_store_k_points': CachingLevel.Cache,
                            'castep_store_eigenvalues': CachingLevel.Cache,
                            }
 
 if __name__ == "__main__":
-    mainFunction(mainFileDescription, metaInfoEnv, parserInfo, superContext = CastepParserContext(), cachingLevelForMetaName = cachingLevelForMetaName, onClose = onClose)
+    mainFunction(mainFileDescription, metaInfoEnv, parserInfo, superContext = CastepParserContext(), cachingLevelForMetaName = cachingLevelForMetaName, onClose = onClose,
+                 defaultSectionCachingLevel = False)
