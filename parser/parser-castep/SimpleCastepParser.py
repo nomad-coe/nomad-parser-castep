@@ -24,6 +24,7 @@ class CastepParserContext(object):
         self.energy_total_scf_iteration_list   = []
         self.scfIterNr                         = []
         self.at_nr                             = 0
+        self.atom_label                        = []
         self.atom_forces                       = []
         self.castep_atom_position              = []
         self.atom_position                     = []
@@ -148,11 +149,22 @@ class CastepParserContext(object):
 
 
 
+# Here we add basis set name and kind for the plane wave code
+    def onClose_section_basis_set_cell_associated(self, backend, gIndex, section):
+
+        basis_set_kind = 'plane_waves'
+        backend.addValue('basis_set_cell_associated_kind', basis_set_kind)
+
+
+
+
+
 ######################################################################################
 ################ Triggers on closure section_system_description ######################
 ######################################################################################
     def onClose_section_system_description(self, backend, gIndex, section):
         """trigger called when _section_system_description is closed"""
+
 
 # Processing forces acting on atoms (final converged forces)
         #get cached values of castep_store_atom_forces
@@ -175,6 +187,14 @@ class CastepParserContext(object):
             pos[i] = [float(j) for j in pos[i]]
             self.castep_atom_position.append(pos[i])
         backend.addArrayValues('castep_atom_position', np.asarray(self.castep_atom_position))
+
+
+
+# Processing the atom labels
+        #get cached values of castep_store_atom_label
+        lab = section['castep_store_atom_label']
+        self.atom_label.append(lab)
+        backend.addArrayValues('atom_label', np.asarray(self.atom_label))
 
 
 
@@ -307,9 +327,19 @@ mainFileDescription = SM(name = 'root',
 
                                                  ]), # CLOSING castep_section_functionals
 
+                                          ]), # CLOSING section_method
+
+
+                                       # cell information
+                                       SM(name = 'planeWave basis set',
+                                          startReStr = r"\sbasis set accuracy\s*",
+                                          forwardMatch = True,
+                                          sections = ["section_basis_set_cell_associated"],
+                                          subMatchers = [
+
                                               SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<basis_set_plan_wave_cutoff> [0-9.]+)")
 
-                                          ]), # CLOSING section_method
+                                          ]), # CLOSING section_basis_set_cell_associated
 
 
                                        # cell information
@@ -334,7 +364,7 @@ mainFileDescription = SM(name = 'root',
                                             SM(r"\s*a \=\s*(?P<castep_cell_length_a>[\d\.]+)\s*alpha \=\s*(?P<castep_cell_angle_alpha>[\d\.]+)"),
                                             SM(r"\s*b \=\s*(?P<castep_cell_length_b>[\d\.]+)\s*beta  \=\s*(?P<castep_cell_angle_beta>[\d\.]+)"),
                                             SM(r"\s*c \=\s*(?P<castep_cell_length_c>[\d\.]+)\s*gamma \=\s*(?P<castep_cell_angle_gamma>[\d\.]+)"),
-                                            SM(r"\s*x\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_position>[\d\.]+\s+[\d\.]+\s+[\d\.]+)",
+                                            SM(r"\s*x\s*(?P<castep_store_atom_label>[A-Za-z0-9]+\s+[\d\.]+)\s*[0-9]\s*(?P<castep_store_atom_position>[\d\.]+\s+[\d\.]+\s+[\d\.]+)",
                                                endReStr = "\n",
                                                repeats = True)
 
@@ -431,10 +461,12 @@ parserInfo = {'name':'castep-parser', 'version': '1.0'}
 cachingLevelForMetaName = {'energy_total': CachingLevel.Cache,
                            'energy_total_scf_iteration_list': CachingLevel.Forward,
                            'atom_forces': CachingLevel.Forward,
+                           'atom_label': CachingLevel.Forward,
                            'number_of_atoms': CachingLevel.Forward,
                            'castep_atom_position': CachingLevel.Forward,
                            'atom_position': CachingLevel.Forward,
                            'basis_set_plan_wave_cutoff': CachingLevel.Forward,
+                           'basis_set_cell_associated_kind': CachingLevel.Forward,
 
                            'eigenvalues_kpoints': CachingLevel.Forward,
                            'eigenvalues_eigenvalues': CachingLevel.Forward,
@@ -442,6 +474,7 @@ cachingLevelForMetaName = {'energy_total': CachingLevel.Cache,
                            'number_of_eigenvalues': CachingLevel.Forward,
                            'castep_store_k_points': CachingLevel.Cache,
                            'castep_store_eigenvalues': CachingLevel.Cache,
+                           'castep_store_atom_label': CachingLevel.Cache,
                            }
 
 if __name__ == "__main__":
