@@ -27,7 +27,6 @@ class CastepParserContext(object):
         self.atom_forces                       = []
         self.castep_atom_position              = []
         self.atom_position                     = []
-        self.atom_forces                       = []
         self.a                                 = []
         self.b                                 = []
         self.c                                 = []
@@ -52,7 +51,7 @@ class CastepParserContext(object):
         """
         # Get the list of functional and relativistic names
         functional_names = section["castep_functional_name"]
-        relativistic_names = section["castep_relativity_treatment"]
+        relativistic_names = section["castep_relativity_treatment_scf"]
 
         # Define a mapping for the functionals
         functional_map = {
@@ -91,7 +90,7 @@ class CastepParserContext(object):
         relativistic = "_".join(sorted(relativistic))
 
         # Push the relativistic treatment string into the backend
-        backend.addValue('relativity_treatment', relativistic)
+        backend.addValue('relativity_method', relativistic)
 
 
 
@@ -99,7 +98,7 @@ class CastepParserContext(object):
     def onClose_castep_section_cell(self, backend, gIndex, section):
         """trigger called when _castep_section_cell is closed"""
         # get cached values for castep_cell_vector
-        vet = section.simpleValues['castep_cell_vector']
+        vet = section['castep_cell_vector']
 
         vet[0] = vet[0].split()
         vet[0] = [float(i) for i in vet[0]]
@@ -113,7 +112,7 @@ class CastepParserContext(object):
         self.cell.append(vet[0])
         self.cell.append(vet[1])
         self.cell.append(vet[2]) # Reconstructing the unit cell vector by vector
-        backend.addArrayValues('cell', np.asarray(self.cell), unit='angstrom')
+        backend.addArrayValues('simulation_cell', np.asarray(self.cell), unit='angstrom')
 
 
 
@@ -121,7 +120,7 @@ class CastepParserContext(object):
     def onClose_section_scf_iteration(self, backend, gIndex, section):
         """trigger called when _section_scf_iteration is closed"""
         # get cached values for energy_total_scf_iteration
-        ev = section.simpleValues['energy_total_scf_iteration']
+        ev = section['energy_total_scf_iteration']
         self.scfIterNr = len(ev)
         self.energy_total_scf_iteration_list.append(ev)
 
@@ -134,12 +133,12 @@ class CastepParserContext(object):
     def onClose_castep_section_atom_position(self, backend, gIndex, section):
         """trigger called when _castep_section_atom_position is closed"""
         # get cached values for cell magnitudes and angles
-        self.a = section.simpleValues['castep_cell_length_a']
-        self.b = section.simpleValues['castep_cell_length_b']
-        self.c = section.simpleValues['castep_cell_length_c']
-        self.alpha = section.simpleValues['castep_cell_angle_alpha']
-        self.beta  = section.simpleValues['castep_cell_angle_beta']
-        self.gamma = section.simpleValues['castep_cell_angle_gamma']
+        self.a = section['castep_cell_length_a']
+        self.b = section['castep_cell_length_b']
+        self.c = section['castep_cell_length_c']
+        self.alpha = section['castep_cell_angle_alpha']
+        self.beta  = section['castep_cell_angle_beta']
+        self.gamma = section['castep_cell_angle_gamma']
         self.volume = np.sqrt( 1 - math.cos(np.deg2rad(self.alpha[0]))**2
                                  - math.cos(np.deg2rad(self.beta[0]))**2
                                  - math.cos(np.deg2rad(self.gamma[0]))**2
@@ -157,7 +156,7 @@ class CastepParserContext(object):
 
 # Processing forces acting on atoms (final converged forces)
         #get cached values of castep_store_atom_forces
-        f_st = section.simpleValues['castep_store_atom_forces']
+        f_st = section['castep_store_atom_forces']
         self.at_nr = len(f_st)
         for i in range(0, self.at_nr):
             f_st[i] = f_st[i].split()
@@ -170,7 +169,7 @@ class CastepParserContext(object):
 
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
         #get cached values of castep_store_atom_position
-        pos = section.simpleValues['castep_store_atom_position']
+        pos = section['castep_store_atom_position']
         for i in range(0, self.at_nr):
             pos[i] = pos[i].split()
             pos[i] = [float(j) for j in pos[i]]
@@ -211,7 +210,7 @@ class CastepParserContext(object):
 
 # Processing k points (given in fractional coordinates)
         #get cached values of castep_store_k_points
-        k_st = section.simpleValues['castep_store_k_points']
+        k_st = section['castep_store_k_points']
         self.k_count = len(k_st)
         self.k_nr   += 1
         for i in range(0, self.k_count):
@@ -227,7 +226,7 @@ class CastepParserContext(object):
         """trigger called when _section_eigenvalues"""
 
         #get cached values of castep_store_k_points
-        e_st = section.simpleValues['castep_store_eigenvalues']
+        e_st = section['castep_store_eigenvalues']
         self.e_nr = len(e_st)
         self.eigenvalues_eigenvalues.append(e_st)
 
@@ -239,8 +238,8 @@ class CastepParserContext(object):
         backend.addArrayValues('eigenvalues_kpoints', np.asarray(self.eigenvalues_kpoints))
         backend.addArrayValues('eigenvalues_eigenvalues', np.asarray(self.eigenvalues_eigenvalues))
 # Backend add the number of k points and eigenvalues
-        backend.addValue('eigenvalues_kpoints_number', self.k_nr)
-        backend.addValue('eigenvalues_eigenvalues_number', self.e_nr)
+        backend.addValue('number_of_eigenvalues_kpoints', self.k_nr)
+        backend.addValue('number_of_eigenvalues', self.e_nr)
 
 
 
@@ -304,7 +303,7 @@ mainFileDescription = SM(name = 'root',
                                                  subMatchers = [
 
                                                     SM(r"\susing functional\s*\: *(?P<castep_functional_name> [A-Za-z0-9() ]*)"),
-                                                    SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment> [A-Za-z0-9() -]*)")
+                                                    SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]*)")
 
                                                  ]), # CLOSING castep_section_functionals
 
@@ -429,7 +428,7 @@ onClose = {}
 # parser info
 parserInfo = {'name':'castep-parser', 'version': '1.0'}
 # adjust caching of metadata
-cachingLevelForMetaName = {'energy_total_scf_iteration': CachingLevel.Cache,
+cachingLevelForMetaName = {'energy_total': CachingLevel.Cache,
                            'energy_total_scf_iteration_list': CachingLevel.Forward,
                            'atom_forces': CachingLevel.Forward,
                            'number_of_atoms': CachingLevel.Forward,
@@ -439,11 +438,12 @@ cachingLevelForMetaName = {'energy_total_scf_iteration': CachingLevel.Cache,
 
                            'eigenvalues_kpoints': CachingLevel.Forward,
                            'eigenvalues_eigenvalues': CachingLevel.Forward,
-                           'eigenvalues_kpoints_number': CachingLevel.Forward,
-                           'eigenvalues_eigenvalues_number': CachingLevel.Forward,
+                           'number_of_eigenvalues_kpoints': CachingLevel.Forward,
+                           'number_of_eigenvalues': CachingLevel.Forward,
                            'castep_store_k_points': CachingLevel.Cache,
                            'castep_store_eigenvalues': CachingLevel.Cache,
                            }
 
 if __name__ == "__main__":
-    mainFunction(mainFileDescription, metaInfoEnv, parserInfo, superContext = CastepParserContext(), cachingLevelForMetaName = cachingLevelForMetaName, onClose = onClose)
+    mainFunction(mainFileDescription, metaInfoEnv, parserInfo, superContext = CastepParserContext(), cachingLevelForMetaName = cachingLevelForMetaName, onClose = onClose,
+                 defaultSectionCachingLevel = False)
