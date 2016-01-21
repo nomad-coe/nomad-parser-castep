@@ -8,6 +8,7 @@ from nomadcore.caching_backend import CachingLevel
 import re, os, sys, json, logging
 
 
+
 ################################################################################################################################################################
 ################################################################################################################################################################
 ################################################################################################################################################################
@@ -16,13 +17,10 @@ import re, os, sys, json, logging
 ############################################################################ CASTEP.Parser Version 1.0 #########################################################
 ################################################################################################################################################################
 
-
 class CastepParserContext(object):
 
     def __init__(self):
         self.cell                              = []
-        self.energy_total_scf_iteration_list   = []
-        self.scfIterNr                         = []
         self.at_nr                             = 0
         self.atom_label                        = []
         self.atom_forces                       = []
@@ -36,6 +34,9 @@ class CastepParserContext(object):
         self.gamma                             = []
         self.volume                            = 0
 
+        self.energy_total_scf_iteration_list   = []
+        self.scfIterNr                         = []
+        self.ecut                              = []
         self.k_count                           = 0
         self.k_nr                              = 0
         self.e_nr                              = 0
@@ -151,17 +152,23 @@ class CastepParserContext(object):
 
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_associated(self, backend, gIndex, section):
+        ecut_str = section['castep_basis_set_plan_wave_cutoff']
+        self.ecut = float(ecut_str[0])
+        eVtoRy = 0.073498618
+        ecut_str_name = str(int(round(eVtoRy*self.ecut)))
 
         basis_set_kind = 'plane_waves'
+        basis_set_name = 'PW_'+ecut_str_name
+        backend.addValue('basis_set_plan_wave_cutoff', self.ecut)
         backend.addValue('basis_set_cell_associated_kind', basis_set_kind)
-
-
+        backend.addValue('basis_set_cell_associated_name', basis_set_name)
 
 
 
 ######################################################################################
 ################ Triggers on closure section_system_description ######################
 ######################################################################################
+
     def onClose_section_system_description(self, backend, gIndex, section):
         """trigger called when _section_system_description is closed"""
 
@@ -224,6 +231,7 @@ class CastepParserContext(object):
 ######################################################################################
 ###################### Storing k points and band energies ############################
 ######################################################################################
+
 # Storing the k point coordinates
     def onClose_castep_section_k_points(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
@@ -263,7 +271,6 @@ class CastepParserContext(object):
 
 
 
-
 ################################################################################################################################################################
 ################################################################################################################################################################
 ################################################################################################################################################################
@@ -271,8 +278,6 @@ class CastepParserContext(object):
 ################################################################################################################################################################
 ############################################################################ CASTEP.Parser Version 1.0 #########################################################
 ################################################################################################################################################################
-
-
 
 # main Parser
 mainFileDescription = SM(name = 'root',
@@ -327,6 +332,7 @@ mainFileDescription = SM(name = 'root',
 
                                                  ]), # CLOSING castep_section_functionals
 
+
                                           ]), # CLOSING section_method
 
 
@@ -337,7 +343,7 @@ mainFileDescription = SM(name = 'root',
                                           sections = ["section_basis_set_cell_associated"],
                                           subMatchers = [
 
-                                              SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<basis_set_plan_wave_cutoff> [0-9.]+)")
+                                              SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<castep_basis_set_plan_wave_cutoff>[0-9.]+)")
 
                                           ]), # CLOSING section_basis_set_cell_associated
 
@@ -387,6 +393,7 @@ mainFileDescription = SM(name = 'root',
                                                     SM(r"\s*[1-9]\s*(?P<energy_total_scf_iteration>[-+0-9.eEdD]*)", repeats = True),
 
                                                  ]), # CLOSING section_scf_iteration
+
 
                                           SM(r"Final energy = *(?P<energy_total>[-+0-9.eEdD]*)"), # macthing final coverged total energy
 
@@ -466,7 +473,9 @@ cachingLevelForMetaName = {'energy_total': CachingLevel.Cache,
                            'castep_atom_position': CachingLevel.Forward,
                            'atom_position': CachingLevel.Forward,
                            'basis_set_plan_wave_cutoff': CachingLevel.Forward,
+                           'castep_basis_set_plan_wave_cutoff': CachingLevel.Cache,
                            'basis_set_cell_associated_kind': CachingLevel.Forward,
+                           'basis_set_cell_associated_name': CachingLevel.Forward,
 
                            'eigenvalues_kpoints': CachingLevel.Forward,
                            'eigenvalues_eigenvalues': CachingLevel.Forward,
