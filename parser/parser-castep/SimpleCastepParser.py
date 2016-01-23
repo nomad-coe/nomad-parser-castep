@@ -200,6 +200,8 @@ class CastepParserContext(object):
 # Processing the atom labels
         #get cached values of castep_store_atom_label
         lab = section['castep_store_atom_label']
+        for i in range(0, self.at_nr):
+            lab[i] = re.sub( '\s+', ' ', lab[i] ).strip()
         self.atom_label.append(lab)
         backend.addArrayValues('atom_label', np.asarray(self.atom_label))
 
@@ -480,6 +482,7 @@ cachingLevelForMetaName = {'energy_total': CachingLevel.Cache,
                            'number_of_eigenvalues': CachingLevel.Forward,
                            'castep_store_k_points': CachingLevel.Cache,
                            'castep_store_eigenvalues': CachingLevel.Cache,
+                           'castep_store_atom_forces': CachingLevel.Cache,
                            'castep_store_atom_label': CachingLevel.Cache,
                            }
 
