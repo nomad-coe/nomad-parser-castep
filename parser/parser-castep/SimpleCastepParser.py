@@ -155,10 +155,10 @@ class CastepParserContext(object):
         ecut_str = section['castep_basis_set_plan_wave_cutoff']
         self.ecut = float(ecut_str[0])
         eVtoRy = 0.073498618
-        ecut_str_name = str(int(round(eVtoRy*self.ecut)))
+        ecut_str_name = int(round(eVtoRy*self.ecut))
 
         basis_set_kind = 'plane_waves'
-        basis_set_name = 'PW_'+ecut_str_name
+        basis_set_name = 'PW_'+str(ecut_str_name)
         backend.addValue('basis_set_plan_wave_cutoff', self.ecut)
         backend.addValue('basis_set_cell_associated_kind', basis_set_kind)
         backend.addValue('basis_set_cell_associated_name', basis_set_name)
@@ -299,7 +299,6 @@ mainFileDescription = SM(name = 'root',
 
                                     SM(r"\s\|\sWelcome to Academic Release\s(?P<program_name>[a-zA-Z]+)* version *(?P<program_version>[0-9a-zA-Z_.]*)"),
                                     SM(r"\sCompiled for *(?P<program_compilation_host>[-a-zA-Z0-9._]*)\son\s(?P<castep_program_compilation_date>[a-zA-Z,\s0-9]*)\s *(?P<castep_program_compilation_time>[0-9:]*)"),
-                                    #SM(r"\sRun started\:\s[A-Za-z,]\s*(?P<castep_program_execution_date> [\d\]+\s[A-Za-z]+\s[\d\]+)\s *(?P<castep_program_execution_time>[0-9:]*)"),
                                     SM(r"\sCompiler\: *(?P<castep_compiler>[a-zA-Z\s0-9.]*)"),
                                     SM(r"\sMATHLIBS\: *(?P<castep_maths_library>[a-zA-Z0-9.() ]*)\s*"),
                                     SM(r"\sFFT Lib \: *(?P<castep_fft_library>[a-zA-Z0-9.() ]*)\s*"),
@@ -323,8 +322,6 @@ mainFileDescription = SM(name = 'root',
                                                  startReStr = r"\susing functional\s*\:",
                                                  forwardMatch = True,
                                                  sections = ["castep_section_functionals"],
-                                                 otherMetaInfo = ["XC_functional"],
-                                                 dependencies = {"XC_functional": ["castep_functional_name"]},
                                                  subMatchers = [
 
                                                     SM(r"\susing functional\s*\: *(?P<castep_functional_name> [A-Za-z0-9() ]*)"),
