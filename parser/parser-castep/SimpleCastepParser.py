@@ -381,7 +381,7 @@ mainFileDescription = SM(name = 'root',
                                           ]), # CLOSING section_method
 
 
-                                       # cell information
+                                       # plane wave energy cutoff
                                        SM(name = 'planeWave basis set',
                                           startReStr = r"\sbasis set accuracy\s*",
                                           forwardMatch = True,
