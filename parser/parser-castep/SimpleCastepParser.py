@@ -40,8 +40,13 @@ class CastepParserContext(object):
         self.k_count                           = 0
         self.k_nr                              = 0
         self.e_nr                              = 0
-        self.eigenvalues_kpoints               = []
-        self.eigenvalues_eigenvalues           = []
+        self.k_count_1                         = 0
+        self.k_nr_1                            = 0
+        self.e_nr_1                            = 0
+        self.castep_band_kpoints               = []
+        self.castep_band_energies              = []
+        self.castep_band_kpoints_1             = []
+        self.castep_band_energies_1            = []
 
 
 
@@ -93,6 +98,8 @@ class CastepParserContext(object):
 
         # Push the relativistic treatment string into the backend
         backend.addValue('relativity_method', relativistic)
+        backend.addValue('XC_method_current', functionals+'_'+relativistic)
+
 
 
 
@@ -201,7 +208,7 @@ class CastepParserContext(object):
         #get cached values of castep_store_atom_label
         lab = section['castep_store_atom_label']
         for i in range(0, self.at_nr):
-            lab[i] = re.sub( '\s+', ' ', lab[i] ).strip()
+            lab[i] = re.sub('\s+', ' ', lab[i]).strip()
         self.atom_label.append(lab)
         backend.addArrayValues('atom_label', np.asarray(self.atom_label))
 
@@ -232,12 +239,12 @@ class CastepParserContext(object):
 
 ######################################################################################
 ###################### Storing k points and band energies ############################
+############################# FIRST SPIN CHANNEL #####################################
 ######################################################################################
 
-# Storing the k point coordinates
+# Storing the k point coordinates (SPIN 1)
     def onClose_castep_section_k_points(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
-
 # Processing k points (given in fractional coordinates)
         #get cached values of castep_store_k_points
         k_st = section['castep_store_k_points']
@@ -247,29 +254,68 @@ class CastepParserContext(object):
             k_st[i] = k_st[i].split()
             k_st[i] = [float(j) for j in k_st[i]]
             k_st_int = k_st[i]
-            self.eigenvalues_kpoints.append(k_st_int)
+            self.castep_band_kpoints.append(k_st_int)
 
 
 
-# Storing the eigenvalues
+# Storing the eigenvalues (SPIN 1)
     def onClose_castep_section_eigenvalues(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
-
         #get cached values of castep_store_k_points
         e_st = section['castep_store_eigenvalues']
         self.e_nr = len(e_st)
-        self.eigenvalues_eigenvalues.append(e_st)
+        self.castep_band_energies.append(e_st)
 
 
 
-# Keeping only the last arrays update
-    def onClose_section_eigenvalues(self, backend, gIndex, section):
+######################################################################################
+###################### Storing k points and band energies ############################
+############################# SECOND SPIN CHANNEL ####################################
+######################################################################################
+
+# Storing the k point coordinates (SPIN 2)
+    def onClose_castep_section_k_points_1(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
-        backend.addArrayValues('eigenvalues_kpoints', np.asarray(self.eigenvalues_kpoints))
-        backend.addArrayValues('eigenvalues_eigenvalues', np.asarray(self.eigenvalues_eigenvalues))
+# Processing k points (given in fractional coordinates)
+        #get cached values of castep_store_k_points
+        k_st_1 = section['castep_store_k_points_1']
+        self.k_count_1 = len(k_st_1)
+        self.k_nr_1   += 1
+        for i in range(0, self.k_count_1):
+            k_st_1[i] = k_st_1[i].split()
+            k_st_1[i] = [float(j) for j in k_st_1[i]]
+            k_st_1_int = k_st_1[i]
+            self.castep_band_kpoints.append(k_st_1_int)
+
+        self.k_nr_1 = self.k_nr  # clean double counting
+
+
+
+# Storing the eigenvalues (SPIN 2)
+    def onClose_castep_section_eigenvalues_1(self, backend, gIndex, section):
+        """trigger called when _section_eigenvalues"""
+        #get cached values of castep_store_k_points
+        e_st_1 = section['castep_store_eigenvalues_1']
+        self.e_nr_1 = len(e_st_1)
+        self.castep_band_energies.append(e_st_1)
+
+        self.e_nr_1 = self.e_nr
+
+
+# Keeping only the last arrays updateclear
+
+    def onClose_castep_section_k_band(self, backend, gIndex, section):
+        """trigger called when _section_eigenvalues"""
+        backend.addArrayValues('castep_band_kpoints', np.asarray(self.castep_band_kpoints))
+        backend.addArrayValues('castep_band_energies', np.asarray(self.castep_band_energies))
 # Backend add the number of k points and eigenvalues
-        backend.addValue('number_of_eigenvalues_kpoints', self.k_nr)
-        backend.addValue('number_of_eigenvalues', self.e_nr)
+        backend.addValue('castep_number_of_band_kpoints', self.k_nr)
+        backend.addValue('castep_number_of_band_energies', self.e_nr)
+
+        if np.size(self.castep_band_kpoints) > self.k_nr:  # Clean up spin-1 info prior ejecting spin-2
+            self.castep_band_kpoints = []
+        if np.size(self.castep_band_energies) > self.k_nr:
+            self.castep_band_energies = []
 
 
 
@@ -389,7 +435,8 @@ mainFileDescription = SM(name = 'root',
                                                  sections = ['section_scf_iteration'],
                                                  subMatchers = [
 
-                                                    SM(r"\s*[1-9]\s*(?P<energy_total_scf_iteration>[-+0-9.eEdD]*)", repeats = True),
+                                                    SM(r"\s*[0-9]+\s*(?P<energy_total_scf_iteration>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                                                       repeats = True),
 
                                                  ]), # CLOSING section_scf_iteration
 
@@ -399,11 +446,12 @@ mainFileDescription = SM(name = 'root',
                                           #  Band Structure Calculation: here we match and parse k points and eigenvalues
                                           SM(startReStr = "\s*\+\s*B A N D   S T R U C T U R E   C A L C U L A T I O N\s*",
                                                  forwardMatch = True,
-                                                 sections = ["section_eigenvalues_group"],
+                                                 sections = ["castep_section_k_band_group"],
                                                  subMatchers = [
 
-                                                     SM(startReStr = "\s*\+\s*B A N D   S T R U C T U R E   C A L C U L A T I O N\s*",
-                                                        sections = ["section_eigenvalues"],
+                                                     # First spin channel
+                                                     SM(startReStr = "\s*\+\s*Spin\=1\skpt\=\s*",
+                                                        sections = ["castep_section_k_band"],
                                                         forwardMatch = True,
                                                         subMatchers = [
 
@@ -416,7 +464,7 @@ mainFileDescription = SM(name = 'root',
                                                                 SM(r"\s*\+\s*Spin\=1\s*kpt\=\s*[0-9]+\s*\((?P<castep_store_k_points>\s+[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)\)\s*",
                                                                    repeats = True),
 
-                                                                    SM(name = 'Eigen',
+                                                                    SM(name = 'Eigen_1',
                                                                        startReStr = r"\s*\+\s*\+\s*",
                                                                        sections = ['castep_section_eigenvalues'],
                                                                        repeats = True,
@@ -431,15 +479,48 @@ mainFileDescription = SM(name = 'root',
                                                             ]), # CLOSING castep_section_k_points
 
 
-                                                        ]), # CLOSING section_eigenvalues
+                                                        ]), # CLOSING 1st section_eigenvalues
+
+                                                     # Second spin channel
+                                                     SM(startReStr = "\s*\+\s*Spin\=2\skpt\=\s*",
+                                                        sections = ["castep_section_k_band"],
+                                                        forwardMatch = True,
+                                                        subMatchers = [
+
+                                                         SM(startReStr = "\s*\+\s*Spin\=2\skpt\=\s*",
+                                                            sections = ["castep_section_k_points_1"],
+                                                            forwardMatch = True,
+                                                            repeats = True,
+                                                            subMatchers = [
+                                                                # Matching k points
+                                                                SM(r"\s*\+\s*Spin\=2\s*kpt\=\s*[0-9]+\s*\((?P<castep_store_k_points_1>\s+[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)\)\s*",
+                                                                   repeats = True),
+
+                                                                    SM(name = 'Eigen_2',
+                                                                       startReStr = r"\s*\+\s*\+\s*",
+                                                                       sections = ['castep_section_eigenvalues_1'],
+                                                                       repeats = True,
+                                                                       subMatchers = [
+                                                                          # Matching eigenvalues
+                                                                          SM(r"\s*\+\s*[0-9]+\s*(?P<castep_store_eigenvalues_1>\s+[-\d\.]+)",
+                                                                             repeats = True)
+
+                                                                       ]), # CLOSING castep_section_eigenvalues_1
+
+
+                                                            ]), # CLOSING castep_section_k_points_1
+
+
+                                                        ]), # CLOSING 2nd section_eigenvalues
 
 
                                                 ]), # CLOSING section_eigenvalues_group
 
 
-                                          SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
-                                             endReStr = "\n",
-                                             repeats = True)
+                                          SM(startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Symmetrised Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
+                                             subMatchers = [
+                                                SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)", repeats = True)
+                                             ])
 
 
                                           ]), # CLOSING SM SinglePointEvaluation
@@ -476,16 +557,18 @@ cachingLevelForMetaName = {'energy_total': CachingLevel.Cache,
                            'basis_set_cell_associated_kind': CachingLevel.Forward,
                            'basis_set_cell_associated_name': CachingLevel.Forward,
 
-                           'eigenvalues_kpoints': CachingLevel.Forward,
-                           'eigenvalues_eigenvalues': CachingLevel.Forward,
-                           'number_of_eigenvalues_kpoints': CachingLevel.Forward,
-                           'number_of_eigenvalues': CachingLevel.Forward,
+                           'castep_band_kpoints': CachingLevel.Forward,
+                           'castep_band_energies': CachingLevel.Forward,
+                           'castep_number_of_band_kpoints': CachingLevel.Forward,
+                           'castep_number_of_band_energies': CachingLevel.Forward,
                            'castep_store_k_points': CachingLevel.Cache,
                            'castep_store_eigenvalues': CachingLevel.Cache,
+                           'castep_store_k_points_1': CachingLevel.Cache,
+                           'castep_store_eigenvalues_1': CachingLevel.Cache,
                            'castep_store_atom_forces': CachingLevel.Cache,
                            'castep_store_atom_label': CachingLevel.Cache,
                            }
 
 if __name__ == "__main__":
     mainFunction(mainFileDescription, metaInfoEnv, parserInfo, superContext = CastepParserContext(), cachingLevelForMetaName = cachingLevelForMetaName, onClose = onClose,
-                 defaultSectionCachingLevel = False)
+                 defaultSectionCachingLevel = True)
