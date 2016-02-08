@@ -371,7 +371,7 @@ class CastepParserContext(object):
             metaInfoEnv = self.parserCell.parserBuilder.metaInfoEnv,
             onClose = onClose,
             superBackend = self.parserCell.backend,
-            cachingLevelForMetaName = {  },
+            cachingLevelForMetaName = { 'castep_store_k_path': CachingLevel.Cache },
             propagateStartFinishParsing = False)
         with open(cellFile) as f:
             #pass
