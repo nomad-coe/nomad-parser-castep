@@ -1,5 +1,6 @@
 import setup_paths
 import numpy as np
+import math
 import nomadcore.ActivateLogging
 from nomadcore.caching_backend import CachingLevel
 from nomadcore.simple_parser import AncillaryParser, mainFunction
@@ -19,12 +20,23 @@ import logging, os, re, sys
 
 class CastepParserContext(object):
 
-    #def __init__(self):
+    def __init__(self):
+        self.functionals                       = []
+        self.relativistic                      = []
 
-
-    def initialize_values(self):
-        """Initializes the values of certain variables.
-        """
+        self.cell                              = []
+        self.at_nr                             = 0
+        self.atom_label                        = []
+        self.atom_forces                       = []
+        self.castep_atom_position              = []
+        self.atom_position                     = []
+        self.a                                 = []
+        self.b                                 = []
+        self.c                                 = []
+        self.alpha                             = []
+        self.beta                              = []
+        self.gamma                             = []
+        self.volume                            = 0
 
         self.k_nr                              = 0
         self.e_nr                              = 0
@@ -37,6 +49,11 @@ class CastepParserContext(object):
         self.castep_band_energies_1            = []
         self.k_path_nr                         = 0
         self.band_en = []
+
+
+    #def initialize_values(self):
+    #    """Initializes the values of certain variables.
+    #    """
 
 
     def startedParsing(self, fInName, parser):
@@ -54,6 +71,170 @@ class CastepParserContext(object):
         self.metaInfoEnv = self.parser.parserBuilder.metaInfoEnv
         # allows to reset values if the same superContext is used to parse different files
         self.initialize_values()
+
+
+# Translating the XC functional name to the NOMAD standard
+    def onClose_castep_section_functionals(self, backend, gIndex, section):
+        """When all the functional definitions have been gathered, matches them
+        with the nomad correspondents and combines into one single string which
+        is put into the backend.
+        """
+        # Get the list of functional and relativistic names
+        functional_names = section["castep_functional_name"]
+        relativistic_names = section["castep_relativity_treatment_scf"]
+
+        # Define a mapping for the functionals
+        functional_map = {
+            " Perdew Burke Ernzerhof": "GGA_C_PBE_GGA_X_PBE",
+            " Local Density Approximation": "LDA_C_PZ_LDA_X_PZ",
+            " Perdew Wang (1991)": "GGA_C_PW91_GGA_X_PW91",
+            " revised Perdew Burke Ernzerhof": "GGA_X_RPBE",
+            " PBE with Wu-Cohen exchange": "GGA_X_WC",
+            " PBE for solids (2008)": "GGA_X_PBE_SOL",
+        }
+
+        # Define a mapping for the relativistic treatments
+        relativistic_map = {
+            " Koelling-Harmon": "scalar_relativistic"
+        }
+
+        # Match each castep functional name and sort the matches into a list
+        self.functionals = []
+
+        for name in functional_names:
+            match = functional_map.get(name)
+            if match:
+                self.functionals.append(match)
+        self.functionals = "_".join(sorted(self.functionals))
+
+
+
+        # Match each castep relativity treatment name and sort the matches into a list
+        self.relativistic = []
+
+        for name in relativistic_names:
+            match = relativistic_map.get(name)
+            if match:
+                self.relativistic.append(match)
+        self.relativistic = "_".join(sorted(self.relativistic))
+
+
+# Here we add info about the XC functional and relativistic treatment
+    def onClose_section_method(self, backend, gIndex, section):
+
+        # Push the functional string into the backend
+        backend.addValue('XC_functional', self.functionals)
+        # Push the relativistic treatment string into the backend
+        backend.addValue('relativity_method', self.relativistic)
+        backend.addValue('XC_method_current', self.functionals+'_'+self.relativistic)
+
+
+# Here we add basis set name and kind for the plane wave code
+    def onClose_section_basis_set_cell_associated(self, backend, gIndex, section):
+        ecut_str = section['castep_basis_set_plan_wave_cutoff']
+        self.ecut = float(ecut_str[0])
+        eVtoRy = 0.073498618
+        ecut_str_name = int(round(eVtoRy*self.ecut))
+
+        basis_set_kind = 'plane_waves'
+        basis_set_name = 'PW_'+str(ecut_str_name)
+        backend.addValue('basis_set_plan_wave_cutoff', self.ecut)
+        backend.addValue('basis_set_cell_associated_kind', basis_set_kind)
+        backend.addValue('basis_set_cell_associated_name', basis_set_name)
+
+
+# Storing the unit cell
+    def onClose_castep_section_cell(self, backend, gIndex, section):
+        """trigger called when _castep_section_cell is closed"""
+        # get cached values for castep_cell_vector
+        vet = section['castep_cell_vector']
+
+        vet[0] = vet[0].split()
+        vet[0] = [float(i) for i in vet[0]]
+
+        vet[1] = vet[1].split()
+        vet[1] = [float(i) for i in vet[1]]
+
+        vet[2] = vet[2].split()
+        vet[2] = [float(i) for i in vet[2]]
+
+        self.cell.append(vet[0])
+        self.cell.append(vet[1])
+        self.cell.append(vet[2]) # Reconstructing the unit cell vector by vector
+
+
+# Here we recover the unit cell dimensions (both magnitudes and angles) (useful to convert fractional coordinates to cartesian)
+    def onClose_castep_section_atom_position(self, backend, gIndex, section):
+        """trigger called when _castep_section_atom_position is closed"""
+        # get cached values for cell magnitudes and angles
+        self.a = section['castep_cell_length_a']
+        self.b = section['castep_cell_length_b']
+        self.c = section['castep_cell_length_c']
+        self.alpha = section['castep_cell_angle_alpha']
+        self.beta  = section['castep_cell_angle_beta']
+        self.gamma = section['castep_cell_angle_gamma']
+        self.volume = np.sqrt( 1 - math.cos(np.deg2rad(self.alpha[0]))**2
+                                 - math.cos(np.deg2rad(self.beta[0]))**2
+                                 - math.cos(np.deg2rad(self.gamma[0]))**2
+                                 + 2 * math.cos(np.deg2rad(self.alpha[0]))
+                                     * math.cos(np.deg2rad(self.beta[0]))
+                                     * math.cos(np.deg2rad(self.gamma[0])) ) * self.a[0]*self.b[0]*self.c[0]
+
+
+
+######################################################################################
+################ Triggers on closure section_system_description ######################
+######################################################################################
+
+    def onClose_section_system_description(self, backend, gIndex, section):
+        """trigger called when _section_system_description is closed"""
+
+
+
+# Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
+        #get cached values of castep_store_atom_position
+        pos = section['castep_store_atom_position']
+        self.at_nr = len(pos)
+        for i in range(0, self.at_nr):
+            pos[i] = pos[i].split()
+            pos[i] = [float(j) for j in pos[i]]
+            self.castep_atom_position.append(pos[i])
+        backend.addArrayValues('castep_atom_position', np.asarray(self.castep_atom_position))
+
+
+# Backend add the total number of atoms in the simulation cell
+        backend.addValue('number_of_atoms', self.at_nr)
+
+
+# Processing the atom labels
+        #get cached values of castep_store_atom_label
+        lab = section['castep_store_atom_label']
+        for i in range(0, self.at_nr):
+            lab[i] = re.sub('\s+', ' ', lab[i]).strip()
+        self.atom_label.append(lab)
+        backend.addArrayValues('atom_label', np.asarray(self.atom_label))
+
+
+# Converting the fractional atomic positions (x) to cartesian coordinates (X) ( X = M^-1 x )
+        for i in range(0, self.at_nr):
+
+            pos_a = [   self.a[0] * self.castep_atom_position[i][0]
+                      + self.b[0] * math.cos(np.deg2rad(self.gamma[0])) * self.castep_atom_position[i][1]
+                      + self.c[0] * math.cos(np.deg2rad(self.beta[0])) * self.castep_atom_position[i][2],
+
+                        self.b[0] * math.sin(self.gamma[0]) * self.castep_atom_position[i][1]
+                      + self.c[0] * self.castep_atom_position[i][2] * (( math.cos(np.deg2rad(self.alpha[0]))
+                      - math.cos(np.deg2rad(self.beta[0])) * math.cos(np.deg2rad(self.gamma[0])) ) / math.sin(np.deg2rad(self.gamma[0])) ),
+
+                       (self.volume / (self.a[0]*self.b[0] * math.sin(np.deg2rad(self.gamma[0])))) * self.castep_atom_position[i][2] ]
+
+            self.atom_position.append(pos_a)
+        backend.addArrayValues('atom_position', np.asarray(self.atom_position))
+
+
+# Backend add the simulation cell
+        backend.addArrayValues('simulation_cell', np.asarray(self.cell), unit='angstrom')
+
 
 
 ######################################################################################
@@ -120,9 +301,8 @@ class CastepParserContext(object):
         self.e_nr_1 = self.e_nr
 
 ######################################################################################
+########### BAND STRUCTURE ###########################################################
 ######################################################################################
-######################################################################################
-
 
     def onClose_section_k_band(self, backend, gIndex, section):
         """Trigger called when section_k_band is closed.
@@ -166,10 +346,8 @@ class CastepParserContext(object):
             return found
         ########################################################################################
 
-
         path_end_index = []
         for i in range(self.k_path_nr):
-            #print self.k_start_end[i][1]
             boundary = self.k_start_end[i][1]
             a = get_last_index(boundary, self.castep_band_kpoints)
             path_end_index.append(a)
@@ -290,12 +468,12 @@ def build_CastepMainFileSimpleMatcher():
                               ]), # CLOSING 2nd section_eigenvalues
 
 
-
         ])
 
 
     ########################################
-    # return main Parser
+    # return main Parser ###################
+    ########################################
     return SM (name = 'Root',
         startReStr = "",
         forwardMatch = True,
@@ -308,12 +486,103 @@ def build_CastepMainFileSimpleMatcher():
             sections = ['section_run'],
             subMatchers = [
 
-               SM(startReStr = r"\s\|\s*CCC\s*AA\s*SSS\s*TTTTT\s*EEEEE\s*PPPP\s*\|\s*",
+               SM(name = 'ProgramHeader',
+                  startReStr = r"\s\|\s*CCC\s*AA\s*SSS\s*TTTTT\s*EEEEE\s*PPPP\s*\|\s*",
+                  subMatchers = [
+
+                     SM(r"\s\|\sWelcome to Academic Release\s(?P<program_name>[a-zA-Z]+)* version *(?P<program_version>[0-9a-zA-Z_.]*)"),
+                     SM(r"\sCompiled for *(?P<program_compilation_host>[-a-zA-Z0-9._]*)\son\s(?P<castep_program_compilation_date>[a-zA-Z,\s0-9]*)\s *(?P<castep_program_compilation_time>[0-9:]*)"),
+                     SM(r"\sCompiler\: *(?P<castep_compiler>[a-zA-Z\s0-9.]*)"),
+                     SM(r"\sMATHLIBS\: *(?P<castep_maths_library>[a-zA-Z0-9.() ]*)\s*"),
+                     SM(r"\sFFT Lib \: *(?P<castep_fft_library>[a-zA-Z0-9.() ]*)\s*"),
+                     SM(r"\sFundamental constants values\: *(?P<castep_constants_reference>[a-zA-Z0-9.() ]*)\s*"),
+
+                                  ]), # CLOSING SM ProgramHeader
+
+
+               # section_method
+               SM(name = 'XCMethods',
+                  startReStr = r"\susing functional\s*\:",
+                  forwardMatch = True,
+                  sections = ["section_method"],
+                  subMatchers = [
+
+                     SM(name = "castepXC",
+                        startReStr = r"\susing functional\s*\:",
+                        forwardMatch = True,
+                        sections = ["castep_section_functionals"],
+                        subMatchers = [
+
+                           SM(r"\susing functional\s*\: *(?P<castep_functional_name> [A-Za-z0-9() ]*)"),
+                           SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]*)")
+
+                                       ]), # CLOSING castep_section_functionals
+
+
+                                 ]), # CLOSING section_method
+
+
+               # section_basis_set_cell_associated
+               SM(name = 'planeWave basis set',
+                  startReStr = r"\sbasis set accuracy\s*",
+                  forwardMatch = True,
+                  sections = ["section_basis_set_cell_associated"],
+                  subMatchers = [
+
+                     SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<castep_basis_set_plan_wave_cutoff>[0-9.]+)")
+
+                                 ]), # CLOSING section_basis_set_cell_associated
+
+
+               # section_system_description
+               SM(startReStr = r"\sCalculation not parallelised\.",
+                  forwardMatch = True,
+                  sections = ["section_system_description"],
+                  subMatchers = [
+
+                     # cell information
+                     SM(name = 'cellInformation',
+                        startReStr = r"\s*Unit Cell\s*",
+                        forwardMatch = True,
+                        sections = ["castep_section_cell"],
+                        subMatchers = [
+
+                           SM(r"\s*(?P<castep_cell_vector>[\d\.]+\s+[\d\.]+\s+[\d\.]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                              endReStr = "\n",
+                              repeats = True),
+
+                                       ]), # CLOSING castep_section_cell
+
+
+                     # atomic positions and cell dimesions
+                     SM(startReStr = r"\s*Lattice parameters",
+                        forwardMatch = True,
+                        sections = ["castep_section_atom_position"],
+                        subMatchers = [
+
+                           SM(r"\s*a \=\s*(?P<castep_cell_length_a>[\d\.]+)\s*alpha \=\s*(?P<castep_cell_angle_alpha>[\d\.]+)"),
+                           SM(r"\s*b \=\s*(?P<castep_cell_length_b>[\d\.]+)\s*beta  \=\s*(?P<castep_cell_angle_beta>[\d\.]+)"),
+                           SM(r"\s*c \=\s*(?P<castep_cell_length_c>[\d\.]+)\s*gamma \=\s*(?P<castep_cell_angle_gamma>[\d\.]+)"),
+                           SM(r"\s*x\s*(?P<castep_store_atom_label>[A-Za-z0-9]+\s+[\d\.]+)\s*[0-9]\s*(?P<castep_store_atom_position>[\d\.]+\s+[\d\.]+\s+[\d\.]+)",
+                              endReStr = "\n",
+                              repeats = True)
+
+                                       ]), # CLOSING castep_section_atom_position
+
+                                   ]), # CLOSING section_system_description
+
+
+
+
+               SM(startReStr = r"SCF\sloop\s*Energy\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
                   forwardMatch = True,
                   sections = ["section_single_configuration_calculation"],
                   subMatchers = [
 
-                                 bandStructureSubMatcher
+
+
+
+                      bandStructureSubMatcher
 
                                  ])
 
@@ -333,14 +602,19 @@ def get_cachingLevelForMetaName(metaInfoEnv):
         Dictionary with metaname as key and caching level as value.
     """
     # manually adjust caching of metadata
-    cachingLevelForMetaName = { }
+    cachingLevelForMetaName = {
+                                'band_energies' : CachingLevel.Cache,
+                                'band_k_points' : CachingLevel.Cache,
+                                'castep_basis_set_plan_wave_cutoff' : CachingLevel.Cache,
+                                }
 
     # Set all controlIn and controlInOut metadata to Cache to capture multiple occurrences of keywords and
     # their last value is then written by the onClose routine in the FhiAimsParserContext.
     # Set all geometry metadata to Cache as all of them need post-processsing.
     # Set all eigenvalue related metadata to Cache.
     for name in metaInfoEnv.infoKinds:
-        if (   name.startswith('castep_store_')):
+        if (   name.startswith('castep_store_')
+            or name.startswith('castep_cell_')):
             cachingLevelForMetaName[name] = CachingLevel.Cache
     return cachingLevelForMetaName
 
