@@ -9,9 +9,6 @@ import CastepCellParser_1
 import logging, os, re, sys
 
 
-
-
-
 ################################################################################################################################################################
 ################################################################################################################################################################
 ################################################################################################################################################################
@@ -28,12 +25,20 @@ class CastepParserContext(object):
 
     def initialize_values(self):
         """Initializes the values of certain variables.
-
-        This allows a consistent setting and resetting of the variables,
-        when the parsing starts and when a section_run closes.
         """
-        # start with -1 since zeroth iteration is the initialization
-        self.scfIterNr = -1
+
+        self.k_nr                              = 0
+        self.e_nr                              = 0
+        self.k_count_1                         = 0
+        self.k_nr_1                            = 0
+        self.e_nr_1                            = 0
+        self.castep_band_kpoints               = []
+        self.castep_band_energies              = []
+        self.castep_band_kpoints_1             = []
+        self.castep_band_energies_1            = []
+        self.k_path_nr                         = 0
+
+        self.band_en = []
 
 
     def startedParsing(self, fInName, parser):
@@ -53,10 +58,78 @@ class CastepParserContext(object):
         self.initialize_values()
 
 
+######################################################################################
+###################### Storing k points and band energies ############################
+############################# FIRST SPIN CHANNEL #####################################
+######################################################################################
+
+# Storing the k point coordinates (SPIN 1)
+    def onClose_castep_section_k_points(self, backend, gIndex, section):
+        """trigger called when _section_eigenvalues"""
+# Processing k points (given in fractional coordinates)
+        #get cached values of castep_store_k_points
+        k_st = section['castep_store_k_points']
+        self.k_count = len(k_st)
+        self.k_nr   += 1
+        for i in range(0, self.k_count):
+            k_st[i] = k_st[i].split()
+            k_st[i] = [float(j) for j in k_st[i]]
+            k_st_int = k_st[i]
+            self.castep_band_kpoints.append(k_st_int)
+
+
+
+# Storing the eigenvalues (SPIN 1)
+    def onClose_castep_section_eigenvalues(self, backend, gIndex, section):
+        """trigger called when _section_eigenvalues"""
+        #get cached values of castep_store_k_points
+        e_st = section['castep_store_eigenvalues']
+        self.e_nr = len(e_st)
+        self.castep_band_energies.append(e_st)
+
+
+######################################################################################
+###################### Storing k points and band energies ############################
+############################# SECOND SPIN CHANNEL ####################################
+######################################################################################
+
+# Storing the k point coordinates (SPIN 2)
+    def onClose_castep_section_k_points_1(self, backend, gIndex, section):
+        """trigger called when _section_eigenvalues"""
+# Processing k points (given in fractional coordinates)
+        #get cached values of castep_store_k_points
+        k_st_1 = section['castep_store_k_points_1']
+        self.k_count_1 = len(k_st_1)
+        self.k_nr_1   += 1
+        for i in range(0, self.k_count_1):
+            k_st_1[i] = k_st_1[i].split()
+            k_st_1[i] = [float(j) for j in k_st_1[i]]
+            k_st_1_int = k_st_1[i]
+            self.castep_band_kpoints_1.append(k_st_1_int)
+
+        self.k_nr_1 = self.k_nr  # clean double counting
+
+
+
+# Storing the eigenvalues (SPIN 2)
+    def onClose_castep_section_eigenvalues_1(self, backend, gIndex, section):
+        """trigger called when _section_eigenvalues"""
+        #get cached values of castep_store_k_points
+        e_st_1 = section['castep_store_eigenvalues_1']
+        self.e_nr_1 = len(e_st_1)
+        self.castep_band_energies_1.append(e_st_1)
+
+        self.e_nr_1 = self.e_nr
+
+######################################################################################
+######################################################################################
+######################################################################################
+
+
     def onClose_section_k_band(self, backend, gIndex, section):
         """Trigger called when section_k_band is closed.
 
-        Band structure is parsed from external band.out files.
+           The k path coordinates are extracted from the *.cell input file.
         """
 
         cellSuperContext = CastepCellParser_1.CastepCellParserContext(False)
@@ -73,13 +146,63 @@ class CastepParserContext(object):
         with open(fName) as fIn:
             cellParser.parseFile(fIn)
 
-        k_start_end = cellSuperContext.k_sgt_start_end
+        self.k_start_end = cellSuperContext.k_sgt_start_end
+        self.k_path_nr = len(self.k_start_end)
+
+
+        if self.castep_band_energies_1 != []:
+            for i in range(self.k_nr):
+                a = [ self.castep_band_energies[i], self.castep_band_energies_1[i] ]
+                self.band_en.append(a)
+        else:
+            self.band_en = self.castep_band_energies
+
+
+        def get_last_index(el, check):  # function that returs end index for each k path
+            found = None
+            for i, next in enumerate(check):
+                if next == el:
+                    found = i
+
+            assert found != None
+            return found
+
+
+        path_end_index = []
+        for i in range(self.k_path_nr):
+            #print self.k_start_end[i][1]
+            boundary = self.k_start_end[i][1]
+            a = get_last_index(boundary, self.castep_band_kpoints)
+            path_end_index.append(a)
+
+        path_end_index = [0] + path_end_index
+
+
+        k_point_path = []
+        for i in range(self.k_path_nr):
+            a = self.castep_band_kpoints[ path_end_index[i] : path_end_index[i+1]+1 ]
+            k_point_path.append(a)
+
+
+        band_en_path = []
+        for i in range(self.k_path_nr):
+            a = self.band_en[ path_end_index[i] : path_end_index[i+1]+1 ]
+            band_en_path.append(a)
+
+
+        backend.addArrayValues('band_k_points', np.asarray(k_point_path))
+        backend.addArrayValues('band_energies', np.asarray(band_en_path))
 
 
 
 
-
-
+################################################################################################################################################################
+################################################################################################################################################################
+################################################################################################################################################################
+######################  MAIN PARSER STARTS HERE  ###############################################################################################################
+################################################################################################################################################################
+############################################################################ CASTEP.Parser Version 1.0 #########################################################
+################################################################################################################################################################
 
 
 def build_CastepMainFileSimpleMatcher():
@@ -201,10 +324,6 @@ def build_CastepMainFileSimpleMatcher():
 
 
 
-
-
-
-
 def get_cachingLevelForMetaName(metaInfoEnv):
     """Sets the caching level for the metadata.
 
@@ -222,18 +341,15 @@ def get_cachingLevelForMetaName(metaInfoEnv):
     # Set all geometry metadata to Cache as all of them need post-processsing.
     # Set all eigenvalue related metadata to Cache.
     for name in metaInfoEnv.infoKinds:
-        if (   name.startswith('castep_store_')
-            or name.startswith('fhi_aims_geometry_')
-            or name.startswith('fhi_aims_eigenvalue_')
-            or name.startswith('fhi_aims_section_eigenvalues_')
-           ):
+        if (   name.startswith('castep_store_')):
             cachingLevelForMetaName[name] = CachingLevel.Cache
     return cachingLevelForMetaName
+
 
 def main():
     """Main function.
 
-    Set up everything for the parsing of the FHI-aims main file and run the parsing.
+    Set up everything for the parsing of the CASTEP main file and run the parsing.
     """
     # get main file description
     CastepMainFileSimpleMatcher = build_CastepMainFileSimpleMatcher()

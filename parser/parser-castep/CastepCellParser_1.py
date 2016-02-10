@@ -11,7 +11,7 @@ import logging, os, re, sys
 
 
 ############################################################
-# This is the parser for the band.out file of FHI-aims.
+# This is the parser for the *.cell file of CASTEP.
 ############################################################
 
 logger = logging.getLogger("nomad.CastepCellParser")
@@ -77,13 +77,13 @@ class CastepCellParserContext(object):
 
 
 def build_CastepCellFileSimpleMatcher():
-    """Builds the SimpleMatcher to parse the band.out file of FHI-aims.
+    """Builds the SimpleMatcher to parse the *.cell file of CASTEP.
 
     SimpleMatchers are called with 'SM (' as this string has length 4,
     which allows nice formating of nested SimpleMatchers in python.
 
     Returns:
-       SimpleMatcher that parses band.out file of FHI-aims.
+       SimpleMatcher that parses *.cell file of CASTEP.
     """
     return SM (name = 'Root1',
         startReStr = "",
@@ -133,14 +133,10 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
     return cachingLevelForMetaName
 
 
-
-
-
-
 def main(CachingLvl):
     """Main function.
 
-    Set up everything for the parsing of the FHI-aims band.out file and run the parsing.
+    Set up everything for the parsing of the CASTEP *.cell file and run the parsing.
 
     Args:
         CachingLvl: Sets the CachingLevel for the sections k_band, run, and single_configuration_calculation.
