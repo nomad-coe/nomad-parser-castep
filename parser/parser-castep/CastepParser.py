@@ -19,8 +19,7 @@ import logging, os, re, sys
 
 class CastepParserContext(object):
 
-    def __init__(self):
-        self.cell                              = []
+    #def __init__(self):
 
 
     def initialize_values(self):
@@ -37,7 +36,6 @@ class CastepParserContext(object):
         self.castep_band_kpoints_1             = []
         self.castep_band_energies_1            = []
         self.k_path_nr                         = 0
-
         self.band_en = []
 
 
@@ -144,21 +142,21 @@ class CastepParserContext(object):
         fName = os.path.normpath(os.path.join(dirName, bFile))
 
         with open(fName) as fIn:
-            cellParser.parseFile(fIn)
+            cellParser.parseFile(fIn)  # parsing *.cell file to get the k path segments
 
         self.k_start_end = cellSuperContext.k_sgt_start_end
         self.k_path_nr = len(self.k_start_end)
 
 
-        if self.castep_band_energies_1 != []:
+        if self.castep_band_energies_1 != []:  # handling k band energies
             for i in range(self.k_nr):
-                a = [ self.castep_band_energies[i], self.castep_band_energies_1[i] ]
+                a = [ self.castep_band_energies[i], self.castep_band_energies_1[i] ]  # spin polarised
                 self.band_en.append(a)
         else:
-            self.band_en = self.castep_band_energies
+            self.band_en = self.castep_band_energies  # single spin
 
-
-        def get_last_index(el, check):  # function that returs end index for each k path
+        ########################################################################################
+        def get_last_index(el, check):  # function that returs end index for each k path segment
             found = None
             for i, next in enumerate(check):
                 if next == el:
@@ -166,6 +164,7 @@ class CastepParserContext(object):
 
             assert found != None
             return found
+        ########################################################################################
 
 
         path_end_index = []
@@ -175,19 +174,19 @@ class CastepParserContext(object):
             a = get_last_index(boundary, self.castep_band_kpoints)
             path_end_index.append(a)
 
-        path_end_index = [0] + path_end_index
+        path_end_index = [0] + path_end_index  # list storing the end index of each k segment
 
 
         k_point_path = []
         for i in range(self.k_path_nr):
             a = self.castep_band_kpoints[ path_end_index[i] : path_end_index[i+1]+1 ]
-            k_point_path.append(a)
+            k_point_path.append(a)          # storing the k point fractional coordinates for each segment
 
 
         band_en_path = []
         for i in range(self.k_path_nr):
             a = self.band_en[ path_end_index[i] : path_end_index[i+1]+1 ]
-            band_en_path.append(a)
+            band_en_path.append(a)          # storing the band energies for each segment, k point and spin channel
 
 
         backend.addArrayValues('band_k_points', np.asarray(k_point_path))
