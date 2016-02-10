@@ -20,7 +20,12 @@ import logging, os, re, sys
 
 class CastepParserContext(object):
 
-    def __init__(self):
+    #def __init__(self):
+
+
+    def initialize_values(self):
+        """Initializes the values of certain variables.
+        """
         self.functionals                       = []
         self.relativistic                      = []
 
@@ -38,6 +43,9 @@ class CastepParserContext(object):
         self.gamma                             = []
         self.volume                            = 0
 
+        self.energy_total_scf_iteration_list   = []
+        self.scfIterNr                         = []
+
         self.k_nr                              = 0
         self.e_nr                              = 0
         self.k_count_1                         = 0
@@ -49,11 +57,6 @@ class CastepParserContext(object):
         self.castep_band_energies_1            = []
         self.k_path_nr                         = 0
         self.band_en = []
-
-
-    #def initialize_values(self):
-    #    """Initializes the values of certain variables.
-    #    """
 
 
     def startedParsing(self, fInName, parser):
@@ -181,6 +184,30 @@ class CastepParserContext(object):
                                      * math.cos(np.deg2rad(self.gamma[0])) ) * self.a[0]*self.b[0]*self.c[0]
 
 
+# Storing the total energy of each SCF iteration in an array
+    def onClose_section_scf_iteration(self, backend, gIndex, section):
+        """trigger called when _section_scf_iteration is closed"""
+        # get cached values for energy_total_scf_iteration
+        ev = section['energy_total_scf_iteration']
+        self.scfIterNr = len(ev)
+        self.energy_total_scf_iteration_list.append(ev)
+
+        backend.addArrayValues('energy_total_scf_iteration_list', np.asarray(self.energy_total_scf_iteration_list))
+        backend.addValue('scf_dft_number_of_iterations', self.scfIterNr)
+
+
+# Processing forces acting on atoms (final converged forces)
+    def onClose_section_single_configuration_calculation(self, backend, gIndex, section):
+        #get cached values of castep_store_atom_forces
+        f_st = section['castep_store_atom_forces']
+        for i in range(0, self.at_nr):
+            f_st[i] = f_st[i].split()
+            f_st[i] = [float(j) for j in f_st[i]]
+            f_st_int = f_st[i]
+            self.atom_forces.append(f_st_int)
+        backend.addArrayValues('atom_forces', np.asarray(self.atom_forces))
+
+
 
 ######################################################################################
 ################ Triggers on closure section_system_description ######################
@@ -234,7 +261,6 @@ class CastepParserContext(object):
 
 # Backend add the simulation cell
         backend.addArrayValues('simulation_cell', np.asarray(self.cell), unit='angstrom')
-
 
 
 ######################################################################################
@@ -299,6 +325,7 @@ class CastepParserContext(object):
         self.castep_band_energies_1.append(e_st_1)
 
         self.e_nr_1 = self.e_nr
+        
 
 ######################################################################################
 ########### BAND STRUCTURE ###########################################################
@@ -396,6 +423,71 @@ def build_CastepMainFileSimpleMatcher():
 
 
     ########################################
+    # submatcher for section system description
+    systemDescriptionSubMatcher = SM(name = "System Description",
+        startReStr = r"\s*Unit Cell\s*",
+        forwardMatch = True,
+        sections = ["section_system_description"],
+        subMatchers = [
+
+           # cell information
+           SM(name = 'cellInformation',
+              startReStr = r"\s*Unit Cell\s*",
+              forwardMatch = True,
+              sections = ["castep_section_cell"],
+              subMatchers = [
+
+                 SM(r"\s*(?P<castep_cell_vector>[\d\.]+\s+[\d\.]+\s+[\d\.]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                    endReStr = "\n",
+                    repeats = True),
+
+                             ]), # CLOSING castep_section_cell
+
+
+           # atomic positions and cell dimesions
+           SM(startReStr = r"\s*Lattice parameters",
+              forwardMatch = True,
+              sections = ["castep_section_atom_position"],
+              subMatchers = [
+
+                 SM(r"\s*a \=\s*(?P<castep_cell_length_a>[\d\.]+)\s*alpha \=\s*(?P<castep_cell_angle_alpha>[\d\.]+)"),
+                 SM(r"\s*b \=\s*(?P<castep_cell_length_b>[\d\.]+)\s*beta  \=\s*(?P<castep_cell_angle_beta>[\d\.]+)"),
+                 SM(r"\s*c \=\s*(?P<castep_cell_length_c>[\d\.]+)\s*gamma \=\s*(?P<castep_cell_angle_gamma>[\d\.]+)"),
+                 SM(r"\s*x\s*(?P<castep_store_atom_label>[A-Za-z0-9]+\s+[\d\.]+)\s*[0-9]\s*(?P<castep_store_atom_position>[\d\.]+\s+[\d\.]+\s+[\d\.]+)",
+                    endReStr = "\n",
+                    repeats = True)
+
+                             ]), # CLOSING castep_section_atom_position
+
+                      ]) # CLOSING section_system_description
+
+
+
+    ########################################
+    # submatcher for section method
+    methodSubmatcher = SM(name = 'XCMethods',
+        startReStr = r"\susing functional\s*\:",
+        forwardMatch = True,
+        sections = ["section_method"],
+        subMatchers = [
+
+           SM(name = "castepXC",
+              startReStr = r"\susing functional\s*\:",
+              forwardMatch = True,
+              sections = ["castep_section_functionals"],
+              subMatchers = [
+
+                 SM(r"\susing functional\s*\: *(?P<castep_functional_name> [A-Za-z0-9() ]*)"),
+                 SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]*)")
+
+                             ]), # CLOSING castep_section_functionals
+
+
+                      ]) # CLOSING section_method
+
+
+
+    ########################################
     # submatcher for band structure
     bandStructureSubMatcher = SM (name = 'BandStructure',
         startReStr = r"\s*\+\s*B A N D   S T R U C T U R E   C A L C U L A T I O N\s*",
@@ -471,6 +563,7 @@ def build_CastepMainFileSimpleMatcher():
         ])
 
 
+
     ########################################
     # return main Parser ###################
     ########################################
@@ -500,26 +593,7 @@ def build_CastepMainFileSimpleMatcher():
                                   ]), # CLOSING SM ProgramHeader
 
 
-               # section_method
-               SM(name = 'XCMethods',
-                  startReStr = r"\susing functional\s*\:",
-                  forwardMatch = True,
-                  sections = ["section_method"],
-                  subMatchers = [
-
-                     SM(name = "castepXC",
-                        startReStr = r"\susing functional\s*\:",
-                        forwardMatch = True,
-                        sections = ["castep_section_functionals"],
-                        subMatchers = [
-
-                           SM(r"\susing functional\s*\: *(?P<castep_functional_name> [A-Za-z0-9() ]*)"),
-                           SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]*)")
-
-                                       ]), # CLOSING castep_section_functionals
-
-
-                                 ]), # CLOSING section_method
+               methodSubmatcher, # section_method
 
 
                # section_basis_set_cell_associated
@@ -534,44 +608,7 @@ def build_CastepMainFileSimpleMatcher():
                                  ]), # CLOSING section_basis_set_cell_associated
 
 
-               # section_system_description
-               SM(startReStr = r"\sCalculation not parallelised\.",
-                  forwardMatch = True,
-                  sections = ["section_system_description"],
-                  subMatchers = [
-
-                     # cell information
-                     SM(name = 'cellInformation',
-                        startReStr = r"\s*Unit Cell\s*",
-                        forwardMatch = True,
-                        sections = ["castep_section_cell"],
-                        subMatchers = [
-
-                           SM(r"\s*(?P<castep_cell_vector>[\d\.]+\s+[\d\.]+\s+[\d\.]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
-                              endReStr = "\n",
-                              repeats = True),
-
-                                       ]), # CLOSING castep_section_cell
-
-
-                     # atomic positions and cell dimesions
-                     SM(startReStr = r"\s*Lattice parameters",
-                        forwardMatch = True,
-                        sections = ["castep_section_atom_position"],
-                        subMatchers = [
-
-                           SM(r"\s*a \=\s*(?P<castep_cell_length_a>[\d\.]+)\s*alpha \=\s*(?P<castep_cell_angle_alpha>[\d\.]+)"),
-                           SM(r"\s*b \=\s*(?P<castep_cell_length_b>[\d\.]+)\s*beta  \=\s*(?P<castep_cell_angle_beta>[\d\.]+)"),
-                           SM(r"\s*c \=\s*(?P<castep_cell_length_c>[\d\.]+)\s*gamma \=\s*(?P<castep_cell_angle_gamma>[\d\.]+)"),
-                           SM(r"\s*x\s*(?P<castep_store_atom_label>[A-Za-z0-9]+\s+[\d\.]+)\s*[0-9]\s*(?P<castep_store_atom_position>[\d\.]+\s+[\d\.]+\s+[\d\.]+)",
-                              endReStr = "\n",
-                              repeats = True)
-
-                                       ]), # CLOSING castep_section_atom_position
-
-                                   ]), # CLOSING section_system_description
-
-
+               systemDescriptionSubMatcher, # section_system_description submatcher
 
 
                SM(startReStr = r"SCF\sloop\s*Energy\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
@@ -579,14 +616,29 @@ def build_CastepMainFileSimpleMatcher():
                   sections = ["section_single_configuration_calculation"],
                   subMatchers = [
 
+                     SM(name = 'ScfIterations',
+                        startReStr = r"SCF\sloop\s*Energy\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
+                        sections = ['section_scf_iteration'],
+                        subMatchers = [
 
+                           SM(r"\s*[0-9]+\s*(?P<energy_total_scf_iteration>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                              repeats = True),
 
+                                       ]), # CLOSING section_scf_iteration
 
-                      bandStructureSubMatcher
+                     SM(r"Final energy = *(?P<energy_total>[-+0-9.eEdD]*)"), # macthing final coverged total energy
 
-                                 ])
+                     bandStructureSubMatcher,  # band structure submatcher
 
-                           ])
+                     SM(startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Symmetrised Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
+                        subMatchers = [
+                            SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                               repeats = True)
+                                       ])
+
+                                 ]) # CLOSING section_single_configuration_calculation
+
+                           ]) # CLOSING SM NewRun
 
         ])
 
@@ -603,8 +655,8 @@ def get_cachingLevelForMetaName(metaInfoEnv):
     """
     # manually adjust caching of metadata
     cachingLevelForMetaName = {
-                                'band_energies' : CachingLevel.Cache,
-                                'band_k_points' : CachingLevel.Cache,
+                                #'band_energies' : CachingLevel.Cache,
+                                #'band_k_points' : CachingLevel.Cache,
                                 'castep_basis_set_plan_wave_cutoff' : CachingLevel.Cache,
                                 }
 
