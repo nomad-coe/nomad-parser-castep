@@ -476,7 +476,7 @@ class CastepParserContext(object):
 
 
 def build_CastepMainFileSimpleMatcher():
-    """Builds the SimpleMatcher to parse the main file of FHI-aims.
+    """Builds the SimpleMatcher to parse the main file of CASTEP.
 
     First, several subMatchers are defined, which are then used to piece together
     the final SimpleMatcher.
