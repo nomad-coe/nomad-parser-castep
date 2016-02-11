@@ -7,6 +7,7 @@ from nomadcore.simple_parser import AncillaryParser, mainFunction
 from nomadcore.simple_parser import SimpleMatcher as SM
 from CastepCommon import get_metaInfo
 import CastepCellParser
+import CastepBandParser
 import logging, os, re, sys
 
 
@@ -18,11 +19,12 @@ import logging, os, re, sys
 ############################################################################ CASTEP.Parser Version 1.0 #########################################################
 ################################################################################################################################################################
 
+logger = logging.getLogger("nomad.CastepParser")
+
 class CastepParserContext(object):
 
     def __init__(self):
         """ Initialise variables used within the current superContext """
-
         self.functionals                       = []
         self.relativistic                      = []
 
@@ -55,10 +57,12 @@ class CastepParserContext(object):
         self.k_path_nr                         = 0
         self.band_en                           = []
 
+        self.e_spin_1                          = []
+        self.e_spin_2                          = []
+
 
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
-
         self.pippo = None
 
 
@@ -209,6 +213,67 @@ class CastepParserContext(object):
         backend.addArrayValues('atom_forces', np.asarray(self.atom_forces))
 
 
+# Add SCF k points and eigenvalue from *.band file to the backend (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
+        if len(self.e_spin_1) != 0:
+            gIndexGroup = backend.openSection('section_eigenvalues_group')
+
+            backend.openSection('section_eigenvalues') # opening first section_eigenvalues
+
+            backend.addArrayValues('eigenvalues_kpoints', np.asarray(self.k_points_scf))
+            backend.addArrayValues('eigenvalues_eigenvalues', np.asarray(self.e_spin_1))
+            backend.addValue('number_of_eigenvalues_kpoints', self.k_nr_scf)
+            backend.addValue('number_of_eigenvalues', self.e_nr_scf)
+
+            backend.closeSection('section_eigenvalues', gIndex)
+
+            if len(self.e_spin_2) != 0:
+
+                backend.openSection('section_eigenvalues') # opening the second section_eigenvalues (only for spin polarised calculations)
+
+                backend.addArrayValues('eigenvalues_kpoints', np.asarray(self.k_points_scf))
+                backend.addArrayValues('eigenvalues_eigenvalues', np.asarray(self.e_spin_2))
+                backend.addValue('number_of_eigenvalues_kpoints', self.k_nr_scf)
+                backend.addValue('number_of_eigenvalues', self.e_nr_scf)
+
+                backend.closeSection('section_eigenvalues', gIndex+1)
+
+                backend.closeSection('section_eigenvalues_group', gIndexGroup)
+
+            else:
+                backend.closeSection('section_eigenvalues_group', gIndexGroup)
+
+
+
+# Recover SCF k points and eigenvalue from *.band file (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
+    def onClose_castep_section_collect_scf_eigenvalues(self, backend, gIndex, section):
+
+        bandSuperContext = CastepBandParser.CastepBandParserContext(False)
+        bandParser = AncillaryParser(
+            fileDescription = CastepBandParser.build_CastepBandFileSimpleMatcher(),
+            parser = self.parser,
+            cachingLevelForMetaName = CastepBandParser.get_cachingLevelForMetaName(self.metaInfoEnv, CachingLevel.Ignore),
+            superContext = bandSuperContext)
+
+        extFile = ".bands"       # Find the file with extension .band_sp
+        dirName = os.path.dirname(os.path.abspath(self.fName))
+        bFile = str()
+        for file in os.listdir(dirName):
+            if file.endswith(extFile):
+                bFile = file
+        fName = os.path.normpath(os.path.join(dirName, bFile))
+
+        with open(fName) as fIn:
+            bandParser.parseFile(fIn)  # parsing *.band file to get SCF eigenvalues and relative k points
+
+
+        self.k_nr_scf     = bandSuperContext.k_nr
+        self.e_nr_scf     = bandSuperContext.e_nr
+        self.k_points_scf = bandSuperContext.eigenvalues_kpoints
+        self.e_spin_1     = bandSuperContext.e_spin_1
+        self.e_spin_2     = bandSuperContext.e_spin_2
+        #self.n_spin = bandSuperContext.n_spin
+
+
 
 ######################################################################################
 ################ Triggers on closure section_system_description ######################
@@ -263,7 +328,7 @@ class CastepParserContext(object):
 
 
 ######################################################################################
-###################### Storing k points and band energies ############################
+###################### Storing k band points and band energies #######################
 ############################# FIRST SPIN CHANNEL #####################################
 ######################################################################################
 
@@ -292,7 +357,7 @@ class CastepParserContext(object):
 
 
 ######################################################################################
-###################### Storing k points and band energies ############################
+###################### Storing k band points and band energies #######################
 ############################# SECOND SPIN CHANNEL ####################################
 ######################################################################################
 
@@ -421,6 +486,16 @@ def build_CastepMainFileSimpleMatcher():
     """
 
 
+
+    ########################################
+    # submatcher for
+    scfEigenvaluesSubMatcher = SM(name = 'scfEigenvalues',
+       startReStr = r"\stype\sof\scalculation\s*\:\ssingle\spoint\senergy\s*",
+       sections = ["castep_section_collect_scf_eigenvalues"]
+
+       ) # CLOSING SM scfEigenvalues
+
+
     ########################################
     # submatcher for section method
     calculationMethodSubMatcher = SM(name = 'calculationMethods',
@@ -462,7 +537,7 @@ def build_CastepMainFileSimpleMatcher():
 
     ########################################
     # submatcher for section system description
-    systemDescriptionSubMatcher = SM(name = "System Description",
+    systemDescriptionSubMatcher = SM(name = "systemDescription",
         startReStr = r"\s*Unit Cell\s*",
         forwardMatch = True,
         sections = ["section_system_description"],
@@ -497,7 +572,7 @@ def build_CastepMainFileSimpleMatcher():
 
                              ]), # CLOSING castep_section_atom_position
 
-                      ]) # CLOSING section_system_description
+                      ]) # CLOSING SM systemDescription
 
 
 
@@ -505,6 +580,7 @@ def build_CastepMainFileSimpleMatcher():
     # submatcher for band structure
     bandStructureSubMatcher = SM (name = 'BandStructure',
         startReStr = r"\s*\+\s*B A N D   S T R U C T U R E   C A L C U L A T I O N\s*",
+        #startReStr = r"\stype\sof\scalculation\s*\:\sband\sstructure\s*",
         sections = ['section_k_band'],
         subMatchers = [
 
@@ -607,6 +683,10 @@ def build_CastepMainFileSimpleMatcher():
                                   ]), # CLOSING SM ProgramHeader
 
 
+
+               scfEigenvaluesSubMatcher, # export section_eigenvalues_group to the correct nesting
+
+
                calculationMethodSubMatcher, # section_method
 
 
@@ -633,7 +713,9 @@ def build_CastepMainFileSimpleMatcher():
 
                      SM(r"Final energy = *(?P<energy_total>[-+0-9.eEdD]*)"), # macthing final coverged total energy
 
+
                      bandStructureSubMatcher,  # band structure subMatcher
+
 
                      SM(startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Symmetrised Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
                         subMatchers = [

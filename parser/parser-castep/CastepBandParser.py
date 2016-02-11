@@ -1,31 +1,78 @@
 import setup_paths
 import numpy as np
-import math
+import nomadcore.ActivateLogging
+from nomadcore.caching_backend import CachingLevel
 from nomadcore.simple_parser import mainFunction
 from nomadcore.simple_parser import SimpleMatcher as SM
 from nomadcore.local_meta_info import loadJsonFile, InfoKindEl
-from nomadcore.caching_backend import CachingLevel
-import re, os, sys, json, logging
+from CastepCommon import get_metaInfo
+import logging, os, re, sys
 
 
-class CastepParserContext(object):
 
-    def __init__(self):
+
+###############################################################
+# This is the parser for the *.band file of CASTEP.
+
+
+# NB: this parser store self consistent eigenvalues and
+#     relative k points for single configuration calculations
+
+###############################################################
+
+logger = logging.getLogger("nomad.CastepBandParser")
+
+class CastepBandParserContext(object):
+    """Context for parsing CASTEP *.band file.
+
+
+    The onClose_ functions allow processing and writing of cached values after a section is closed.
+    They take the following arguments:
+        backend: Class that takes care of wrting and caching of metadata.
+        gIndex: Index of the section that is closed.
+        section: The cached values and sections that were found in the section that is closed.
+    """
+    def __init__(self, writeMetaData = True):
+        """Args:
+            writeMetaData: Deteremines if metadata is written or stored in class attributes.
+        """
+        self.writeMetaData = writeMetaData
+
+    def startedParsing(self, fInName, parser):
+        """Function is called when the parsing starts and the compiled parser is obtained.
+
+        Args:
+            fInName: The file name on which the current parser is running.
+            parser: The compiled parser. Is an object of the class SimpleParser in nomadcore.simple_parser.py.
+        """
+        self.parser = parser
+        # get unit from metadata for band energies
+        # allows to reset values if the same superContext is used to parse different files
         self.k_count                    = 0
         self.k_nr                       = 0
         self.e_nr                       = 0
         self.eigenvalues_kpoints        = []
         self.eigenvalues_eigenvalues    = []
 
+        self.e_spin_1                   = []
+        self.e_spin_2                   = []
+        self.n_spin                     = 0
+
+
+
+# Reading the number of spins
+    def onClose_castep_section_spin_number(self, backend, gIndex, section):
+
+        self.n_spin = section['castep_spin_number']
 
 
 # Storing the k point coordinates
-    def onClose_castep_section_k_points(self, backend, gIndex, section):
+    def onClose_castep_section_scf_k_points(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
 
 # Processing k points (given in fractional coordinates)
         #get cached values of castep_store_k_points
-        k_st = section['castep_store_k_points']
+        k_st = section['castep_store_scf_k_points']
         self.k_count = len(k_st)
         self.k_nr   += 1
         for i in range(0, self.k_count):
@@ -36,26 +83,29 @@ class CastepParserContext(object):
 
 
 # Storing the eigenvalues
-    def onClose_castep_section_eigenvalues(self, backend, gIndex, section):
+    def onClose_castep_section_scf_eigenvalues(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
 
         #get cached values of castep_store_k_points
-        e_st = section['castep_store_eigenvalues']
-        self.e_nr = len(e_st)
-        self.eigenvalues_eigenvalues.append(e_st)
+        e_st = section['castep_store_scf_eigenvalues']
 
+        e_st_0 = e_st
 
+        def split_list(lista):
+            half = len(lista)/2
+            return lista[:half], lista[half:]
 
-# Keeping only the last arrays update
-    def onClose_section_eigenvalues(self, backend, gIndex, section):
-        """trigger called when _section_eigenvalues"""
-        backend.addArrayValues('eigenvalues_kpoints', np.asarray(self.eigenvalues_kpoints))
-        backend.addArrayValues('eigenvalues_eigenvalues', np.asarray(self.eigenvalues_eigenvalues))
-# Backend add the number of k points and eigenvalues
-        backend.addValue('number_of_eigenvalues_kpoints', self.k_nr)
-        backend.addValue('number_of_eigenvalues', self.e_nr)
+        e_st_1, e_st_2 = split_list(e_st)
 
+        if self.n_spin[0] == 1:
+            self.e_nr = len(e_st_0)
+            self.e_spin_1.append(e_st_0)
+            self.e_spin_2 = []
 
+        else:
+            self.e_nr = len(e_st_1)
+            self.e_spin_1.append(e_st_1)
+            self.e_spin_2.append(e_st_2)
 
 
 
@@ -66,104 +116,116 @@ class CastepParserContext(object):
 ######################  MAIN PARSER STARTS HERE  ###############################
 ################################################################################
 
-# main Parser
-mainFileDescription = SM(name = 'root',
-                         weak = True,
-                         startReStr = "",
-                         subMatchers = [
 
-                            SM(name = "newRun",
-                            startReStr = r"",
-                            #repeats = True,
-                            required = True,
-                            forwardMatch = True,
-                            sections   = ["section_run"],
-                            subMatchers = [
+def build_CastepBandFileSimpleMatcher():
+    """Builds the SimpleMatcher to parse the *.cell file of CASTEP.
 
+    SimpleMatchers are called with 'SM (' as this string has length 4,
+    which allows nice formating of nested SimpleMatchers in python.
 
-                                SM(startReStr = "Number of k-points\s*",
-                                   forwardMatch = True,
-                                   sections = ["section_system_description"],
-                                   subMatchers = [
+    Returns:
+       SimpleMatcher that parses *.cell file of CASTEP.
+    """
+    return SM (name = 'Root1',
+        startReStr = "",
+        sections = ['section_run'],
+        forwardMatch = True,
+        weak = True,
+        subMatchers = [
+        SM (name = 'Root2',
+            startReStr = "",
+            sections = ['section_single_configuration_calculation'],
+            forwardMatch = True,
+            weak = True,
+            subMatchers = [
 
-                                       SM(startReStr = "Number of k-points\s*",
-                                          forwardMatch = True,
-                                          sections = ["section_single_configuration_calculation"],
-                                          subMatchers = [
+               SM(startReStr = r"Number\sof\sk\-points\s*[0-9]+\s*",
+                  sections = ['castep_section_spin_number'],
+                  forwardMatch = True,
+                  subMatchers = [
 
-                                              SM(startReStr = "Number of k-points\s*",
-                                                 forwardMatch = True,
-                                                 sections = ["section_eigenvalues_group"],
-                                                 subMatchers = [
+                     SM(r"Number\sof\sspin\scomponents\s*(?P<castep_spin_number>[1-2]+)")
 
-                                                     SM(startReStr = "Number of k-points\s*",
-                                                        sections = ["section_eigenvalues"],
-                                                        forwardMatch = True,
-                                                        subMatchers = [
+                                 ]),
 
-                                                         SM(startReStr = "K\-point\s*[0-9]+\s*",
-                                                            sections = ["castep_section_k_points"],
-                                                            forwardMatch = True,
-                                                            repeats = True,
-                                                            subMatchers = [
+               SM(startReStr = r"K\-point\s*[0-9]+\s*",
+                  sections = ["castep_section_scf_k_points"],
+                  forwardMatch = True,
+                  repeats = True,
+                  subMatchers = [
 
-                                                                SM(r"K\-point\s*[0-9]+\s*(?P<castep_store_k_points> [-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
-                                                                   repeats = True),
+                     SM(r"K\-point\s*[0-9]+\s*(?P<castep_store_scf_k_points> [-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                        repeats = True),
 
-                                                                    SM(name = 'Eigen',
-                                                                       startReStr = r"Spin component\s*[0-9]+\s*",
-                                                                       sections = ['castep_section_eigenvalues'],
-                                                                       repeats = True,
-                                                                       subMatchers = [
+                     SM(name = 'Eigen',
+                        startReStr = r"Spin component\s*1\s*",
+                        #endReStr = r"Spin component\s*2\s*",
+                        sections = ['castep_section_scf_eigenvalues'],
+                        repeats = True,
+                        subMatchers = [
 
-                                                                          SM(r"\s*(?P<castep_store_eigenvalues> [-\d\.]+)",
-                                                                             repeats = True)
+                           SM(r"\s*(?P<castep_store_scf_eigenvalues> [-\d\.]+)",
+                              repeats = True)
 
-                                                                       ]), # CLOSING castep_section_eigenvalues
+                                       ]), # CLOSING castep_section_scf_eigenvalues
 
 
-                                                            ]), # CLOSING castep_section_k_points
+                                 ]) # CLOSING castep_section_k_points
 
 
-                                                        ]), # CLOSING section_eigenvalues
-
-
-
-                                                ]), # CLOSING section_eigenvalues_group
-
-
-                                          ]), # CLOSING section_single_configuration_calculation
-
-
-                                ]), # CLOSING section_system_description
-
-
-    ]), # CLOSING SM newRun
-
-
+    ]), # CLOSING section_single_configuration_calculation
 ])
 
 
+def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
+    """Sets the caching level for the metadata.
+
+    Args:
+        metaInfoEnv: metadata which is an object of the class InfoKindEnv in nomadcore.local_meta_info.py.
+        CachingLvl: Sets the CachingLevel for the sections k_band, run, and single_configuration_calculation.
+            This allows to run the parser without opening new sections.
+
+    Returns:
+        Dictionary with metaname as key and caching level as value.
+    """
+    # manually adjust caching of metadata
+    cachingLevelForMetaName = {
+                               'section_run': CachingLvl,
+                               'section_single_configuration_calculation': CachingLvl,
+                              }
+    # Set all band metadata to Cache as they need post-processsing.
+    for name in metaInfoEnv.infoKinds:
+        if name.startswith('castep_'):
+            cachingLevelForMetaName[name] = CachingLevel.Cache
+    return cachingLevelForMetaName
 
 
+def main(CachingLvl):
+    """Main function.
 
+    Set up everything for the parsing of the CASTEP *.cell file and run the parsing.
 
-# loading metadata from nomad-meta-info/meta_info/nomad_meta_info/fhi_aims.nomadmetainfo.json
-metaInfoPath = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"../../../../nomad-meta-info/meta_info/nomad_meta_info/castep.nomadmetainfo.json"))
-metaInfoEnv, warnings = loadJsonFile(filePath = metaInfoPath, dependencyLoader = None, extraArgsHandling = InfoKindEl.ADD_EXTRA_ARGS, uri = None)
-# dictionary for functions to call on close of a section metaname
-onClose = {}
-# parser info
-parserInfo = {'name':'castep-parser', 'version': '1.0'}
-# adjust caching of metadata
-cachingLevelForMetaName = {'eigenvalues_kpoints': CachingLevel.Forward,
-                           'eigenvalues_eigenvalues': CachingLevel.Forward,
-                           'number_of_eigenvalues_kpoints': CachingLevel.Forward,
-                           'number_of_eigenvalues': CachingLevel.Forward,
-                           'castep_store_k_points': CachingLevel.Cache,
-                           'castep_store_eigenvalues': CachingLevel.Cache,
-                           }
+    Args:
+        CachingLvl: Sets the CachingLevel for the sections k_band, run, and single_configuration_calculation.
+            This allows to run the parser without opening new sections.
+    """
+    # get band.out file description
+    CasteBandFileSimpleMatcher = build_CastepBandFileSimpleMatcher()
+    # loading metadata from nomad-meta-info/meta_info/nomad_meta_info/fhi_aims.nomadmetainfo.json
+    metaInfoPath = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"../../../../nomad-meta-info/meta_info/nomad_meta_info/castep.nomadmetainfo.json"))
+    metaInfoEnv = get_metaInfo(metaInfoPath)
+    # set parser info
+    parserInfo = {'name':'castep-cell-parser', 'version': '1.0'}
+    # get caching level for metadata
+    cachingLevelForMetaName = get_cachingLevelForMetaName(metaInfoEnv, CachingLvl)
+    # start parsing
+    mainFunction(mainFileDescription = CasteBandFileSimpleMatcher,
+                 metaInfoEnv = metaInfoEnv,
+                 parserInfo = parserInfo,
+                 cachingLevelForMetaName = cachingLevelForMetaName,
+                 superContext = CastepBandParserContext())
 
 if __name__ == "__main__":
-    mainFunction(mainFileDescription, metaInfoEnv, parserInfo, superContext = CastepParserContext(), cachingLevelForMetaName = cachingLevelForMetaName, onClose = onClose,
-                 defaultSectionCachingLevel = False)
+    main(CachingLevel.Forward)
+
+

@@ -538,7 +538,7 @@ mainFileDescription = SM(name = 'root',
 
 
 # loading metadata from nomad-meta-info/meta_info/nomad_meta_info/castep.nomadmetainfo.json
-metaInfoPath = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"../../../../nomad-meta-info/meta_info/nomad_meta_info/castep.nomadmetainfo.json"))
+metaInfoPath = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"../../../../nomad-meta-info/meta_info/nomad_meta_info/castep_old.nomadmetainfo.json"))
 metaInfoEnv, warnings = loadJsonFile(filePath = metaInfoPath, dependencyLoader = None, extraArgsHandling = InfoKindEl.ADD_EXTRA_ARGS, uri = None)
 # dictionary for functions to call on close of a section metaname
 onClose = {}
