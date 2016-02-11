@@ -6,7 +6,7 @@ from nomadcore.caching_backend import CachingLevel
 from nomadcore.simple_parser import AncillaryParser, mainFunction
 from nomadcore.simple_parser import SimpleMatcher as SM
 from CastepCommon import get_metaInfo
-import CastepCellParser_1
+import CastepCellParser
 import logging, os, re, sys
 
 
@@ -20,12 +20,9 @@ import logging, os, re, sys
 
 class CastepParserContext(object):
 
-    #def __init__(self):
+    def __init__(self):
+        """ Initialise variables used within the current superContext """
 
-
-    def initialize_values(self):
-        """Initializes the values of certain variables.
-        """
         self.functionals                       = []
         self.relativistic                      = []
 
@@ -56,7 +53,13 @@ class CastepParserContext(object):
         self.castep_band_kpoints_1             = []
         self.castep_band_energies_1            = []
         self.k_path_nr                         = 0
-        self.band_en = []
+        self.band_en                           = []
+
+
+    def initialize_values(self):
+        """ Initializes the values of variables in superContexts that are used to parse different files """
+
+        self.pippo = None
 
 
     def startedParsing(self, fInName, parser):
@@ -109,8 +112,6 @@ class CastepParserContext(object):
             if match:
                 self.functionals.append(match)
         self.functionals = "_".join(sorted(self.functionals))
-
-
 
         # Match each castep relativity treatment name and sort the matches into a list
         self.relativistic = []
@@ -216,8 +217,6 @@ class CastepParserContext(object):
     def onClose_section_system_description(self, backend, gIndex, section):
         """trigger called when _section_system_description is closed"""
 
-
-
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
         #get cached values of castep_store_atom_position
         pos = section['castep_store_atom_position']
@@ -283,7 +282,6 @@ class CastepParserContext(object):
             self.castep_band_kpoints.append(k_st_int)
 
 
-
 # Storing the eigenvalues (SPIN 1)
     def onClose_castep_section_eigenvalues(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
@@ -315,7 +313,6 @@ class CastepParserContext(object):
         self.k_nr_1 = self.k_nr  # clean double counting
 
 
-
 # Storing the eigenvalues (SPIN 2)
     def onClose_castep_section_eigenvalues_1(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
@@ -337,21 +334,25 @@ class CastepParserContext(object):
            The k path coordinates are extracted from the *.cell input file.
         """
 
-        cellSuperContext = CastepCellParser_1.CastepCellParserContext(False)
+        cellSuperContext = CastepCellParser.CastepCellParserContext(False)
         cellParser = AncillaryParser(
-            fileDescription = CastepCellParser_1.build_CastepCellFileSimpleMatcher(),
+            fileDescription = CastepCellParser.build_CastepCellFileSimpleMatcher(),
             parser = self.parser,
-            cachingLevelForMetaName = CastepCellParser_1.get_cachingLevelForMetaName(self.metaInfoEnv, CachingLevel.Ignore),
+            cachingLevelForMetaName = CastepCellParser.get_cachingLevelForMetaName(self.metaInfoEnv, CachingLevel.Ignore),
             superContext = cellSuperContext)
 
-        bFile = "Si2.cell"
+        extFile = ".cell"       # Find the file with extension .cell
         dirName = os.path.dirname(os.path.abspath(self.fName))
-        fName = os.path.normpath(os.path.join(dirName, bFile))
+        cFile = str()
+        for file in os.listdir(dirName):
+            if file.endswith(extFile):
+                cFile = file
+        fName = os.path.normpath(os.path.join(dirName, cFile))
 
         with open(fName) as fIn:
             cellParser.parseFile(fIn)  # parsing *.cell file to get the k path segments
 
-        self.k_start_end = cellSuperContext.k_sgt_start_end
+        self.k_start_end = cellSuperContext.k_sgt_start_end  # recover k path segments coordinartes from *.cell file
         self.k_path_nr = len(self.k_start_end)
 
 
@@ -414,11 +415,9 @@ def build_CastepMainFileSimpleMatcher():
 
     First, several subMatchers are defined, which are then used to piece together
     the final SimpleMatcher.
-    SimpleMatchers are called with 'SM (' as this string has length 4,
-    which allows nice formating of nested SimpleMatchers in python.
 
     Returns:
-       SimpleMatcher that parses main file of FHI-aims.
+       SimpleMatcher that parses main file of CASTEP.
     """
 
 
@@ -465,7 +464,7 @@ def build_CastepMainFileSimpleMatcher():
 
     ########################################
     # submatcher for section method
-    methodSubmatcher = SM(name = 'XCMethods',
+    methodSubmatcher = SM(name = 'calculationMethods',
         startReStr = r"\susing functional\s*\:",
         forwardMatch = True,
         sections = ["section_method"],
@@ -483,7 +482,7 @@ def build_CastepMainFileSimpleMatcher():
                              ]), # CLOSING castep_section_functionals
 
 
-                      ]) # CLOSING section_method
+                      ]) # CLOSING SM calculationMethods
 
 
 
@@ -560,7 +559,7 @@ def build_CastepMainFileSimpleMatcher():
                               ]), # CLOSING 2nd section_eigenvalues
 
 
-        ])
+        ]) # CLOSING SM BandStructure
 
 
 
@@ -608,7 +607,7 @@ def build_CastepMainFileSimpleMatcher():
                                  ]), # CLOSING section_basis_set_cell_associated
 
 
-               systemDescriptionSubMatcher, # section_system_description submatcher
+               systemDescriptionSubMatcher, # section_system_description subMatcher
 
 
                SM(startReStr = r"SCF\sloop\s*Energy\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
@@ -628,7 +627,7 @@ def build_CastepMainFileSimpleMatcher():
 
                      SM(r"Final energy = *(?P<energy_total>[-+0-9.eEdD]*)"), # macthing final coverged total energy
 
-                     bandStructureSubMatcher,  # band structure submatcher
+                     bandStructureSubMatcher,  # band structure subMatcher
 
                      SM(startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Symmetrised Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
                         subMatchers = [
