@@ -422,6 +422,45 @@ def build_CastepMainFileSimpleMatcher():
 
 
     ########################################
+    # submatcher for section method
+    calculationMethodSubMatcher = SM(name = 'calculationMethods',
+        startReStr = r"\susing functional\s*\:",
+        forwardMatch = True,
+        sections = ["section_method"],
+        subMatchers = [
+
+           SM(name = "castepXC",
+              startReStr = r"\susing functional\s*\:",
+              forwardMatch = True,
+              sections = ["castep_section_functionals"],
+              subMatchers = [
+
+                 SM(r"\susing functional\s*\: *(?P<castep_functional_name> [A-Za-z0-9() ]*)"),
+                 SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]*)")
+
+                             ]), # CLOSING castep_section_functionals
+
+
+                      ]) # CLOSING SM calculationMethods
+
+
+
+    ########################################
+    # submatcher for section_basis_set_cell_associated
+
+    basisSetCellAssociatedSubMatcher = SM(name = 'planeWaveBasisSet',
+        startReStr = r"\sbasis set accuracy\s*",
+        forwardMatch = True,
+        sections = ["section_basis_set_cell_associated"],
+        subMatchers = [
+
+           SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<castep_basis_set_plan_wave_cutoff>[0-9.]+)")
+
+                      ]) # CLOSING SM planeWaveBasisSet
+
+
+
+    ########################################
     # submatcher for section system description
     systemDescriptionSubMatcher = SM(name = "System Description",
         startReStr = r"\s*Unit Cell\s*",
@@ -459,30 +498,6 @@ def build_CastepMainFileSimpleMatcher():
                              ]), # CLOSING castep_section_atom_position
 
                       ]) # CLOSING section_system_description
-
-
-
-    ########################################
-    # submatcher for section method
-    methodSubmatcher = SM(name = 'calculationMethods',
-        startReStr = r"\susing functional\s*\:",
-        forwardMatch = True,
-        sections = ["section_method"],
-        subMatchers = [
-
-           SM(name = "castepXC",
-              startReStr = r"\susing functional\s*\:",
-              forwardMatch = True,
-              sections = ["castep_section_functionals"],
-              subMatchers = [
-
-                 SM(r"\susing functional\s*\: *(?P<castep_functional_name> [A-Za-z0-9() ]*)"),
-                 SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]*)")
-
-                             ]), # CLOSING castep_section_functionals
-
-
-                      ]) # CLOSING SM calculationMethods
 
 
 
@@ -592,19 +607,10 @@ def build_CastepMainFileSimpleMatcher():
                                   ]), # CLOSING SM ProgramHeader
 
 
-               methodSubmatcher, # section_method
+               calculationMethodSubMatcher, # section_method
 
 
-               # section_basis_set_cell_associated
-               SM(name = 'planeWave basis set',
-                  startReStr = r"\sbasis set accuracy\s*",
-                  forwardMatch = True,
-                  sections = ["section_basis_set_cell_associated"],
-                  subMatchers = [
-
-                     SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<castep_basis_set_plan_wave_cutoff>[0-9.]+)")
-
-                                 ]), # CLOSING section_basis_set_cell_associated
+               basisSetCellAssociatedSubMatcher, # section_basis_set_cell_associated
 
 
                systemDescriptionSubMatcher, # section_system_description subMatcher
