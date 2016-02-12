@@ -747,10 +747,7 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 'castep_basis_set_plan_wave_cutoff' : CachingLevel.Cache,
                                 }
 
-    # Set all controlIn and controlInOut metadata to Cache to capture multiple occurrences of keywords and
-    # their last value is then written by the onClose routine in the FhiAimsParserContext.
-    # Set all geometry metadata to Cache as all of them need post-processsing.
-    # Set all eigenvalue related metadata to Cache.
+    # Set caching for temparary storage variables
     for name in metaInfoEnv.infoKinds:
         if (   name.startswith('castep_store_')
             or name.startswith('castep_cell_')):
@@ -765,7 +762,7 @@ def main():
     """
     # get main file description
     CastepMainFileSimpleMatcher = build_CastepMainFileSimpleMatcher()
-    # loading metadata from nomad-meta-info/meta_info/nomad_meta_info/fhi_aims.nomadmetainfo.json
+    # loading metadata from nomad-meta-info/meta_info/nomad_meta_info/castep.nomadmetainfo.json
     metaInfoPath = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../../../nomad-meta-info/meta_info/nomad_meta_info/castep.nomadmetainfo.json"))
     metaInfoEnv = get_metaInfo(metaInfoPath)
     # set parser info
