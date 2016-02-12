@@ -12,8 +12,10 @@ object CastepParser extends SimpleExternalParserGenerator(
   cmd = Seq(DefaultPythonInterpreter.python2Exe(), "${envDir}/parsers/castep/parser/parser-castep/SimpleCastepParser.py",
     "--uri", "${mainFileUri}", "${mainFilePath}"),
   resList = Seq(
-    "parser-castep/SimpleCastepParser.py",
+    "parser-castep/CastepParser.py",
     "parser-castep/CastepBandParser.py",
+    "parser-castep/CastepCellParser.py",
+    "parser-castep/CastepCommon.py",
     "parser-castep/setup_paths.py",
     "nomad_meta_info/common.nomadmetainfo.json",
     "nomad_meta_info/meta_types.nomadmetainfo.json",
