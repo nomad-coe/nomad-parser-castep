@@ -254,7 +254,7 @@ class CastepParserContext(object):
             cachingLevelForMetaName = CastepBandParser.get_cachingLevelForMetaName(self.metaInfoEnv, CachingLevel.Ignore),
             superContext = bandSuperContext)
 
-        extFile = ".bands"       # Find the file with extension .band_sp
+        extFile = ".bands_sp"       # ".band_sp" = spin polarised, ".band" = not spin polarised (ONLY FOR TEST FILES IN /test/examples)
         dirName = os.path.dirname(os.path.abspath(self.fName))
         bFile = str()
         for file in os.listdir(dirName):
