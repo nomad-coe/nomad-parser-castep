@@ -9,7 +9,7 @@ object CastepParser extends SimpleExternalParserGenerator(
       ("version" -> jn.JString("1.0")) :: Nil),
   mainFileTypes = Seq("text/.*"),
   mainFileRe = """\s\|\s*CCC\s*AA\s*SSS\s*TTTTT\s*EEEEE\s*PPPP\s*\|\s*""".r,
-  cmd = Seq(DefaultPythonInterpreter.python2Exe(), "${envDir}/parsers/castep/parser/parser-castep/SimpleCastepParser.py",
+  cmd = Seq(DefaultPythonInterpreter.python2Exe(), "${envDir}/parsers/castep/parser/parser-castep/CastepParser.py",
     "--uri", "${mainFileUri}", "${mainFilePath}"),
   resList = Seq(
     "parser-castep/CastepParser.py",
