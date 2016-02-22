@@ -775,7 +775,7 @@ def main():
                  parserInfo = parserInfo,
                  cachingLevelForMetaName = cachingLevelForMetaName,
                  superContext = CastepParserContext(),
-                 defaultSectionCachingLevel = False)
+                 defaultSectionCachingLevel = True)
 
 if __name__ == "__main__":
     main()
