@@ -85,28 +85,31 @@ class CastepBandParserContext(object):
 # Storing the eigenvalues
     def onClose_castep_section_scf_eigenvalues(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
-
+        Ha_to_J = 4.35974e-18
         #get cached values of castep_store_k_points
         e_st = section['castep_store_scf_eigenvalues']
 
         e_st_0 = e_st
+        e_st_0 = [x * Ha_to_J for x in e_st_0]
 
         def split_list(lista):
             half = len(lista)/2
             return lista[:half], lista[half:]
 
         e_st_1, e_st_2 = split_list(e_st)
-
+        e_st_1 = [x * Ha_to_J for x in e_st_1]
+        e_st_2 = [x * Ha_to_J for x in e_st_2]
         if self.n_spin[0] == 1:
             self.e_nr = len(e_st_0)
-            self.e_spin_1.append(e_st_0)
+            self.e_spin_1.append(e_st_0)            
             self.e_spin_2 = []
 
         else:
             self.e_nr = len(e_st_1)
-            self.e_spin_1.append(e_st_1)
-            self.e_spin_2.append(e_st_2)
-
+            self.e_spin_1.append(e_st_1)          
+            self.e_spin_2.append(e_st_2) 
+            
+         
 
 
 

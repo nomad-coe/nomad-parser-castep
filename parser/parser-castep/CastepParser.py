@@ -771,7 +771,7 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 #'band_energies' : CachingLevel.Cache,
                                 #'band_k_points' : CachingLevel.Cache,
                                 'castep_basis_set_plan_wave_cutoff' : CachingLevel.Cache,
-                                'eigenvalues_eigenvalues': CachingLevel.Cache,
+                                #'eigenvalues_eigenvalues': CachingLevel.Cache,
                                 'eigenvalues_kpoints':CachingLevel.Cache
                                 }
 
