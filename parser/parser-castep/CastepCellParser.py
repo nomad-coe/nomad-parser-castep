@@ -98,7 +98,7 @@ def build_CastepCellFileSimpleMatcher():
             weak = True,
             subMatchers = [
             SM (name = 'Root3',
-                startReStr = r"\! Specify a path through the Brillouin Zone to compute the band structure\.\s*",
+                startReStr = r"\s*\%block bs\_kpoint\_path\s*",
                 sections = ['section_k_band'],
                 forwardMatch = True,
                 weak = True,

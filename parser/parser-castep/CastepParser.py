@@ -95,14 +95,20 @@ class CastepParserContext(object):
 
         # Define a mapping for the functionals
         functional_map = {
-            " Perdew Burke Ernzerhof": "GGA_C_PBE_GGA_X_PBE",
-            " Local Density Approximation": "LDA_C_PZ_LDA_X_PZ",
-            " Perdew Wang (1991)": "GGA_C_PW91_GGA_X_PW91",
-            " revised Perdew Burke Ernzerhof": "GGA_X_RPBE",
-            " PBE with Wu-Cohen exchange": "GGA_X_WC",
-            " PBE for solids (2008)": "GGA_X_PBE_SOL",
+              'Local Density Approximation':[{'name': 'LDA_C_PW'}, {'name': 'LDA_X'}],
+              'Perdew Burke Ernzerhof'     :[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_PBE'}],
+              'PBE for solids (2008)'      :[{'name': 'GGA_C_PBE_SOL'}, {'name': 'GGA_X_PBE_SOL'}],
+              'revised Perdew Burke Ernzerhof':[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_RPBE'}],
+              'Perdew Wang (1991)'         :[{'name': 'GGA_C_PW91'}, {'name': 'GGA_X_PW91'}],
+              'hybrid B3LYP'               :[{'name': 'HYB_GGA_XC_B3LYP5'}],
+              'Hartree-Fock'               :[{'name': 'HF_X'}],
+              'Hartree-Fock + Local Density Approximation':[{'name': 'HF_X'},{'name': 'LDA_C_PW'}],
+              'hybrid HSE03'               :[{'name': 'HYB_GGA_XC_HSE03'}],
+              'hybrid HSE06'               :[{'name': 'HYB_GGA_XC_HSE06'}],
+              'hybrid PBE0'                :[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_PBE'}], 
+              'PBE with Wu-Cohen exchange' :[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_WC'}],    
         }
-
+       
         # Define a mapping for the relativistic treatments
         relativistic_map = {
             " Koelling-Harmon": "scalar_relativistic"
@@ -253,24 +259,26 @@ class CastepParserContext(object):
             parser = self.parser,
             cachingLevelForMetaName = CastepBandParser.get_cachingLevelForMetaName(self.metaInfoEnv, CachingLevel.Ignore),
             superContext = bandSuperContext)
-
+        
         extFile = ".bands_sp"       # ".band_sp" = spin polarised, ".band" = not spin polarised (ONLY FOR TEST FILES IN /test/examples)
         dirName = os.path.dirname(os.path.abspath(self.fName))
         bFile = str()
         for file in os.listdir(dirName):
             if file.endswith(extFile):
                 bFile = file
-        fName = os.path.normpath(os.path.join(dirName, bFile))
+                fName = os.path.normpath(os.path.join(dirName, bFile))
 
-        with open(fName) as fIn:
-            bandParser.parseFile(fIn)  # parsing *.band file to get SCF eigenvalues and relative k points
+                with open(fName) as fIn:    
+                    bandParser.parseFile(fIn)  # parsing *.band file to get SCF eigenvalues and relative k points
 
 
-        self.k_nr_scf     = bandSuperContext.k_nr
-        self.e_nr_scf     = bandSuperContext.e_nr
-        self.k_points_scf = bandSuperContext.eigenvalues_kpoints
-        self.e_spin_1     = bandSuperContext.e_spin_1
-        self.e_spin_2     = bandSuperContext.e_spin_2
+                self.k_nr_scf     = bandSuperContext.k_nr
+                self.e_nr_scf     = bandSuperContext.e_nr
+                self.k_points_scf = bandSuperContext.eigenvalues_kpoints
+                self.e_spin_1     = bandSuperContext.e_spin_1
+                self.e_spin_2     = bandSuperContext.e_spin_2
+            else: 
+                pass # if no .bands is found in the same folder as .castep file than skip and continue     
         #self.n_spin = bandSuperContext.n_spin
 
 
@@ -320,7 +328,7 @@ class CastepParserContext(object):
                        (self.volume / (self.a[0]*self.b[0] * math.sin(np.deg2rad(self.gamma[0])))) * self.castep_atom_position[i][2] ]
 
             self.atom_position.append(pos_a)
-        backend.addArrayValues('atom_position', np.asarray(self.atom_position))
+        backend.addArrayValues('atom_position', np.asarray(self.atom_position), unit='angstrom')
 
 
 # Backend add the simulation cell
@@ -416,20 +424,12 @@ class CastepParserContext(object):
 
         with open(fName) as fIn:
             cellParser.parseFile(fIn)  # parsing *.cell file to get the k path segments
-
+           
         self.k_start_end = cellSuperContext.k_sgt_start_end  # recover k path segments coordinartes from *.cell file
         self.k_path_nr = len(self.k_start_end)
-
-
-        if self.castep_band_energies_1 != []:  # handling k band energies
-            for i in range(self.k_nr):
-                a = [ self.castep_band_energies[i], self.castep_band_energies_1[i] ]  # spin polarised
-                self.band_en.append(a)
-        else:
-            self.band_en = self.castep_band_energies  # single spin
-
+        
         ########################################################################################
-        def get_last_index(el, check):  # function that returs end index for each k path segment
+        def get_last_index(el, check):  # function that returns end index for each k path segment
             found = None
             for i, next in enumerate(check):
                 if next == el:
@@ -438,31 +438,40 @@ class CastepParserContext(object):
             assert found != None
             return found
         ########################################################################################
+        if self.k_start_end: 
+            if self.castep_band_energies_1 != []:  # handling k band energies
+                for i in range(self.k_nr):
+                    a = [ self.castep_band_energies[i], self.castep_band_energies_1[i] ]  # spin polarised
+                    self.band_en.append(a)
+            else:
+                self.band_en = self.castep_band_energies  # single spin
 
-        path_end_index = []
-        for i in range(self.k_path_nr):
-            boundary = self.k_start_end[i][1]
-            a = get_last_index(boundary, self.castep_band_kpoints)
-            path_end_index.append(a)
+    
+            path_end_index = []
+            for i in range(self.k_path_nr):
+                boundary = self.k_start_end[i][1]
+                a = get_last_index(boundary, self.castep_band_kpoints)
+                path_end_index.append(a)
 
-        path_end_index = [0] + path_end_index  # list storing the end index of each k segment
-
-
-        k_point_path = []
-        for i in range(self.k_path_nr):
-            a = self.castep_band_kpoints[ path_end_index[i] : path_end_index[i+1]+1 ]
-            k_point_path.append(a)          # storing the k point fractional coordinates for each segment
-
-
-        band_en_path = []
-        for i in range(self.k_path_nr):
-            a = self.band_en[ path_end_index[i] : path_end_index[i+1]+1 ]
-            band_en_path.append(a)          # storing the band energies for each segment, k point and spin channel
+            path_end_index = [0] + path_end_index  # list storing the end index of each k segment
 
 
-        backend.addArrayValues('band_k_points', np.asarray(k_point_path))
-        backend.addArrayValues('band_energies', np.asarray(band_en_path))
+            k_point_path = []
+            for i in range(self.k_path_nr):
+                a = self.castep_band_kpoints[ path_end_index[i] : path_end_index[i+1]+1 ]
+                k_point_path.append(a)          # storing the k point fractional coordinates for each segment
 
+
+            band_en_path = []
+            for i in range(self.k_path_nr):
+                a = self.band_en[ path_end_index[i] : path_end_index[i+1]+1 ]
+                band_en_path.append(a)          # storing the band energies for each segment, k point and spin channel
+
+
+            backend.addArrayValues('band_k_points', np.asarray(k_point_path))
+            backend.addArrayValues('band_energies', np.asarray(band_en_path))
+        else: 
+            pass    
 
 
 
@@ -695,35 +704,51 @@ def build_CastepMainFileSimpleMatcher():
 
                systemDescriptionSubMatcher, # section_system_description subMatcher
 
-
-               SM(startReStr = r"SCF\sloop\s*Energy\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
+                SM(startReStr = r"\-*\s*\<\-\-\sSCF\s*",
                   forwardMatch = True,
                   sections = ["section_single_configuration_calculation"],
                   subMatchers = [
-
+                  
                      SM(name = 'ScfIterations',
+                        startReStr = r"SCF\sloop\s*Energy\s*Fermi\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
+                        sections = ['section_scf_iteration'],
+                        subMatchers = [
+                     
+                           SM(r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                              repeats = True),
+
+                                  ]), # CLOSING section_scf_iteration
+
+                      SM(name = 'ScfIterations',
                         startReStr = r"SCF\sloop\s*Energy\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
                         sections = ['section_scf_iteration'],
                         subMatchers = [
 
-                           SM(r"\s*[0-9]+\s*(?P<energy_total_scf_iteration>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                           SM(r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                               repeats = True),
 
-                                       ]), # CLOSING section_scf_iteration
+                                  ]), # CLOSING section_scf_iteration
 
-                     SM(r"Final energy = *(?P<energy_total>[-+0-9.eEdD]*)"), # macthing final coverged total energy
-
+                      SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                      SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                      SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"), # matching final converged total free energy
 
                      bandStructureSubMatcher,  # band structure subMatcher
-
+                           
+                     SM(startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
+                        subMatchers = [
+                           SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                              repeats = True)
+                                      ]),
 
                      SM(startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Symmetrised Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
                         subMatchers = [
-                            SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
-                               repeats = True)
-                                       ])
+                           SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                              repeats = True)
+                                      ])
 
-                                 ]) # CLOSING section_single_configuration_calculation
+                                 ]) # CLOSING section_single_configuration_calculation                
+
 
                            ]) # CLOSING SM NewRun
 
@@ -745,6 +770,8 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 #'band_energies' : CachingLevel.Cache,
                                 #'band_k_points' : CachingLevel.Cache,
                                 'castep_basis_set_plan_wave_cutoff' : CachingLevel.Cache,
+                                'eigenvalues_eigenvalues': CachingLevel.Cache,
+                                'eigenvalues_kpoints':CachingLevel.Cache
                                 }
 
     # Set caching for temparary storage variables
@@ -775,7 +802,7 @@ def main():
                  parserInfo = parserInfo,
                  cachingLevelForMetaName = cachingLevelForMetaName,
                  superContext = CastepParserContext(),
-                 defaultSectionCachingLevel = False)
+                 defaultSectionCachingLevel = True)
 
 if __name__ == "__main__":
     main()

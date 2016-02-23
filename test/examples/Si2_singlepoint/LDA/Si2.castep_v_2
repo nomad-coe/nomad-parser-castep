@@ -1,0 +1,1139 @@
+ +-------------------------------------------------+
+ |                                                 |
+ |      CCC   AA    SSS  TTTTT  EEEEE  PPPP        |
+ |     C     A  A  S       T    E      P   P       |
+ |     C     AAAA   SS     T    EEE    PPPP        |
+ |     C     A  A     S    T    E      P           |
+ |      CCC  A  A  SSS     T    EEEEE  P           |
+ |                                                 |
+ +-------------------------------------------------+
+ |                                                 |
+ | Welcome to Academic Release CASTEP version 16.1 |          
+ | Ab Initio Total Energy Program                  |
+ |                                                 |
+ | Authors:                                        |
+ | M. Segall, M. Probert, C. Pickard, P. Hasnip,   |
+ | S. Clark, K. Refson, J. R. Yates, M. Payne      |
+ |                                                 |
+ | Contributors:                                   |
+ | P. Lindan, P. Haynes, J. White, V. Milman,      |
+ | N. Govind, M. Gibson, P. Tulip, V. Cocula,      |
+ | B. Montanari, D. Quigley, M. Glover,            |
+ | L. Bernasconi, A. Perlov, M. Plummer,           |
+ | E. McNellis, J. Meyer, J. Gale, D. Jochym       |
+ | J. Aarons, B. Walker, R. Gillen, D. Jones       |
+ | T. Green, I. J. Bush, C. J. Armstrong,          |
+ | E. J. Higgins, E. L. Brown, M. S. McFly         |
+ |                                                 |
+ | Copyright (c) 2000 - 2015                       |
+ |                                                 |
+ |     Distributed under the terms of an           |
+ |     Agreement between the United Kingdom        |
+ |     Car-Parrinello (UKCP) Consortium,           |
+ |     Daresbury Laboratory and Accelrys, Inc.     |
+ |                                                 |
+ | Please cite                                     |
+ |                                                 |
+ |     "First principles methods using CASTEP"     |
+ |                                                 |
+ |         Zeitschrift fuer Kristallographie       |
+ |           220(5-6) pp. 567-570 (2005)           |
+ |                                                 |
+ | S. J. Clark, M. D. Segall, C. J. Pickard,       |
+ | P. J. Hasnip, M. J. Probert, K. Refson,         |
+ | M. C. Payne                                     |
+ |                                                 |
+ |       in all publications arising from          |
+ |              your use of CASTEP                 |
+ |                                                 |
+ +-------------------------------------------------+
+
+
+ Compiled for darwin_x86_64_gfortran4.9 on Tue, 15 Dec 2015 16:29:18 +0000
+ from code version b833c1ffcd7d+  Fri, 13 Jun 2014 17:24:31 +0100
+ Compiler: GNU Fortran 4.9.1; Optimisation: intermediate
+ MATHLIBS: default (LAPACK version 3.2.1)
+ FFT Lib : default
+ Fundamental constants values: CODATA 2010
+
+ Run started: Wed, 27 Jan 2016 09:05:37 +0100
+
+ ******************************* User Parameters *******************************
+iprint                : 2           # verbosity control (I)
+task                  : singlepoint # type of calculation (S)
+calculatedensdiff     : T           # calculate density difference based on atoms (L)
+writeformatteddensity : T           # formatted density on/off (L)
+optstrategy           : speed       # optimization strategy (S)
+xcfunctional          : LDA         # exchange-correlation functional (S)
+basisprecision        : MEDIUM      # accuracy of basis set (S)
+fixoccupancy          : T           # treat system as an insulator (L)
+numdumpcycles         : 0           # frequency of wavefunction dumps (I)
+
+ *******************************************************************************
+  
+
+ Pseudo atomic calculation performed for Si 3s2 3p2
+
+ Converged in 16 iterations to a total energy of -102.0354 eV
+
+Initialising basis set.
+
+Standard grid dimensions:  12  12  12
+Fine grid dimensions:      12  12  12
+
+Plane wave load balancing: max    122 min    113 average    117
+True cut-off energy of basis :   4.407
+ Calculation not parallelised.
+
+ ************************************ Title ************************************
+ 
+
+ ***************************** General Parameters ******************************
+  
+ output verbosity                               : verbose (2)
+ write checkpoint data to                       : Si2.check
+ type of calculation                            : single point energy
+ stress calculation                             : off
+ density difference calculation                 : on
+ electron localisation func (ELF) calculation   : off
+ Hirshfeld analysis                             : off
+ unlimited duration calculation
+ timing information                             : on
+ memory usage estimate                          : on
+ write final potential to formatted file        : off
+ write final density to formatted file          : on
+ write BibTeX reference list                    : on
+ write OTFG pseudopotential files               : on
+ checkpoint writing                             : both castep_bin and check files
+  
+ output         length unit                     : A
+ output           mass unit                     : amu
+ output           time unit                     : ps
+ output         charge unit                     : e
+ output           spin unit                     : hbar/2
+ output         energy unit                     : eV
+ output          force unit                     : eV/A
+ output       velocity unit                     : A/ps
+ output       pressure unit                     : GPa
+ output     inv_length unit                     : 1/A
+ output      frequency unit                     : cm-1
+ output force constant unit                     : eV/A**2
+ output         volume unit                     : A**3
+ output   IR intensity unit                     : (D/A)**2/amu
+ output         dipole unit                     : D
+ output         efield unit                     : eV/A/e
+ output        entropy unit                     : J/mol/K
+  
+ wavefunctions paging                           : none
+ random number generator seed                   : randomised (90537717)
+ data distribution                              : optimal for this architecture
+ optimization strategy                          : maximize speed(+++)
+
+ *********************** Exchange-Correlation Parameters ***********************
+  
+ using functional                               : Local Density Approximation
+ relativistic treatment                         : Koelling-Harmon
+ DFT+D: Semi-empirical dispersion correction    : off
+
+ ************************* Pseudopotential Parameters **************************
+  
+ pseudopotential representation                 : reciprocal space
+ <beta|phi> representation                      : reciprocal space
+ spin-orbit coupling                            : off
+
+ **************************** Basis Set Parameters *****************************
+  
+ basis set accuracy                             : MEDIUM
+ plane wave basis set cut-off                   :   120.0000   eV
+ size of standard grid                          :     1.7500
+ size of   fine   gmax                          :     9.8213   1/A
+ finite basis set correction                    : none
+
+ **************************** Electronic Parameters ****************************
+  
+ number of  electrons                           :  8.000    
+ net charge of system                           :  0.000    
+ treating system as non-spin-polarized
+ number of bands                                :          4
+
+ ********************* Electronic Minimization Parameters **********************
+  
+ Method: Treating system as non-metallic,
+         and number of  SD  steps               :          1
+         and number of  CG  steps               :          4
+  
+ total energy / atom convergence tol.           : 0.1000E-04   eV
+ max force / atom convergence tol.              : ignored
+ convergence tolerance window                   :          3   cycles
+ max. number of SCF cycles                      :         30
+ periodic dipole correction                     : NONE
+
+ *********************** Population Analysis Parameters ************************
+  
+ Population analysis with cutoff                :  3.000       A
+
+ *******************************************************************************
+  
+
+                           -------------------------------
+                                      Unit Cell
+                           -------------------------------
+        Real Lattice(A)                      Reciprocal Lattice(1/A)
+   2.6954645   2.6954645   0.0000000        1.1655107   1.1655107  -1.1655107
+   2.6954645   0.0000000   2.6954645        1.1655107  -1.1655107   1.1655107
+   0.0000000   2.6954645   2.6954645       -1.1655107   1.1655107   1.1655107
+
+                       Lattice parameters(A)       Cell Angles
+                    a =    3.811962          alpha =   60.000000
+                    b =    3.811962          beta  =   60.000000
+                    c =    3.811962          gamma =   60.000000
+
+                       Current cell volume =   39.167950       A**3
+
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+                         Total number of ions in cell =    2
+                      Total number of species in cell =    1
+                        Max number of any one species =    2
+
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom        Fractional coordinates of atoms  x
+            x            Number           u          v          w      x
+            x----------------------------------------------------------x
+            x  Si           1         0.000000   0.000000   0.000000   x 
+            x  Si           2         0.250000   0.250000   0.250000   x 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+                         No user defined ionic velocities
+
+                           -------------------------------
+                                   Details of Species
+                           -------------------------------
+
+                               Mass of species in AMU
+                                    Si   28.0855000
+
+                          Electric Quadrupole Moment (Barn)
+                                    Si    1.0000000 No Isotope Defined
+
+                          Files used for pseudopotentials:
+                                    Si Si_00.usp
+
+                           -------------------------------
+                              k-Points For BZ Sampling
+                           -------------------------------
+                       MP grid size for SCF calculation is  4  4  4
+                            with an offset of   0.000  0.000  0.000
+                       Number of kpoints used =            10
+
+             +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+             +  Number       Fractional coordinates        Weight  +
+             +-----------------------------------------------------+
+             +     1  -0.375000  -0.125000  -0.375000   0.0937500  +
+             +     2  -0.375000   0.375000   0.375000   0.0937500  +
+             +     3  -0.125000  -0.375000  -0.125000   0.0937500  +
+             +     4  -0.125000   0.375000   0.375000   0.0937500  +
+             +     5   0.125000  -0.375000  -0.125000   0.1875000  +
+             +     6   0.125000  -0.375000   0.125000   0.0937500  +
+             +     7   0.125000  -0.125000  -0.125000   0.0937500  +
+             +     8   0.125000   0.125000   0.125000   0.0312500  +
+             +     9   0.375000  -0.375000   0.125000   0.1875000  +
+             +    10   0.375000   0.375000   0.375000   0.0312500  +
+             +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+                           -------------------------------
+                               Symmetry and Constraints
+                           -------------------------------
+
+                      Maximum deviation from symmetry =  0.00000         ANG
+
+                      Number of symmetry operations   =          48
+                      Number of ionic constraints     =           3
+                      Point group of crystal =    32: Oh, m-3m, 4/m -3 2/m
+                      Space group of crystal =   227: Fd-3m, F 4d 2 3 -1d
+
+                    1 rotation    
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                    1 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                    2 rotation    
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                    2 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                    3 rotation    
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                    3 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                    4 rotation    
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                    4 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                    5 rotation    
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                    5 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                    6 rotation    
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                    6 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                    7 rotation    
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                    7 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                    8 rotation    
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                    8 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                    9 rotation    
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                    9 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   10 rotation    
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                   10 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   11 rotation    
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                   11 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   12 rotation    
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                   12 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   13 rotation    
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                   13 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   14 rotation    
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                   14 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   15 rotation    
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                   15 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   16 rotation    
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                   16 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   17 rotation    
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                   17 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   18 rotation    
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                   18 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   19 rotation    
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                   19 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   20 rotation    
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                   20 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   21 rotation    
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                   21 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   22 rotation    
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                   22 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   23 rotation    
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                   23 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   24 rotation    
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                   24 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   25 rotation    
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                   25 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   26 rotation    
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                   26 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   27 rotation    
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                   27 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   28 rotation    
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                   28 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   29 rotation    
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                   29 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   30 rotation    
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                   30 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   31 rotation    
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                   31 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   32 rotation    
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                   32 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   33 rotation    
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                   33 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   34 rotation    
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                   34 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   35 rotation    
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                   35 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   36 rotation    
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                   36 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   37 rotation    
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                   37 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   38 rotation    
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                   38 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   39 rotation    
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                   39 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   40 rotation    
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                   40 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   41 rotation    
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                   41 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   42 rotation    
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                   42 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   43 rotation    
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                   43 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   44 rotation    
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (   1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                   44 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   45 rotation    
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                   45 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   46 rotation    
+                 (   0.00000000000  -1.00000000000   0.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                   46 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+                   47 rotation    
+                 (   0.00000000000   0.00000000000   1.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                   47 displacement
+                 (   0.25000000000   0.25000000000   0.25000000000 )
+                      symmetry related atoms: 
+             Si:    2    1
+
+                   48 rotation    
+                 (   0.00000000000   1.00000000000   0.00000000000 )
+                 (  -1.00000000000   0.00000000000   0.00000000000 )
+                 (   0.00000000000   0.00000000000  -1.00000000000 )
+                   48 displacement
+                 (   0.00000000000   0.00000000000  -0.00000000000 )
+                      symmetry related atoms: 
+             Si:    1    2
+
+
+                         Centre of mass is constrained
+
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....
+            x  Species  atom   co-ordinate  constraints.....         
+            x--------------------------------------------------------....
+            x Si           1       x        51196.7345      0.0000      0.0000
+            x Si           1       y            0.0000  51196.7345      0.0000
+            x Si           1       z            0.0000      0.0000  51196.7345
+            x Si           2       x        51196.7345      0.0000      0.0000
+            x Si           2       y            0.0000  51196.7345      0.0000
+            x Si           2       z            0.0000      0.0000  51196.7345
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....
+
+                         Number of cell constraints= 5
+                         Cell constraints are:  1 1 1 0 0 0
+
+                         External pressure/stress (GPa)
+                          0.00000   0.00000   0.00000
+                                    0.00000   0.00000
+                                              0.00000
+  
++---------------- MEMORY AND SCRATCH DISK ESTIMATES PER PROCESS --------------+
+|                                                     Memory          Disk    |
+| Baseline code, static data and system overhead        0.0 MB         0.0 MB |
+| BLAS internal memory storage                          0.0 MB         0.0 MB |
+| Model and support data                                2.8 MB         0.0 MB |
+| Electronic energy minimisation requirements           0.6 MB         0.0 MB |
+| Force calculation requirements                        0.2 MB         0.0 MB |
+|                                               ----------------------------- |
+| Approx. total storage required per process            3.4 MB         0.0 MB |
+|                                                                             |
+| Requirements will fluctuate during execution and may exceed these estimates |
++-----------------------------------------------------------------------------+
+ 
+Init
+Total energy                     =       169.57013416084163282 eV
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy                           Energy gain       Timer   <-- SCF
+                                               per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial   1.69570134E+002                                          0.23  <-- SCF
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy =  1.695701E+002 eV; initial dE/dstep = -2.938E+002 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   1.712E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  2.477E+02   2.500E+02* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -8.040993E+001 eV; initial dE/dstep = -1.189E+002 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   1.223E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  6.892E+01   7.131E+01* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -1.517187E+002 eV; initial dE/dstep = -5.814E+001 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   1.030E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  2.373E+01   2.914E+01* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -1.808619E+002 eV; initial dE/dstep = -3.149E+001 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   9.375E-01* unnecessary unnecessary unnecessary  |<- line
+| gain   |  9.448E+00   1.431E+01* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -1.951690E+002 eV; initial dE/dstep = -1.735E+001 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   8.570E-01* unnecessary unnecessary unnecessary  |<- line
+| gain   |  3.250E+00   7.273E+00* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
+      1  -2.02442027E+002                    1.86006080E+002       0.35  <-- SCF
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.024420E+002 eV; initial dE/dstep = -3.348E+000 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   5.099E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  4.283E+00   7.851E+00* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.102929E+002 eV; initial dE/dstep = -1.172E+000 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   5.413E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  1.515E+00   2.901E+00* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.131937E+002 eV; initial dE/dstep = -7.269E-001 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   4.384E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  9.038E-01   1.517E+00* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.147106E+002 eV; initial dE/dstep = -3.937E-001 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   4.187E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  4.848E-01   7.764E-01* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.154870E+002 eV; initial dE/dstep = -1.875E-001 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   3.839E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  2.263E-01   3.527E-01* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
+      2  -2.15839654E+002                    6.69881344E+000       0.47  <-- SCF
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.158397E+002 eV; initial dE/dstep = -7.172E-002 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   4.895E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  9.110E-02   1.754E-01* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160150E+002 eV; initial dE/dstep = -2.721E-002 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   3.990E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  3.315E-02   5.428E-02* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160693E+002 eV; initial dE/dstep = -8.480E-003 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   4.072E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  1.038E-02   1.725E-02* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160865E+002 eV; initial dE/dstep = -1.956E-003 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   3.511E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  2.307E-03   3.432E-03* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160900E+002 eV; initial dE/dstep = -4.232E-004 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   3.488E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  4.983E-04   7.420E-04* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
+      3  -2.16090712E+002                    1.25529069E-001       0.59  <-- SCF
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160907E+002 eV; initial dE/dstep = -9.011E-005 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   3.126E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  1.027E-04   1.414E-04* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160909E+002 eV; initial dE/dstep = -3.810E-005 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   4.454E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  4.753E-05   8.745E-05* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160909E+002 eV; initial dE/dstep = -1.308E-005 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   4.077E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  1.602E-05   2.724E-05* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -2.973E-006 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   4.363E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  3.692E-06   6.006E-06* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -9.027E-007 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   3.426E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  1.058E-06   1.553E-06* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
+      4  -2.16090975E+002                    1.31843264E-004       0.70  <-- SCF
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -2.073E-007 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   5.624E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  2.694E-07   4.197E-07* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -1.022E-007 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   2.971E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  1.146E-07   1.498E-07* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -5.208E-008 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   2.380E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  5.350E-08   6.545E-08* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -2.193E-008 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   2.988E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  2.463E-08   3.109E-08* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -4.258E-009 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00*  1.929E+01  unnecessary unnecessary unnecessary  |<- line
+| gain   |  6.139E-09* -1.943E-07  unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
+      5  -2.16090976E+002                    3.36095267E-007       0.82  <-- SCF
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -1.977E-009 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   3.134E+00* unnecessary unnecessary unnecessary  |<- line
+| gain   |  2.255E-09   3.229E-09* unnecessary unnecessary unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
+line_minimisation: wavefunction *unchanged*
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -4.016E-010 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  1.500E+00   4.578E-01   1.263E-01   3.463E-02  unnecessary  |<- line
+| gain   | -3.845E-10  -9.989E-11  -2.608E-11  -7.106E-12  unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
+line_minimisation: wavefunction *unchanged*
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -7.730E-010 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  9.000E-01   2.624E-01   7.017E-02   1.866E-02  unnecessary  |<- line
+| gain   | -4.974E-10  -1.215E-10  -3.065E-11  -8.000E-12  unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
+line_minimisation: wavefunction *unchanged*
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -1.144E-009 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  5.400E-01   1.569E-01   4.157E-02   1.095E-02  unnecessary  |<- line
+| gain   | -4.454E-10  -1.100E-10  -2.770E-11  -7.057E-12  unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
+line_minimisation: wavefunction *unchanged*
++------------------- WAVEFUNCTION LINE MINIMISATION --------------------+<- line
+| Initial energy = -2.160910E+002 eV; initial dE/dstep = -1.516E-009 eV |<- line
+|                                                                       |<- line
+|            1st step    2nd step    3rd step    4th step    5th step   |<- line
++--------+--------------------------------------------------------------+<- line
+| step   |  3.240E-01   9.518E-02   2.513E-02   6.579E-03  unnecessary  |<- line
+| gain   | -3.448E-10  -8.855E-11  -2.243E-11  -5.728E-12  unnecessary  |<- line
++--------+--------------------------------------------------------------+<- line
+ * indicates the final, accepted state (should have the lowest energy)          
+ 
+      6  -2.16090976E+002                    1.61426679E-009       0.99  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Total energy has converged after 6 SCF iterations.
+ 
+Final energy =  -216.0909760783     eV
+(energy not corrected for finite basis set)
+ 
+Have a nice day.
+
+Writing analysis data to Si2.castep_bin
+
+Writing model to Si2.check
+
+ ******************** Ewald forces ********************
+ *                                                    *
+ *            Cartesian components (eV/A)             *
+ * -------------------------------------------------- *
+ *                   x            y            z      *
+ *                                                    *
+ * Si        1      0.00000      0.00000      0.00000 *
+ * Si        2     -0.00000     -0.00000     -0.00000 *
+ *                                                    *
+ ******************************************************
+
+ *************** Local potential forces ***************
+ *                                                    *
+ *            Cartesian components (eV/A)             *
+ * -------------------------------------------------- *
+ *                   x            y            z      *
+ *                                                    *
+ * Si        1      0.12010     -0.27527     -0.09149 *
+ * Si        2     -0.12009      0.27525      0.09147 *
+ *                                                    *
+ ******************************************************
+
+ ************* Non-local potential forces *************
+ *                                                    *
+ *            Cartesian components (eV/A)             *
+ * -------------------------------------------------- *
+ *                   x            y            z      *
+ *                                                    *
+ * Si        1      0.34992     -1.25539     -0.23428 *
+ * Si        2     -0.34987      1.25534      0.23416 *
+ *                                                    *
+ ******************************************************
+
+ *********** External Efield and/or dipole ************
+ *                                                    *
+ *            Cartesian components (eV/A)             *
+ * -------------------------------------------------- *
+ *                   x            y            z      *
+ *                                                    *
+ * Si        1      0.00000      0.00000      0.00000 *
+ * Si        2      0.00000      0.00000      0.00000 *
+ *                                                    *
+ ******************************************************
+
+ ***************** Symmetrised Forces *****************
+ *                                                    *
+ *            Cartesian components (eV/A)             *
+ * -------------------------------------------------- *
+ *                   x            y            z      *
+ *                                                    *
+ * Si        1      0.00000      0.00000      0.00000 *
+ * Si        2      0.00000      0.00000      0.00000 *
+ *                                                    *
+ ******************************************************
+
+ Pseudo atomic calculation performed for Si 3s2 3p2
+
+ Converged in 16 iterations to a total energy of -102.0354 eV
+
+Charge spilling parameter for spin component 1 = 0.78%
+The total projected population is    8.000   0.000
+
+     Atomic Populations (Mulliken)
+     -----------------------------
+Species   Ion     s      p      d      f     Total  Charge (e)
+==============================================================
+  Si       1     1.35   2.65   0.00   0.00   4.00     0.00
+  Si       2     1.35   2.65   0.00   0.00   4.00     0.00
+==============================================================
+
+            Bond              Population      Length (A)
+============================================================
+         Si 1 -- Si 2              2.99        2.33434
+============================================================
+
+
+Writing analysis data to Si2.castep_bin
+
+Writing model to Si2.check
+ 
+ A BibTeX formatted list of references used in this run has been written to 
+ Si2.bib
+ 
+Initialisation time =      0.13 s
+Calculation time    =      0.94 s
+Finalisation time   =      0.01 s
+Total time          =      1.08 s
