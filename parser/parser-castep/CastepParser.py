@@ -95,18 +95,18 @@ class CastepParserContext(object):
 
         # Define a mapping for the functionals
         functional_map = {
-              'Local Density Approximation':[{'name': 'LDA_C_PW'}, {'name': 'LDA_X'}],
-              'Perdew Burke Ernzerhof'     :[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_PBE'}],
-              'PBE for solids (2008)'      :[{'name': 'GGA_C_PBE_SOL'}, {'name': 'GGA_X_PBE_SOL'}],
-              'revised Perdew Burke Ernzerhof':[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_RPBE'}],
-              'Perdew Wang (1991)'         :[{'name': 'GGA_C_PW91'}, {'name': 'GGA_X_PW91'}],
-              'hybrid B3LYP'               :[{'name': 'HYB_GGA_XC_B3LYP5'}],
-              'Hartree-Fock'               :[{'name': 'HF_X'}],
-              'Hartree-Fock + Local Density Approximation':[{'name': 'HF_X'},{'name': 'LDA_C_PW'}],
-              'hybrid HSE03'               :[{'name': 'HYB_GGA_XC_HSE03'}],
-              'hybrid HSE06'               :[{'name': 'HYB_GGA_XC_HSE06'}],
-              'hybrid PBE0'                :[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_PBE'}], 
-              'PBE with Wu-Cohen exchange' :[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_WC'}],    
+              ' Local Density Approximation':[{'name': 'LDA_C_PW'}, {'name': 'LDA_X'}],
+              ' Perdew Burke Ernzerhof'     :[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_PBE'}],
+              ' PBE for solids (2008)'      :[{'name': 'GGA_C_PBE_SOL'}, {'name': 'GGA_X_PBE_SOL'}],
+              ' revised Perdew Burke Ernzerhof':[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_RPBE'}],
+              ' Perdew Wang (1991)'         :[{'name': 'GGA_C_PW91'}, {'name': 'GGA_X_PW91'}],
+              ' hybrid B3LYP'               :[{'name': 'HYB_GGA_XC_B3LYP5'}],
+              ' Hartree-Fock'               :[{'name': 'HF_X'}],
+              ' Hartree-Fock + Local Density Approximation':[{'name': 'HF_X'},{'name': 'LDA_C_PW'}],
+              ' hybrid HSE03'               :[{'name': 'HYB_GGA_XC_HSE03'}],
+              ' hybrid HSE06'               :[{'name': 'HYB_GGA_XC_HSE06'}],
+              ' hybrid PBE0'                :[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_PBE'}], 
+              ' PBE with Wu-Cohen exchange' :[{'name': 'GGA_C_PBE'}, {'name': 'GGA_X_WC'}],    
         }
        
         # Define a mapping for the relativistic treatments
@@ -260,7 +260,7 @@ class CastepParserContext(object):
             cachingLevelForMetaName = CastepBandParser.get_cachingLevelForMetaName(self.metaInfoEnv, CachingLevel.Ignore),
             superContext = bandSuperContext)
         
-        extFile = ".bands_sp"       # ".band_sp" = spin polarised, ".band" = not spin polarised (ONLY FOR TEST FILES IN /test/examples)
+        extFile = ".bands"       # ".band_sp" = spin polarised, ".band" = not spin polarised (ONLY FOR TEST FILES IN /test/examples)
         dirName = os.path.dirname(os.path.abspath(self.fName))
         bFile = str()
         for file in os.listdir(dirName):
