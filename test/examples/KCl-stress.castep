@@ -1,0 +1,368 @@
+ +-------------------------------------------------+
+ |                                                 |
+ |      CCC   AA    SSS  TTTTT  EEEEE  PPPP        |
+ |     C     A  A  S       T    E      P   P       |
+ |     C     AAAA   SS     T    EEE    PPPP        |
+ |     C     A  A     S    T    E      P           |
+ |      CCC  A  A  SSS     T    EEEEE  P           |
+ |                                                 |
+ +-------------------------------------------------+
+ |                                                 |
+ | Welcome to Academic Release CASTEP version 16.1 |          
+ | Ab Initio Total Energy Program                  |
+ |                                                 |
+ | Authors:                                        |
+ | M. Segall, M. Probert, C. Pickard, P. Hasnip,   |
+ | S. Clark, K. Refson, J. R. Yates, M. Payne      |
+ |                                                 |
+ | Contributors:                                   |
+ | P. Lindan, P. Haynes, J. White, V. Milman,      |
+ | N. Govind, M. Gibson, P. Tulip, V. Cocula,      |
+ | B. Montanari, D. Quigley, M. Glover,            |
+ | L. Bernasconi, A. Perlov, M. Plummer,           |
+ | E. McNellis, J. Meyer, J. Gale, D. Jochym       |
+ | J. Aarons, B. Walker, R. Gillen, D. Jones       |
+ | T. Green, I. J. Bush, C. J. Armstrong,          |
+ | E. J. Higgins, E. L. Brown, M. S. McFly         |
+ |                                                 |
+ | Copyright (c) 2000 - 2015                       |
+ |                                                 |
+ |     Distributed under the terms of an           |
+ |     Agreement between the United Kingdom        |
+ |     Car-Parrinello (UKCP) Consortium,           |
+ |     Daresbury Laboratory and Accelrys, Inc.     |
+ |                                                 |
+ | Please cite                                     |
+ |                                                 |
+ |     "First principles methods using CASTEP"     |
+ |                                                 |
+ |         Zeitschrift fuer Kristallographie       |
+ |           220(5-6) pp. 567-570 (2005)           |
+ |                                                 |
+ | S. J. Clark, M. D. Segall, C. J. Pickard,       |
+ | P. J. Hasnip, M. J. Probert, K. Refson,         |
+ | M. C. Payne                                     |
+ |                                                 |
+ |       in all publications arising from          |
+ |              your use of CASTEP                 |
+ |                                                 |
+ +-------------------------------------------------+
+
+
+ Compiled for darwin_x86_64_gfortran5.0 on Fri, 19 Feb 2016 13:44:46 +0000
+ from code version Version unavailable
+ Compiler: GNU Fortran 5.3.0; Optimisation: intermediate
+ MATHLIBS: default (LAPACK version 3.2.1)
+ FFT Lib : default
+ Fundamental constants values: CODATA 2010
+
+ Run started: Tue, 23 Feb 2016 16:13:54 +0000
+
+ Pseudo atomic calculation performed for Cl 3s2 3p5
+
+ Converged in 19 iterations to a total energy of -407.2505 eV
+
+
+ Pseudo atomic calculation performed for K 3s2 3p6 4s1
+
+ Converged in 20 iterations to a total energy of -779.7947 eV
+
+ Calculation not parallelised.
+
+ ************************************ Title ************************************
+ 
+
+ ***************************** General Parameters ******************************
+  
+ output verbosity                               : normal  (1)
+ write checkpoint data to                       : KCl-stress.check
+ type of calculation                            : single point energy
+ stress calculation                             : on
+ density difference calculation                 : off
+ electron localisation func (ELF) calculation   : off
+ Hirshfeld analysis                             : off
+ unlimited duration calculation
+ timing information                             : on
+ memory usage estimate                          : on
+ write final potential to formatted file        : off
+ write final density to formatted file          : off
+ write BibTeX reference list                    : on
+ write OTFG pseudopotential files               : on
+ checkpoint writing                             : both castep_bin and check files
+  
+ output         length unit                     : A
+ output           mass unit                     : amu
+ output           time unit                     : ps
+ output         charge unit                     : e
+ output           spin unit                     : hbar/2
+ output         energy unit                     : eV
+ output          force unit                     : eV/A
+ output       velocity unit                     : A/ps
+ output       pressure unit                     : GPa
+ output     inv_length unit                     : 1/A
+ output      frequency unit                     : cm-1
+ output force constant unit                     : eV/A**2
+ output         volume unit                     : A**3
+ output   IR intensity unit                     : (D/A)**2/amu
+ output         dipole unit                     : D
+ output         efield unit                     : eV/A/e
+ output        entropy unit                     : J/mol/K
+  
+ wavefunctions paging                           : none
+ random number generator seed                   : randomised (161354995)
+ data distribution                              : optimal for this architecture
+ optimization strategy                          : balance speed and memory
+
+ *********************** Exchange-Correlation Parameters ***********************
+  
+ using functional                               : Perdew Burke Ernzerhof
+ relativistic treatment                         : Koelling-Harmon
+ DFT+D: Semi-empirical dispersion correction    : off
+
+ ************************* Pseudopotential Parameters **************************
+  
+ pseudopotential representation                 : reciprocal space
+ <beta|phi> representation                      : reciprocal space
+ spin-orbit coupling                            : off
+
+ **************************** Basis Set Parameters *****************************
+  
+ plane wave basis set cut-off                   :   200.0000   eV
+ size of standard grid                          :     1.7500
+ size of   fine   gmax                          :    12.6792   1/A
+ finite basis set correction                    : manual
+ user-supplied dEtot/dlog(Ecut)                 :    -7.3800   eV
+
+ **************************** Electronic Parameters ****************************
+  
+ number of  electrons                           :  64.00    
+ net charge of system                           :  0.000    
+ treating system as non-spin-polarized
+ number of bands                                :         32
+
+ ********************* Electronic Minimization Parameters **********************
+  
+ Method: Treating system as non-metallic,
+         and number of  SD  steps               :          1
+         and number of  CG  steps               :          4
+  
+ total energy / atom convergence tol.           : 0.1000E-04   eV
+ max force / atom convergence tol.              : ignored
+ convergence tolerance window                   :          3   cycles
+ max. number of SCF cycles                      :         30
+ periodic dipole correction                     : NONE
+
+ *********************** Population Analysis Parameters ************************
+  
+ Population analysis with cutoff                :  3.000       A
+
+ *******************************************************************************
+  
+
+                           -------------------------------
+                                      Unit Cell
+                           -------------------------------
+        Real Lattice(A)                      Reciprocal Lattice(1/A)
+   5.6400000   0.0000000   0.0000000        1.1140399  -0.0000000  -0.0000000
+   0.0000000   5.6400000   0.0000000        0.0000000   1.1140399  -0.0000000
+   0.0000000   0.0000000   5.6400000        0.0000000   0.0000000   1.1140399
+
+                       Lattice parameters(A)       Cell Angles
+                    a =    5.640000          alpha =   90.000000
+                    b =    5.640000          beta  =   90.000000
+                    c =    5.640000          gamma =   90.000000
+
+                       Current cell volume =  179.406144       A**3
+
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+                         Total number of ions in cell =    8
+                      Total number of species in cell =    2
+                        Max number of any one species =    4
+
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom        Fractional coordinates of atoms  x
+            x            Number           u          v          w      x
+            x----------------------------------------------------------x
+            x  Cl           1         0.520000   0.520000   0.520000   x 
+            x  Cl           2         0.520000   1.020000   1.020000   x 
+            x  Cl           3         1.020000   0.520000   1.020000   x 
+            x  Cl           4         1.020000   1.020000   0.520000   x 
+            x  K            1         0.000000   0.000000   0.000000   x 
+            x  K            2         0.000000   0.500000   0.500000   x 
+            x  K            3         0.500000   0.000000   0.500000   x 
+            x  K            4         0.500000   0.500000   0.000000   x 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+                         No user defined ionic velocities
+
+                           -------------------------------
+                                   Details of Species
+                           -------------------------------
+
+                               Mass of species in AMU
+                                    Cl   35.4527000
+                                    K   39.0983000
+
+                          Electric Quadrupole Moment (Barn)
+                                    Cl   -0.0816500 Isotope 35
+                                    K    0.0585000 Isotope 39
+
+                          Files used for pseudopotentials:
+                                    Cl Cl_00.usp
+                                    K K_00.usp
+
+                           -------------------------------
+                              k-Points For BZ Sampling
+                           -------------------------------
+                       MP grid size for SCF calculation is  1  1  1
+                            with an offset of   0.000  0.000  0.000
+                       Number of kpoints used =             1
+
+                           -------------------------------
+                               Symmetry and Constraints
+                           -------------------------------
+
+                      Cell is a supercell containing 4 primitive cells
+                      Maximum deviation from symmetry = 0.125233E-14     ANG
+
+                      Number of symmetry operations   =          24
+         There are no ionic constraints specified or generated for this cell
+                      Point group of crystal =    18: C3v, 3m, 3 m
+                      Space group of crystal =   160: R3m, P 3* -2
+
+             Set iprint > 1 for details on symmetry rotations/translations
+
+                         Centre of mass is NOT constrained
+
+                         Number of cell constraints= 4
+                         Cell constraints are:  1 1 1 4 4 4
+
+                         External pressure/stress (GPa)
+                          0.00000   0.00000   0.00000
+                                    0.00000   0.00000
+                                              0.00000
+  
++---------------- MEMORY AND SCRATCH DISK ESTIMATES PER PROCESS --------------+
+|                                                     Memory          Disk    |
+| Baseline code, static data and system overhead        0.0 MB         0.0 MB |
+| BLAS internal memory storage                          0.0 MB         0.0 MB |
+| Model and support data                               10.0 MB         7.9 MB |
+| Electronic energy minimisation requirements           2.6 MB         0.0 MB |
+| Force calculation requirements                        1.3 MB         0.0 MB |
+| Stress calculation requirements                       1.7 MB         0.0 MB |
+|                                               ----------------------------- |
+| Approx. total storage required per process           12.6 MB         7.9 MB |
+|                                                                             |
+| Requirements will fluctuate during execution and may exceed these estimates |
++-----------------------------------------------------------------------------+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy                           Energy gain       Timer   <-- SCF
+                                               per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.28093669E+003                                          0.44  <-- SCF
+      1  -4.70138926E+003                    3.02556570E+002       0.72  <-- SCF
+      2  -4.75585322E+003                    6.80799588E+000       1.01  <-- SCF
+      3  -4.76645890E+003                    1.32571012E+000       1.28  <-- SCF
+      4  -4.76702529E+003                    7.07982120E-002       1.55  <-- SCF
+      5  -4.76703433E+003                    1.12948090E-003       1.82  <-- SCF
+      6  -4.76703452E+003                    2.38127515E-005       2.10  <-- SCF
+      7  -4.76703452E+003                    6.30309022E-007       2.38  <-- SCF
+      8  -4.76703452E+003                    1.82010563E-008       2.65  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy =  -4767.034521154     eV
+(energy not corrected for finite basis set)
+ 
+ Total energy corrected for finite basis set =   -4766.880055 eV
+
+Writing analysis data to KCl-stress.castep_bin
+
+Writing model to KCl-stress.check
+
+ ***************** Symmetrised Forces *****************
+ *                                                    *
+ *            Cartesian components (eV/A)             *
+ * -------------------------------------------------- *
+ *                   x            y            z      *
+ *                                                    *
+ * Cl        1      0.08818      0.08818      0.08818 *
+ * Cl        2      0.08818      0.08818      0.08818 *
+ * Cl        3      0.08818      0.08818      0.08818 *
+ * Cl        4      0.08818      0.08818      0.08818 *
+ * K         1     -0.08818     -0.08818     -0.08818 *
+ * K         2     -0.08818     -0.08818     -0.08818 *
+ * K         3     -0.08818     -0.08818     -0.08818 *
+ * K         4     -0.08818     -0.08818     -0.08818 *
+ *                                                    *
+ ******************************************************
+
+ *********** Symmetrised Stress Tensor ***********
+ *                                               *
+ *          Cartesian components (GPa)           *
+ * --------------------------------------------- *
+ *             x             y             z     *
+ *                                               *
+ *  x    -29.552479      0.280946      0.280946  *
+ *  y      0.280946    -29.552479      0.280946  *
+ *  z      0.280946      0.280946    -29.552479  *
+ *                                               *
+ *  Pressure:   29.5525                          *
+ *                                               *
+ *************************************************
+
+ Pseudo atomic calculation performed for Cl 3s2 3p5
+
+ Converged in 19 iterations to a total energy of -407.2505 eV
+
+
+ Pseudo atomic calculation performed for K 3s2 3p6 4s1
+
+ Converged in 20 iterations to a total energy of -779.7947 eV
+
+Charge spilling parameter for spin component 1 = 0.47%
+
+     Atomic Populations (Mulliken)
+     -----------------------------
+Species   Ion     s      p      d      f     Total  Charge (e)
+==============================================================
+  Cl       1     1.94   6.03   0.00   0.00   7.97    -0.97
+  Cl       2     1.94   6.03   0.00   0.00   7.97    -0.97
+  Cl       3     1.94   6.03   0.00   0.00   7.97    -0.97
+  Cl       4     1.94   6.03   0.00   0.00   7.97    -0.97
+  K        1     2.06   5.96   0.00   0.00   8.03     0.97
+  K        2     2.06   5.96   0.00   0.00   8.03     0.97
+  K        3     2.06   5.96   0.00   0.00   8.03     0.97
+  K        4     2.06   5.96   0.00   0.00   8.03     0.97
+==============================================================
+
+            Bond              Population      Length (A)
+============================================================
+         Cl 4 -- K 3              -0.20        2.71190
+         Cl 4 -- K 2              -0.20        2.71190
+         Cl 4 -- K 1              -0.20        2.71190
+         Cl 3 -- K 4              -0.20        2.71190
+         Cl 3 -- K 2              -0.20        2.71190
+         Cl 3 -- K 1              -0.20        2.71190
+         Cl 2 -- K 4              -0.20        2.71190
+         Cl 2 -- K 3              -0.20        2.71190
+         Cl 2 -- K 1              -0.20        2.71190
+         Cl 1 -- K 4              -0.20        2.71190
+         Cl 1 -- K 3              -0.20        2.71190
+         Cl 1 -- K 2              -0.20        2.71190
+============================================================
+
+
+Writing analysis data to KCl-stress.castep_bin
+
+Writing model to KCl-stress.check
+ 
+ A BibTeX formatted list of references used in this run has been written to 
+ KCl-stress.bib
+ 
+Initialisation time =      0.24 s
+Calculation time    =      2.95 s
+Finalisation time   =      0.01 s
+Total time          =      3.21 s

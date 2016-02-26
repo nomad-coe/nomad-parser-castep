@@ -27,11 +27,12 @@ class CastepParserContext(object):
         """ Initialise variables used within the current superContext """
         self.functionals                       = []
         self.relativistic                      = []
-
         self.cell                              = []
         self.at_nr                             = 0
+        self.atom_type_mass                    = []
         self.atom_label                        = []
         self.atom_forces                       = []
+        self.stress_tensor_value               = []
         self.castep_atom_position              = []
         self.atom_position                     = []
         self.a                                 = []
@@ -81,7 +82,22 @@ class CastepParserContext(object):
         self.metaInfoEnv = self.parser.parserBuilder.metaInfoEnv
         # allows to reset values if the same superContext is used to parse different files
         self.initialize_values()
+    
+    def onClose_section_topology(self, backend, gIndex, section):
+    # Processing the atom masses and type
+        #get cached values of castep_store_atom_mass and type
+        mass = section['castep_store_atom_mass']
+        name = section['castep_store_atom_name']
+        for i in range(len(mass)):
+            #converting mass in Kg from AMU
+            mass[i] = float(mass[i]) * 1.66053904e-27
 
+            backend.openSection('section_atom_type')
+            backend.addValue('atom_type_mass', float(mass[i]))
+
+            backend.addValue('atom_type_name', name[i])
+            backend.closeSection('section_atom_type', gIndex+i)
+    
 
 # Translating the XC functional name to the NOMAD standard
     def onClose_castep_section_functionals(self, backend, gIndex, section):
@@ -218,6 +234,9 @@ class CastepParserContext(object):
             f_st_int = f_st[i]
             self.atom_forces.append(f_st_int)
         backend.addArrayValues('atom_forces', np.asarray(self.atom_forces))
+  
+
+       
 
 
 # Add SCF k points and eigenvalue from *.band file to the backend (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
@@ -248,7 +267,10 @@ class CastepParserContext(object):
 
             else:
                 backend.closeSection('section_eigenvalues_group', gIndexGroup)
-
+        
+        backend.openSection('section_stress_tensor')
+        backend.addArrayValues('stress_tensor_value',np.asarray(self.stress_tensor_value))
+        backend.closeSection('section_stress_tensor', gIndex)
 
 
 # Recover SCF k points and eigenvalue from *.band file (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
@@ -282,7 +304,16 @@ class CastepParserContext(object):
                 pass # if no .bands is found in the same folder as .castep file than skip and continue     
         #self.n_spin = bandSuperContext.n_spin
 
-
+    def onClose_castep_section_stress_tensor(self, backend, gIndex, section): 
+     #get cached values for stress tensor
+        stress_tens = section['castep_store_stress_tensor']
+        for i in range(len(stress_tens)):
+            stress_tens[i] = stress_tens[i].split()
+            stress_tens[i] = [float(j) for j in stress_tens[i]]
+            stress_tens_int = stress_tens[i]
+            stress_tens_int = [x / 10e9 for x in stress_tens_int] #converting GPa in Pa.
+            self.stress_tensor_value.append(stress_tens_int)
+    
 
 ######################################################################################
 ################ Triggers on closure section_system_description ######################
@@ -495,8 +526,8 @@ def build_CastepMainFileSimpleMatcher():
        SimpleMatcher that parses main file of CASTEP.
     """
 
-
-
+    ########################################
+  
     ########################################
     # submatcher for
     scfEigenvaluesSubMatcher = SM(name = 'scfEigenvalues',
@@ -679,6 +710,8 @@ def build_CastepMainFileSimpleMatcher():
             sections = ['section_run'],
             subMatchers = [
 
+    
+
                SM(name = 'ProgramHeader',
                   startReStr = r"\s\|\s*CCC\s*AA\s*SSS\s*TTTTT\s*EEEEE\s*PPPP\s*\|\s*",
                   subMatchers = [
@@ -691,9 +724,7 @@ def build_CastepMainFileSimpleMatcher():
                      SM(r"\sFundamental constants values\: *(?P<castep_constants_reference>[a-zA-Z0-9.() ]*)\s*"),
 
                                   ]), # CLOSING SM ProgramHeader
-
-
-
+                  
                scfEigenvaluesSubMatcher, # export section_eigenvalues_group to the correct nesting
 
 
@@ -704,7 +735,18 @@ def build_CastepMainFileSimpleMatcher():
 
 
                systemDescriptionSubMatcher, # section_system_description subMatcher
-
+               SM(name = 'Atom_topology',
+                  startReStr = r"\s*Mass of species in AMU\s*",              
+                  endReStr = "\n",
+                  #forwardMatch = True,
+                  sections = ['section_topology'],
+                  subMatchers = [
+                 
+                      SM(r"\s*(?P<castep_store_atom_name>[a-zA-Z]+)\s*(?P<castep_store_atom_mass>[\d\.]+)\s*",
+                        #endReStr = "\n",   
+                        repeats = True),
+                     ]), # CLOSING section_atom_topology
+               
                 SM(startReStr = r"\-*\s*\<\-\-\sSCF\s*",
                   forwardMatch = True,
                   sections = ["section_single_configuration_calculation"],
@@ -735,7 +777,7 @@ def build_CastepMainFileSimpleMatcher():
                       SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"), # matching final converged total free energy
 
                      bandStructureSubMatcher,  # band structure subMatcher
-                           
+                     
                      SM(startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
                         subMatchers = [
                            SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
@@ -746,9 +788,17 @@ def build_CastepMainFileSimpleMatcher():
                         subMatchers = [
                            SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                               repeats = True)
-                                      ])
+                                      ]),
+                     
+                     SM(name = 'stresstensor',
+                        startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\* Symmetrised Stress Tensor \*\*\*\*\*\*\*\*\*\*\*\s*",
+                        sections = ['castep_section_stress_tensor'],
+                        subMatchers = [
+                           SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                              repeats = True),  
+                                      ]), # CLOSING section_stress_tensor
 
-                                 ]) # CLOSING section_single_configuration_calculation                
+                                        ]) # CLOSING section_single_configuration_calculation                
 
 
                            ]) # CLOSING SM NewRun
