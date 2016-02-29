@@ -1,4 +1,4 @@
-sbtstages:
+stages:
   - test
 
 testing:
