@@ -1,12 +1,22 @@
 package eu.nomad_lab.parsers
+
+import eu.{nomad_lab=>lab}
 import eu.nomad_lab.DefaultPythonInterpreter
 import org.{json4s => jn}
+import scala.collection.breakOut
 
 object CastepParser extends SimpleExternalParserGenerator(
   name = "CastepParser",
   parserInfo = jn.JObject(
     ("name" -> jn.JString("CastepParser")) ::
-      ("version" -> jn.JString("1.0")) :: Nil),
+      ("parserId" -> jn.JString("CastepParser" + lab.CastepVersionInfo.version)) ::
+      ("versionInfo" -> jn.JObject(
+        ("nomadCoreVersion" -> jn.JString(lab.NomadCoreVersionInfo.version)) ::
+          (lab.CastepVersionInfo.toMap.map{ case (key, value) =>
+            (key -> jn.JString(value.toString))
+          }(breakOut): List[(String, jn.JString)])
+      )) :: Nil
+  ),
   mainFileTypes = Seq("text/.*"),
   mainFileRe = """\s\|\s*CCC\s*AA\s*SSS\s*TTTTT\s*EEEEE\s*PPPP\s*\|\s*""".r,
   cmd = Seq(DefaultPythonInterpreter.python2Exe(), "${envDir}/parsers/castep/parser/parser-castep/CastepParser.py",
