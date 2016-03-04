@@ -97,15 +97,35 @@ def build_CastepCellFileSimpleMatcher():
             forwardMatch = True,
             weak = True,
             subMatchers = [
-            SM (name = 'Root3',
-                startReStr = r"\s*\%block bs\_kpoint\_path\s*",
-                sections = ['section_k_band'],
-                forwardMatch = True,
-                weak = True,
-                subMatchers = [
-                SM (r"(?P<castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
-                ])
+            
+            SM(startReStr = r"\s*\%block bs\_kpoint\_path\s*",
+                  sections = ['section_k_band'],
+                  forwardMatch = True,
+                  subMatchers = [
+
+                     SM (r"(?P<castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
+                                 ]),
+
+            SM(startReStr = r"\s*\%BLOCK BS\_KPOINT\_PATH\s*",
+                  sections = ['section_k_band'],
+                  forwardMatch = True,
+                  subMatchers = [
+
+                      SM (r"(?P<castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
+
+                                 ]),
+
+            #SM (name = 'Root3',
+            #    startReStr = r"\s*\%block bs\_kpoint\_path\s*",
+            #    sections = ['section_k_band'],
+            #    forwardMatch = True,
+            #    weak = True,
+            #    subMatchers = [
+            #    SM (r"(?P<castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
+            #    ]),
+                
             ])
+
         ])
 
 

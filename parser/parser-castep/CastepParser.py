@@ -42,7 +42,8 @@ class CastepParserContext(object):
         self.beta                              = []
         self.gamma                             = []
         self.volume                            = 0
-
+        self.time_calc                         = 0
+        self.time_calculation                  = []
         self.energy_total_scf_iteration_list   = []
         self.scfIterNr                         = []
 
@@ -115,7 +116,6 @@ class CastepParserContext(object):
             " Local Density Approximation": "LDA_C_PZ_LDA_X_PZ",
             " Perdew Wang (1991)": "GGA_C_PW91_GGA_X_PW91",
             " revised Perdew Burke Ernzerhof": "GGA_X_RPBE",
-            " PBE with Wu-Cohen exchange": "GGA_X_WC",
             " PBE for solids (2008)": "GGA_X_PBE_SOL",          
             " hybrid B3LYP"       :"HYB_GGA_XC_B3LYP5",
             " Hartree-Fock"       :"HF_X", 
@@ -235,10 +235,7 @@ class CastepParserContext(object):
             self.atom_forces.append(f_st_int)
         backend.addArrayValues('atom_forces', np.asarray(self.atom_forces))
   
-
        
-
-
 # Add SCF k points and eigenvalue from *.band file to the backend (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
         if len(self.e_spin_1) != 0:
             gIndexGroup = backend.openSection('section_eigenvalues_group')
@@ -271,7 +268,11 @@ class CastepParserContext(object):
         backend.openSection('section_stress_tensor')
         backend.addArrayValues('stress_tensor_value',np.asarray(self.stress_tensor_value))
         backend.closeSection('section_stress_tensor', gIndex)
+        
+        
 
+    
+        
 
 # Recover SCF k points and eigenvalue from *.band file (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
     def onClose_castep_section_collect_scf_eigenvalues(self, backend, gIndex, section):
@@ -314,7 +315,13 @@ class CastepParserContext(object):
             stress_tens_int = [x / 10e9 for x in stress_tens_int] #converting GPa in Pa.
             self.stress_tensor_value.append(stress_tens_int)
     
-
+    def onClose_castep_section_time(self, backend, gIndex, section): 
+        initial_time = section['castep_initialisation_time']  
+        calc_time = section['castep_calculation_time']
+        final_time = section['castep_finalisation_time']
+        for i in range(len(initial_time)):
+            self.time_calc = (initial_time[i] + calc_time[i] + final_time[i])
+        backend.addValue('time_calculation', self.time_calc)
 ######################################################################################
 ################ Triggers on closure section_system_description ######################
 ######################################################################################
@@ -505,8 +512,7 @@ class CastepParserContext(object):
         else: 
             pass    
 
-
-
+    
 ################################################################################################################################################################
 ################################################################################################################################################################
 ################################################################################################################################################################
@@ -590,8 +596,8 @@ def build_CastepMainFileSimpleMatcher():
               forwardMatch = True,
               sections = ["castep_section_cell"],
               subMatchers = [
-
-                 SM(r"\s*(?P<castep_cell_vector>[\d\.]+\s+[\d\.]+\s+[\d\.]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                  SM(r"\s*(?P<castep_cell_vector>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                 #SM(r"\s*(?P<castep_cell_vector>[\d\.]+\s+[\d\.]+\s+[\d\.]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                     endReStr = "\n",
                     repeats = True),
 
@@ -647,7 +653,7 @@ def build_CastepMainFileSimpleMatcher():
                               repeats = True,
                               subMatchers = [
                                  # Matching eigenvalues
-                                 SM(r"\s*\+\s*[0-9]+\s*(?P<castep_store_eigenvalues>\s+[-\d\.]+)",
+                                 SM(r"\s*\+\s*[0-9]+\s*(?P<castep_store_eigenvalues>\s+[-+0-9.eEd]+)",
                                     repeats = True)
 
                                              ]), # CLOSING castep_section_eigenvalues
@@ -679,7 +685,7 @@ def build_CastepMainFileSimpleMatcher():
                               repeats = True,
                               subMatchers = [
                                  # Matching eigenvalues
-                                 SM(r"\s*\+\s*[0-9]+\s*(?P<castep_store_eigenvalues_1>\s+[-\d\.]+)",
+                                 SM(r"\s*\+\s*[0-9]+\s*(?P<castep_store_eigenvalues_1>\s+[-+0-9.eEd]+)",
                                     repeats = True)
 
                                              ]), # CLOSING castep_section_eigenvalues_1
@@ -750,8 +756,8 @@ def build_CastepMainFileSimpleMatcher():
                 SM(startReStr = r"\-*\s*\<\-\-\sSCF\s*",
                   forwardMatch = True,
                   sections = ["section_single_configuration_calculation"],
-                  subMatchers = [
-                  
+                  subMatchers = [                     
+                 
                      SM(name = 'ScfIterations',
                         startReStr = r"SCF\sloop\s*Energy\s*Fermi\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
                         sections = ['section_scf_iteration'],
@@ -762,7 +768,7 @@ def build_CastepMainFileSimpleMatcher():
 
                                   ]), # CLOSING section_scf_iteration
 
-                      SM(name = 'ScfIterations',
+                     SM(name = 'ScfIterations',
                         startReStr = r"SCF\sloop\s*Energy\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
                         sections = ['section_scf_iteration'],
                         subMatchers = [
@@ -775,9 +781,12 @@ def build_CastepMainFileSimpleMatcher():
                       SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
                       SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
                       SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"), # matching final converged total free energy
+                      SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<energy_total_T0__eV>[-+0-9.eEdD]*)"), # 0K corrected final SCF energy
 
                      bandStructureSubMatcher,  # band structure subMatcher
                      
+                     
+
                      SM(startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
                         subMatchers = [
                            SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
@@ -797,12 +806,21 @@ def build_CastepMainFileSimpleMatcher():
                            SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                               repeats = True),  
                                       ]), # CLOSING section_stress_tensor
-
+                     
+                     SM(name = 'calc_time',
+                        startReStr = r" A BibTeX formatted list of references used in this run has been written to",
+                        sections = ['castep_section_time'],
+                        subMatchers = [
+                           SM(r"Initialisation time =\s*(?P<castep_initialisation_time>[0-9.]*)"), # matching final converged total energy
+                           SM(r"Calculation time    =\s*(?P<castep_calculation_time>[0-9.]*)"),
+                           SM(r"Finalisation time   =\s*(?P<castep_finalisation_time>[0-9.]*)"),
+                                      ]), # CLOSING section_castep_time
                                         ]) # CLOSING section_single_configuration_calculation                
-
-
-                           ]) # CLOSING SM NewRun
-
+                
+                
+                           ]) # CLOSING SM NewRun        
+                
+ 
         ])
 
 
