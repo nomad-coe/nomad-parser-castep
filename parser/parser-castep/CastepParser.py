@@ -26,6 +26,7 @@ class CastepParserContext(object):
     def __init__(self):
         """ Initialise variables used within the current superContext """
         self.functionals                       = []
+        self.func_total                        = []
         self.relativistic                      = []
         self.cell                              = []
         self.at_nr                             = 0
@@ -46,7 +47,8 @@ class CastepParserContext(object):
         self.time_calculation                  = []
         self.energy_total_scf_iteration_list   = []
         self.scfIterNr                         = []
-
+        self.functional_type                   = []
+        self.functional_weight                 = None
         self.k_nr                              = 0
         self.e_nr                              = 0
         self.k_count_1                         = 0
@@ -66,7 +68,6 @@ class CastepParserContext(object):
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
         self.pippo = None
-
 
     def startedParsing(self, fInName, parser):
         """Function is called when the parsing starts.
@@ -108,7 +109,8 @@ class CastepParserContext(object):
         """
         # Get the list of functional and relativistic names
         functional_names = section["castep_functional_name"]
-        relativistic_names = section["castep_relativity_treatment_scf"]
+        
+        #relativistic_names = section["castep_relativity_treatment_scf"]
 
         # Define a mapping for the functionals
         functional_map = {
@@ -124,13 +126,14 @@ class CastepParserContext(object):
             " hybrid HSE06"              :"HYB_GGA_XC_HSE06",
             " hybrid PBE0"               :"GGA_C_PBE_GGA_X_PBE", 
             " PBE with Wu-Cohen exchange" :"GGA_C_PBE_GGA_X_WC",    
+            " LDA-X" : "LDA_X_PZ",
+            " LDA-C" : "LDA_C_PZ",
+            #" 'EXX','EXX-LDA'" : ""
+            #" 'SHF','SX'"      :
+            #" Optimised Effective Potential" :
         }
        
-        # Define a mapping for the relativistic treatments
-        relativistic_map = {
-            " Koelling-Harmon": "scalar_relativistic"
-        }
-
+       
         # Match each castep functional name and sort the matches into a list
         self.functionals = []
 
@@ -138,9 +141,51 @@ class CastepParserContext(object):
             match = functional_map.get(name)
             if match:
                 self.functionals.append(match)
-        self.functionals = "_".join(sorted(self.functionals))
+        #self.functionals = "_".join(sorted(self.functionals))
+        
 
-        # Match each castep relativity treatment name and sort the matches into a list
+    def onClose_castep_section_functional_definition(self, backend, gIndex, section):
+
+        self.functional_types = section["castep_functional_type"]
+        self.functional_weight = section["castep_functional_weight"]
+        
+
+        # Define a mapping for the functionals
+        functional_map = {
+            "PBE": "GGA_C_PBE_GGA_X_PBE",
+            "PW91": "GGA_C_PW91_GGA_X_PW91",
+            "RPBE": "GGA_X_RPBE",
+            "PBEsol": "GGA_X_PBE_SOL",          
+            "HF"       :"HF_X", 
+            "HF-LDA":"HF_X_LDA_C_PW",
+            "HSE03"              :"HYB_GGA_XC_HSE03",
+            "HSE06"              :"HYB_GGA_XC_HSE06",
+            "PBE0"               :"GGA_C_PBE_GGA_X_PBE", 
+            "WC" :"GGA_C_PBE_GGA_X_WC",    
+            "LDA-X" : "LDA_X_PZ",
+            "LDA-C" : "LDA_C_PZ",
+            "LDA": "LDA_C_PZ_LDA_X_PZ",
+            "b3lyp"       :"HYB_GGA_XC_B3LYP5",
+            #" 'EXX','EXX-LDA'" : ""
+            #" 'SHF','SX'"      :
+            #" Optimised Effective Potential" :
+        }
+        
+        self.functionals = []
+       
+        for name in self.functional_types:
+            match = functional_map.get(name)
+            if match:
+                self.functionals.append(match)
+        #self.functionals = "_".join(sorted(self.functionals))
+        
+    def onClose_castep_section_relativity_treatment(self, backend, gIndex, section):
+        relativistic_names = section["castep_relativity_treatment_scf"]
+        
+        # Define a mapping for the relativistic treatments
+        relativistic_map = {
+            " Koelling-Harmon": "scalar_relativistic"
+        }
         self.relativistic = []
 
         for name in relativistic_names:
@@ -148,18 +193,39 @@ class CastepParserContext(object):
             if match:
                 self.relativistic.append(match)
         self.relativistic = "_".join(sorted(self.relativistic))
-
-
 # Here we add info about the XC functional and relativistic treatment
+    
     def onClose_section_method(self, backend, gIndex, section):
-
+        if self.functional_weight is not None:
+            self.func_and_weight = []
+            for i in range(len(self.functional_types)):
+                self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i]) 
+                backend.openSection('section_XC_functionals')            
+                backend.addValue('XC_functional_name', self.functionals[i]) 
+                backend.addValue('XC_functional_weight', self.functional_weight[i])
+                backend.closeSection('section_XC_functionals',gIndex+i)        
         # Push the functional string into the backend
-        backend.addValue('XC_functional', self.functionals)
         # Push the relativistic treatment string into the backend
-        backend.addValue('relativity_method', self.relativistic)
-        backend.addValue('XC_method_current', self.functionals+'_'+self.relativistic)
-
-
+            backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
+            backend.addValue('relativity_method', self.relativistic)
+        #if self.functional_weight = 0
+            backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.relativistic)
+        else:
+            for i in range(len(self.functionals)):
+          #      self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i])
+                backend.openSection('section_XC_functionals')            
+                backend.addValue('XC_functional_name', self.functionals[i]) 
+         #       backend.addValue('XC_functional_weight', self.functional_weight[i])
+                backend.closeSection('section_XC_functionals',gIndex+i)
+            backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
+            backend.addValue('relativity_method', self.relativistic)
+            backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.relativistic)
+            
+            
+     
+            
+        
+        
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_associated(self, backend, gIndex, section):
         ecut_str = section['castep_basis_set_plan_wave_cutoff']
@@ -322,6 +388,7 @@ class CastepParserContext(object):
         for i in range(len(initial_time)):
             self.time_calc = (initial_time[i] + calc_time[i] + final_time[i])
         backend.addValue('time_calculation', self.time_calc)
+
 ######################################################################################
 ################ Triggers on closure section_system_description ######################
 ######################################################################################
@@ -546,7 +613,7 @@ def build_CastepMainFileSimpleMatcher():
     ########################################
     # submatcher for section method
     calculationMethodSubMatcher = SM(name = 'calculationMethods',
-        startReStr = r"\susing functional\s*\:",
+        startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Exchange-Correlation Parameters \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*",
         forwardMatch = True,
         sections = ["section_method"],
         subMatchers = [
@@ -558,11 +625,36 @@ def build_CastepMainFileSimpleMatcher():
               subMatchers = [
 
                  SM(r"\susing functional\s*\: *(?P<castep_functional_name> [A-Za-z0-9() ]*)"),
-                 SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]*)")
-
+                 #SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]*)")
                              ]), # CLOSING castep_section_functionals
+            
+           SM(name = "castepXC_definition",
+              startReStr = r"\susing custom XC functional definition\:",
+              #endReStr = r"\srelativistic treatment\s*\:\s*",
+              forwardMatch = True,
+              sections = ["castep_section_functional_definition"],
+              subMatchers = [     
+                 SM(r"\s*(?P<castep_functional_type>[A-Za-z0-9]+)\s*(?P<castep_functional_weight>[0-9.]+)",
+                        repeats = True),
+                 #SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]*)")              
+                              ]), # CLOSING castep_section_functional_definition
 
+           SM(name = "castep_relativ",
+              startReStr = r"\srelativistic treatment\s*\:\s*",
+              forwardMatch = True,
+              sections = ["castep_section_relativity_treatment"],
+              subMatchers = [
+                 SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]+)")
+                             ]), # CLOSING castep_section_relativistic_treatment           
 
+            SM(name = "van der Waals",
+               startReStr = r"\sDFT\+D: Semi-empirical dispersion correction\s*\:\s*",
+               forwardMatch = True,
+              #sections = ["castep_section_relativity_treatment"],
+               subMatchers = [
+                 SM(r"\sSEDC with\s*\: *(?P<van_der_Waals_method> [A-Za-z0-9() -]+)")
+                             ]), # CLOSING van der waals           
+ 
                       ]) # CLOSING SM calculationMethods
 
 

@@ -56,14 +56,14 @@
  FFT Lib : default
  Fundamental constants values: CODATA 2010
 
- Run started: Wed, 02 Mar 2016 12:14:38 +0000
+ Run started: Tue, 15 Mar 2016 13:35:39 +0000
 
  Atomic calculation performed for Fe: 1s2 2s2 2p6 3s2 3p6 3d6 4s2
 
  Converged in 99 iterations to an ae energy of -34563.483 eV
 
    ============================================================                
-   | Pseudopotential Report - Date of generation  2-03-2016   |                
+   | Pseudopotential Report - Date of generation 15-03-2016   |                
    ------------------------------------------------------------                
    | Element: Fe Ionic charge:  8.00 Level of theory: LDA     |                
    | Atomic Solver: Koelling-Harmon                           |                
@@ -137,7 +137,7 @@
  output        entropy unit                     : J/mol/K
   
  wavefunctions paging                           : none
- random number generator seed                   : randomised (121438088)
+ random number generator seed                   : randomised (133539139)
  data distribution                              : optimal for this architecture
  optimization strategy                          : maximize speed(+++)
 
@@ -302,35 +302,35 @@
 SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
                                energy          per atom          (sec)   <-- SCF
 ------------------------------------------------------------------------ <-- SCF
-Initial  -7.23227020E+002  0.00000000E+000                         7.80  <-- SCF
-      1  -8.46712322E+002  8.67411359E+000   1.23485302E+002       8.09  <-- SCF
-      2  -8.57286314E+002  6.58603007E+000   1.05739920E+001       8.34  <-- SCF
-      3  -8.57527313E+002  6.54821507E+000   2.40999324E-001       8.64  <-- SCF
-      4  -8.57681886E+002  5.16297258E+000   1.54572691E-001       8.91  <-- SCF
-      5  -8.57523732E+002  6.02650145E+000  -1.58154404E-001       9.19  <-- SCF
-      6  -8.57523924E+002  5.99061455E+000   1.92345508E-004       9.50  <-- SCF
-      7  -8.57524046E+002  5.98927537E+000   1.21631279E-004       9.78  <-- SCF
-      8  -8.57524210E+002  5.98712681E+000   1.63960923E-004      10.02  <-- SCF
-      9  -8.57524214E+002  5.98649672E+000   3.85077195E-006      10.20  <-- SCF
-     10  -8.57608094E+002  5.99494184E+000   8.38808855E-002      10.37  <-- SCF
-     11  -8.57759172E+002  6.06271499E+000   1.51077994E-001      10.65  <-- SCF
-     12  -8.57792454E+002  6.07000335E+000   3.32812504E-002      10.91  <-- SCF
-     13  -8.57796845E+002  5.99960492E+000   4.39135189E-003      11.19  <-- SCF
-     14  -8.57796477E+002  6.04307286E+000  -3.68048816E-004      11.47  <-- SCF
-     15  -8.57796630E+002  6.02941371E+000   1.52820194E-004      11.73  <-- SCF
-     16  -8.57796653E+002  6.03079460E+000   2.34106569E-005      11.91  <-- SCF
-     17  -8.57796651E+002  6.03208936E+000  -1.76068451E-006      12.07  <-- SCF
-     18  -8.57796652E+002  6.03244387E+000   8.83126133E-007      12.24  <-- SCF
+Initial  -7.21539385E+002  0.00000000E+000                         8.03  <-- SCF
+      1  -8.46908700E+002  8.34487815E+000   1.25369315E+002       8.33  <-- SCF
+      2  -8.57282213E+002  6.58599599E+000   1.03735129E+001       8.58  <-- SCF
+      3  -8.57526963E+002  6.54790476E+000   2.44749582E-001       8.89  <-- SCF
+      4  -8.57681929E+002  5.16281708E+000   1.54966414E-001       9.17  <-- SCF
+      5  -8.57523720E+002  6.02652167E+000  -1.58208992E-001       9.43  <-- SCF
+      6  -8.57523924E+002  5.99059852E+000   2.04263503E-004       9.76  <-- SCF
+      7  -8.57524046E+002  5.98928966E+000   1.21456822E-004      10.04  <-- SCF
+      8  -8.57524210E+002  5.98713574E+000   1.63945612E-004      10.26  <-- SCF
+      9  -8.57524214E+002  5.98650109E+000   3.80405102E-006      10.43  <-- SCF
+     10  -8.57608094E+002  5.99494362E+000   8.38807739E-002      10.60  <-- SCF
+     11  -8.57759172E+002  6.06271409E+000   1.51078153E-001      10.88  <-- SCF
+     12  -8.57792453E+002  6.06999862E+000   3.32810269E-002      11.14  <-- SCF
+     13  -8.57796845E+002  5.99960577E+000   4.39152977E-003      11.41  <-- SCF
+     14  -8.57796477E+002  6.04307302E+000  -3.68066987E-004      11.70  <-- SCF
+     15  -8.57796630E+002  6.02941342E+000   1.52809000E-004      11.95  <-- SCF
+     16  -8.57796653E+002  6.03079524E+000   2.34135380E-005      12.13  <-- SCF
+     17  -8.57796651E+002  6.03208943E+000  -1.76267077E-006      12.29  <-- SCF
+     18  -8.57796652E+002  6.03244384E+000   8.83489821E-007      12.44  <-- SCF
 ------------------------------------------------------------------------ <-- SCF
  
 Integrated Spin Density     =     2.16929     hbar/2                        
 Integrated |Spin Density|   =     2.24132     hbar/2                        
  
-Final energy, E             =  -857.7798150163     eV
-Final free energy (E-TS)    =  -857.7966522988     eV
+Final energy, E             =  -857.7798150181     eV
+Final free energy (E-TS)    =  -857.7966523000     eV
 (energies not corrected for finite basis set)
  
-NB est. 0K energy (E-0.5TS)      =  -857.7882336576     eV
+NB est. 0K energy (E-0.5TS)      =  -857.7882336591     eV
  
 
 Writing analysis data to Fe.castep_bin
@@ -364,59 +364,59 @@ Writing model to Fe.check
   +                                                                   +
   +   Spin= 1 of  2, K-point=   1 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=   2 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=   3 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=   3 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=   4 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=   5 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=   6 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=   6 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=   7 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=   8 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=   9 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=   8 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=   9 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  10 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  11 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  12 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  13 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=  14 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=  15 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  14 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  15 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  16 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=  17 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  17 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  18 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  19 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  20 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=  21 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  21 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  22 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=  23 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  23 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  24 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  25 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  26 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  27 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=  28 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  28 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  29 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  30 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  31 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  32 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=  33 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  33 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  34 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  35 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  36 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=  37 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=  38 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  37 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  38 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  39 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  40 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  41 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  42 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  42 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  43 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  44 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  45 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  44 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  45 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  46 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  47 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  48 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  48 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  49 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  50 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  50 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  51 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  52 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  53 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  54 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  55 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  55 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  56 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  57 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  58 of  118 completed, Time:     0.03s. +
@@ -424,48 +424,48 @@ Writing model to Fe.check
   +   Spin= 1 of  2, K-point=  60 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  61 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  62 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  63 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  63 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  64 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  65 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  66 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  67 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  67 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  68 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  69 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  70 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  71 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  72 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  73 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  73 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  74 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  75 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  75 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  76 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  77 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  78 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  78 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  79 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  80 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  81 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  80 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  81 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  82 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point=  83 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  83 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  84 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  85 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  86 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  87 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  88 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  89 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  89 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  90 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  91 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  92 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  92 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  93 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  94 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  95 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  96 of  118 completed, Time:     0.03s. +
+  +   Spin= 1 of  2, K-point=  96 of  118 completed, Time:     0.02s. +
   +   Spin= 1 of  2, K-point=  97 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point=  98 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point=  99 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point= 100 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point=  99 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point= 100 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point= 101 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point= 102 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point= 102 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point= 103 of  118 completed, Time:     0.02s. +
-  +   Spin= 1 of  2, K-point= 104 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point= 104 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point= 105 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point= 106 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point= 107 of  118 completed, Time:     0.03s. +
@@ -479,14 +479,14 @@ Writing model to Fe.check
   +   Spin= 1 of  2, K-point= 115 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point= 116 of  118 completed, Time:     0.03s. +
   +   Spin= 1 of  2, K-point= 117 of  118 completed, Time:     0.03s. +
-  +   Spin= 1 of  2, K-point= 118 of  118 completed, Time:     0.02s. +
-  +   Spin= 2 of  2, K-point=   1 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=   2 of  118 completed, Time:     0.02s. +
+  +   Spin= 1 of  2, K-point= 118 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=   1 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point=   2 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=   3 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=   4 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=   5 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point=   5 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=   6 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=   7 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=   7 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=   8 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=   9 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  10 of  118 completed, Time:     0.02s. +
@@ -498,33 +498,33 @@ Writing model to Fe.check
   +   Spin= 2 of  2, K-point=  16 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  17 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  18 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  19 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  19 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  20 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  21 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  22 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  23 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point=  23 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  24 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  25 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  26 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  27 of  118 completed, Time:     0.02s. +
-  +   Spin= 2 of  2, K-point=  28 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  28 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  29 of  118 completed, Time:     0.02s. +
-  +   Spin= 2 of  2, K-point=  30 of  118 completed, Time:     0.02s. +
-  +   Spin= 2 of  2, K-point=  31 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  30 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  31 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  32 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  33 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  34 of  118 completed, Time:     0.02s. +
-  +   Spin= 2 of  2, K-point=  35 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point=  35 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  36 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  37 of  118 completed, Time:     0.02s. +
-  +   Spin= 2 of  2, K-point=  38 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  38 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  39 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  40 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  41 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  42 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  43 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  44 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  45 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  45 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  46 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  47 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  48 of  118 completed, Time:     0.03s. +
@@ -539,39 +539,39 @@ Writing model to Fe.check
   +   Spin= 2 of  2, K-point=  57 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  58 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  59 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  60 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point=  60 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  61 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  62 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  63 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  64 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point=  64 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  65 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  66 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  67 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  67 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  68 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  69 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  70 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  70 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  71 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  72 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  73 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  74 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  75 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  75 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  76 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  77 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  78 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  79 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  80 of  118 completed, Time:     0.02s. +
-  +   Spin= 2 of  2, K-point=  81 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  81 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  82 of  118 completed, Time:     0.02s. +
-  +   Spin= 2 of  2, K-point=  83 of  118 completed, Time:     0.02s. +
-  +   Spin= 2 of  2, K-point=  84 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  85 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  86 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  83 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  84 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point=  85 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point=  86 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  87 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  88 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  88 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  89 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  90 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  90 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  91 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point=  92 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point=  92 of  118 completed, Time:     0.02s. +
   +   Spin= 2 of  2, K-point=  93 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  94 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point=  95 of  118 completed, Time:     0.03s. +
@@ -584,19 +584,19 @@ Writing model to Fe.check
   +   Spin= 2 of  2, K-point= 102 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point= 103 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point= 104 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point= 105 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point= 105 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point= 106 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point= 107 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point= 107 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point= 108 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point= 109 of  118 completed, Time:     0.02s. +
-  +   Spin= 2 of  2, K-point= 110 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point= 109 of  118 completed, Time:     0.03s. +
+  +   Spin= 2 of  2, K-point= 110 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point= 111 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point= 112 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point= 113 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point= 114 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point= 115 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point= 116 of  118 completed, Time:     0.03s. +
-  +   Spin= 2 of  2, K-point= 117 of  118 completed, Time:     0.02s. +
+  +   Spin= 2 of  2, K-point= 117 of  118 completed, Time:     0.03s. +
   +   Spin= 2 of  2, K-point= 118 of  118 completed, Time:     0.03s. +
   +   Finished BS calculation on root process (waiting for others).   +
   +                                                                   +
@@ -616,7 +616,7 @@ Writing model to Fe.check
   +           3        3.698801                                       +
   +           4        3.698801                                       +
   +           5        5.077942                                       +
-  +           6        5.077942                                       +
+  +           6        5.077943                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=    2 (  0.013158  0.013158  0.013158) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -626,7 +626,7 @@ Writing model to Fe.check
   +           3        3.691313                                       +
   +           4        3.722649                                       +
   +           5        5.072978                                       +
-  +           6        5.072978                                       +
+  +           6        5.072979                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=    3 (  0.026316  0.026316  0.026316) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -635,8 +635,8 @@ Writing model to Fe.check
   +           2        3.668226                                       +
   +           3        3.668226                                       +
   +           4        3.800429                                       +
-  +           5        5.059696                                       +
-  +           6        5.059696                                       +
+  +           5        5.059697                                       +
+  +           6        5.059697                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=    4 (  0.039474  0.039474  0.039474) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -646,7 +646,7 @@ Writing model to Fe.check
   +           3        3.638688                                       +
   +           4        4.025235                                       +
   +           5        5.061097                                       +
-  +           6        5.061097                                       +
+  +           6        5.061098                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=    5 (  0.052632  0.052632  0.052632) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -654,7 +654,7 @@ Writing model to Fe.check
   +           1       -1.715697                                       +
   +           2        3.639867                                       +
   +           3        3.639867                                       +
-  +           4        4.193698                                       +
+  +           4        4.193699                                       +
   +           5        5.061902                                       +
   +           6        5.061903                                       +
   + ----------------------------------------------------------------- +
@@ -666,7 +666,7 @@ Writing model to Fe.check
   +           3        3.555822                                       +
   +           4        4.410930                                       +
   +           5        5.046321                                       +
-  +           6        5.046321                                       +
+  +           6        5.046322                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=    7 (  0.078947  0.078947  0.078947) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -683,7 +683,7 @@ Writing model to Fe.check
   +                                                                   +
   +           1       -0.478046                                       +
   +           2        3.341705                                       +
-  +           3        3.341705                                       +
+  +           3        3.341706                                       +
   +           4        4.992700                                       +
   +           5        5.008384                                       +
   +           6        5.008384                                       +
@@ -701,9 +701,9 @@ Writing model to Fe.check
   +  Spin=1 kpt=   10 (  0.118421  0.118421  0.118421) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        0.566321                                       +
+  +           1        0.566322                                       +
   +           2        3.150434                                       +
-  +           3        3.150435                                       +
+  +           3        3.150434                                       +
   +           4        5.084992                                       +
   +           5        5.084992                                       +
   +           6        5.813147                                       +
@@ -715,14 +715,14 @@ Writing model to Fe.check
   +           2        3.039976                                       +
   +           3        3.039976                                       +
   +           4        5.120615                                       +
-  +           5        5.120615                                       +
+  +           5        5.120616                                       +
   +           6        6.285939                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   12 (  0.144737  0.144737  0.144737) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.606063                                       +
-  +           2        2.904011                                       +
+  +           2        2.904012                                       +
   +           3        2.904012                                       +
   +           4        5.129365                                       +
   +           5        5.129365                                       +
@@ -736,27 +736,27 @@ Writing model to Fe.check
   +           3        2.822396                                       +
   +           4        5.165807                                       +
   +           5        5.165807                                       +
-  +           6        7.436969                                       +
+  +           6        7.436970                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   14 (  0.171053  0.171053  0.171053) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.447674                                       +
   +           2        2.762687                                       +
-  +           3        2.762687                                       +
+  +           3        2.762688                                       +
   +           4        5.201213                                       +
-  +           5        5.201214                                       +
-  +           6        8.159055                                       +
+  +           5        5.201213                                       +
+  +           6        8.159054                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   15 (  0.184211  0.184211  0.184211) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.726533                                       +
   +           2        2.726533                                       +
-  +           3        2.738927                                       +
+  +           3        2.738928                                       +
   +           4        5.234110                                       +
   +           5        5.234110                                       +
-  +           6        8.981938                                       +
+  +           6        8.981939                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   16 (  0.197368  0.197368  0.197368) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -766,23 +766,23 @@ Writing model to Fe.check
   +           3        2.931095                                       +
   +           4        5.263521                                       +
   +           5        5.263522                                       +
-  +           6        9.905420                                       +
+  +           6        9.905421                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   17 (  0.210526  0.210526  0.210526) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.724757                                       +
-  +           2        2.724758                                       +
+  +           2        2.724757                                       +
   +           3        3.027703                                       +
   +           4        5.288917                                       +
   +           5        5.288917                                       +
-  +           6       10.922901                                       +
+  +           6       10.922902                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   18 (  0.223684  0.223684  0.223684) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.755824                                       +
-  +           2        2.755824                                       +
+  +           2        2.755825                                       +
   +           3        3.040981                                       +
   +           4        5.310139                                       +
   +           5        5.310139                                       +
@@ -806,7 +806,7 @@ Writing model to Fe.check
   +           3        2.817219                                       +
   +           4        5.235096                                       +
   +           5        5.235096                                       +
-  +           6       14.272964                                       +
+  +           6       14.273045                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   21 (  0.263158  0.263158  0.263158) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -815,8 +815,8 @@ Writing model to Fe.check
   +           2        2.915556                                       +
   +           3        2.915556                                       +
   +           4        5.285764                                       +
-  +           5        5.285764                                       +
-  +           6       13.802499                                       +
+  +           5        5.285765                                       +
+  +           6       13.802498                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   22 (  0.276316  0.276316  0.276316) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -825,7 +825,7 @@ Writing model to Fe.check
   +           2        3.040969                                       +
   +           3        3.040969                                       +
   +           4        5.321659                                       +
-  +           5        5.321661                                       +
+  +           5        5.321660                                       +
   +           6       13.427201                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   23 (  0.289474  0.289474  0.289474) kpt-group=  1  +
@@ -834,9 +834,9 @@ Writing model to Fe.check
   +           1        2.513227                                       +
   +           2        3.084252                                       +
   +           3        3.084252                                       +
-  +           4        5.309996                                       +
+  +           4        5.309997                                       +
   +           5        5.309997                                       +
-  +           6       13.087489                                       +
+  +           6       13.087488                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   24 (  0.302632  0.302632  0.302632) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -846,12 +846,12 @@ Writing model to Fe.check
   +           3        3.108361                                       +
   +           4        5.303548                                       +
   +           5        5.303548                                       +
-  +           6       12.824876                                       +
+  +           6       12.824877                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   25 (  0.315789  0.315789  0.315789) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        2.409675                                       +
+  +           1        2.409674                                       +
   +           2        3.104750                                       +
   +           3        3.104750                                       +
   +           4        5.306369                                       +
@@ -863,17 +863,17 @@ Writing model to Fe.check
   +                                                                   +
   +           1        2.401962                                       +
   +           2        3.064636                                       +
-  +           3        3.064637                                       +
+  +           3        3.064636                                       +
   +           4        5.301667                                       +
-  +           5        5.301667                                       +
+  +           5        5.301668                                       +
   +           6       12.543106                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   27 (  0.342105  0.342105  0.342105) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        2.536577                                       +
+  +           1        2.536576                                       +
   +           2        2.986945                                       +
-  +           3        2.986945                                       +
+  +           3        2.986946                                       +
   +           4        5.352880                                       +
   +           5        5.352880                                       +
   +           6       12.524529                                       +
@@ -881,11 +881,11 @@ Writing model to Fe.check
   +  Spin=1 kpt=   28 (  0.355263  0.355263  0.355263) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        2.695018                                       +
+  +           1        2.695019                                       +
   +           2        2.872610                                       +
   +           3        2.872610                                       +
   +           4        5.398353                                       +
-  +           5        5.398353                                       +
+  +           5        5.398354                                       +
   +           6       12.583360                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   29 (  0.368421  0.368421  0.368421) kpt-group=  1  +
@@ -895,8 +895,8 @@ Writing model to Fe.check
   +           2        2.727740                                       +
   +           3        2.921253                                       +
   +           4        5.460645                                       +
-  +           5        5.460646                                       +
-  +           6       12.713851                                       +
+  +           5        5.460645                                       +
+  +           6       12.713852                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   30 (  0.381579  0.381579  0.381579) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -905,8 +905,8 @@ Writing model to Fe.check
   +           2        2.560936                                       +
   +           3        3.210997                                       +
   +           4        5.536818                                       +
-  +           5        5.536819                                       +
-  +           6       12.908537                                       +
+  +           5        5.536818                                       +
+  +           6       12.908536                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   31 (  0.394737  0.394737  0.394737) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -915,8 +915,8 @@ Writing model to Fe.check
   +           2        2.422556                                       +
   +           3        3.560451                                       +
   +           4        5.645999                                       +
-  +           5        5.646000                                       +
-  +           6       13.180135                                       +
+  +           5        5.645999                                       +
+  +           6       13.180136                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   32 (  0.407895  0.407895  0.407895) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -931,7 +931,7 @@ Writing model to Fe.check
   +  Spin=1 kpt=   33 (  0.421053  0.421053  0.421053) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        2.043057                                       +
+  +           1        2.043058                                       +
   +           2        2.043058                                       +
   +           3        4.395229                                       +
   +           4        5.772493                                       +
@@ -956,7 +956,7 @@ Writing model to Fe.check
   +           3        5.199853                                       +
   +           4        5.925511                                       +
   +           5        5.925511                                       +
-  +           6       14.521456                                       +
+  +           6       14.521460                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   36 (  0.460526  0.460526  0.460526) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -986,7 +986,7 @@ Writing model to Fe.check
   +           3        6.007207                                       +
   +           4        6.062069                                       +
   +           5        6.062069                                       +
-  +           6       15.381929                                       +
+  +           6       15.381921                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   39 (  0.500000  0.500000  0.500000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -995,15 +995,15 @@ Writing model to Fe.check
   +           2        1.450105                                       +
   +           3        6.069176                                       +
   +           4        6.071879                                       +
-  +           5        6.071879                                       +
-  +           6       15.459013                                       +
+  +           5        6.071880                                       +
+  +           6       15.459473                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   40 (  0.500000  0.481481  0.481481) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.467946                                       +
   +           2        1.468287                                       +
-  +           3        6.013509                                       +
+  +           3        6.013510                                       +
   +           4        6.049717                                       +
   +           5        6.068915                                       +
   +           6       15.270942                                       +
@@ -1011,7 +1011,7 @@ Writing model to Fe.check
   +  Spin=1 kpt=   41 (  0.500000  0.462963  0.462963) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        1.520806                                       +
+  +           1        1.520805                                       +
   +           2        1.522164                                       +
   +           3        5.852540                                       +
   +           4        5.985268                                       +
@@ -1036,7 +1036,7 @@ Writing model to Fe.check
   +           3        5.287378                                       +
   +           4        5.755582                                       +
   +           5        6.023320                                       +
-  +           6       13.365368                                       +
+  +           6       13.365369                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   44 (  0.500000  0.407407  0.407407) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1044,7 +1044,7 @@ Writing model to Fe.check
   +           1        1.862145                                       +
   +           2        1.868757                                       +
   +           3        4.932474                                       +
-  +           4        5.609627                                       +
+  +           4        5.609628                                       +
   +           5        5.995083                                       +
   +           6       12.606535                                       +
   + ----------------------------------------------------------------- +
@@ -1056,14 +1056,14 @@ Writing model to Fe.check
   +           3        4.539513                                       +
   +           4        5.457972                                       +
   +           5        5.959091                                       +
-  +           6       11.865407                                       +
+  +           6       11.865405                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   46 (  0.500000  0.370370  0.370370) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.163074                                       +
   +           2        2.196817                                       +
-  +           3        4.156738                                       +
+  +           3        4.156739                                       +
   +           4        5.346436                                       +
   +           5        5.921276                                       +
   +           6       11.145687                                       +
@@ -1073,10 +1073,10 @@ Writing model to Fe.check
   +                                                                   +
   +           1        2.298162                                       +
   +           2        2.360247                                       +
-  +           3        3.834723                                       +
-  +           4        5.212477                                       +
+  +           3        3.834722                                       +
+  +           4        5.212476                                       +
   +           5        5.866221                                       +
-  +           6       10.490498                                       +
+  +           6       10.490499                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   48 (  0.500000  0.333333  0.333333) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1085,8 +1085,8 @@ Writing model to Fe.check
   +           2        2.511407                                       +
   +           3        3.594635                                       +
   +           4        5.102845                                       +
-  +           5        5.802144                                       +
-  +           6        9.866265                                       +
+  +           5        5.802145                                       +
+  +           6        9.866266                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   49 (  0.500000  0.314815  0.314815) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1094,7 +1094,7 @@ Writing model to Fe.check
   +           1        2.363562                                       +
   +           2        2.645586                                       +
   +           3        3.474562                                       +
-  +           4        5.035471                                       +
+  +           4        5.035472                                       +
   +           5        5.756789                                       +
   +           6        9.340192                                       +
   + ----------------------------------------------------------------- +
@@ -1103,9 +1103,9 @@ Writing model to Fe.check
   +                                                                   +
   +           1        2.299548                                       +
   +           2        2.726145                                       +
-  +           3        3.440017                                       +
-  +           4        4.965429                                       +
-  +           5        5.664438                                       +
+  +           3        3.440016                                       +
+  +           4        4.965430                                       +
+  +           5        5.664437                                       +
   +           6        8.899520                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   51 (  0.500000  0.277778  0.277778) kpt-group=  1  +
@@ -1132,7 +1132,7 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.049002                                       +
-  +           2        2.818806                                       +
+  +           2        2.818805                                       +
   +           3        3.342503                                       +
   +           4        5.003106                                       +
   +           5        5.400140                                       +
@@ -1144,7 +1144,7 @@ Writing model to Fe.check
   +           1        2.063709                                       +
   +           2        2.818779                                       +
   +           3        3.222521                                       +
-  +           4        5.060044                                       +
+  +           4        5.060045                                       +
   +           5        5.335935                                       +
   +           6        7.986178                                       +
   + ----------------------------------------------------------------- +
@@ -1153,16 +1153,16 @@ Writing model to Fe.check
   +                                                                   +
   +           1        2.148060                                       +
   +           2        2.804620                                       +
-  +           3        3.050684                                       +
+  +           3        3.050685                                       +
   +           4        5.115124                                       +
   +           5        5.313931                                       +
-  +           6        7.931197                                       +
+  +           6        7.931198                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   56 (  0.500000  0.185185  0.185185) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.250765                                       +
-  +           2        2.789466                                       +
+  +           2        2.789467                                       +
   +           3        2.873411                                       +
   +           4        5.156435                                       +
   +           5        5.228114                                       +
@@ -1171,9 +1171,9 @@ Writing model to Fe.check
   +  Spin=1 kpt=   57 (  0.500000  0.166667  0.166667) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        2.328968                                       +
-  +           2        2.777667                                       +
-  +           3        2.777839                                       +
+  +           1        2.328967                                       +
+  +           2        2.777666                                       +
+  +           3        2.777838                                       +
   +           4        5.190555                                       +
   +           5        5.192994                                       +
   +           6        7.910062                                       +
@@ -1186,7 +1186,7 @@ Writing model to Fe.check
   +           3        2.914487                                       +
   +           4        5.161212                                       +
   +           5        5.221564                                       +
-  +           6        7.906853                                       +
+  +           6        7.906852                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   59 (  0.500000  0.129630  0.129630) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1233,7 +1233,7 @@ Writing model to Fe.check
   +                                                                   +
   +           1        1.425049                                       +
   +           2        2.757965                                       +
-  +           3        4.933872                                       +
+  +           3        4.933873                                       +
   +           4        5.173081                                       +
   +           5        5.295986                                       +
   +           6        7.414344                                       +
@@ -1242,8 +1242,8 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.342679                                       +
-  +           2        2.782799                                       +
-  +           3        5.134772                                       +
+  +           2        2.782800                                       +
+  +           3        5.134773                                       +
   +           4        5.306536                                       +
   +           5        5.458435                                       +
   +           6        7.141528                                       +
@@ -1253,7 +1253,7 @@ Writing model to Fe.check
   +                                                                   +
   +           1        1.265811                                       +
   +           2        2.779668                                       +
-  +           3        5.139407                                       +
+  +           3        5.139408                                       +
   +           4        5.284690                                       +
   +           5        5.928219                                       +
   +           6        6.791315                                       +
@@ -1263,9 +1263,9 @@ Writing model to Fe.check
   +                                                                   +
   +           1        1.247474                                       +
   +           2        2.778598                                       +
-  +           3        5.139445                                       +
+  +           3        5.139446                                       +
   +           4        5.284663                                       +
-  +           5        6.380885                                       +
+  +           5        6.380884                                       +
   +           6        6.381245                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   67 (  0.468750  0.000000  0.000000) kpt-group=  1  +
@@ -1274,8 +1274,8 @@ Writing model to Fe.check
   +           1        1.245216                                       +
   +           2        2.788367                                       +
   +           3        5.129558                                       +
-  +           4        5.282073                                       +
-  +           5        6.221623                                       +
+  +           4        5.282074                                       +
+  +           5        6.221621                                       +
   +           6        6.352142                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   68 (  0.437500  0.000000  0.000000) kpt-group=  1  +
@@ -1284,27 +1284,27 @@ Writing model to Fe.check
   +           1        1.253015                                       +
   +           2        2.817394                                       +
   +           3        5.094383                                       +
-  +           4        5.293163                                       +
+  +           4        5.293162                                       +
   +           5        5.819175                                       +
-  +           6        6.266838                                       +
+  +           6        6.266839                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   69 (  0.406250  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.213987                                       +
-  +           2        2.864843                                       +
-  +           3        4.979204                                       +
+  +           2        2.864844                                       +
+  +           3        4.979205                                       +
   +           4        5.278099                                       +
   +           5        5.365210                                       +
-  +           6        6.131060                                       +
+  +           6        6.131059                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   70 (  0.375000  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.124901                                       +
-  +           2        2.929328                                       +
+  +           2        2.929329                                       +
   +           3        4.610940                                       +
-  +           4        5.156311                                       +
+  +           4        5.156312                                       +
   +           5        5.260280                                       +
   +           6        5.953428                                       +
   + ----------------------------------------------------------------- +
@@ -1313,9 +1313,9 @@ Writing model to Fe.check
   +                                                                   +
   +           1        0.951921                                       +
   +           2        3.008926                                       +
-  +           3        4.191064                                       +
+  +           3        4.191065                                       +
   +           4        5.083985                                       +
-  +           5        5.240890                                       +
+  +           5        5.240891                                       +
   +           6        5.744396                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   72 (  0.312500  0.000000  0.000000) kpt-group=  1  +
@@ -1324,14 +1324,14 @@ Writing model to Fe.check
   +           1        0.660579                                       +
   +           2        3.027584                                       +
   +           3        3.875912                                       +
-  +           4        4.961333                                       +
+  +           4        4.961334                                       +
   +           5        5.245704                                       +
-  +           6        5.469399                                       +
+  +           6        5.469400                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   73 (  0.281250  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        0.283125                                       +
+  +           1        0.283126                                       +
   +           2        3.122723                                       +
   +           3        3.706903                                       +
   +           4        4.917838                                       +
@@ -1343,8 +1343,8 @@ Writing model to Fe.check
   +                                                                   +
   +           1       -0.151129                                       +
   +           2        3.224076                                       +
-  +           3        3.666789                                       +
-  +           4        4.887346                                       +
+  +           3        3.666790                                       +
+  +           4        4.887347                                       +
   +           5        4.979487                                       +
   +           6        5.196737                                       +
   + ----------------------------------------------------------------- +
@@ -1362,10 +1362,10 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1       -1.034624                                       +
-  +           2        3.384018                                       +
+  +           2        3.384019                                       +
   +           3        3.694310                                       +
   +           4        4.511357                                       +
-  +           5        4.879550                                       +
+  +           5        4.879551                                       +
   +           6        5.124117                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   77 (  0.156250  0.000000  0.000000) kpt-group=  1  +
@@ -1391,12 +1391,12 @@ Writing model to Fe.check
   +  Spin=1 kpt=   79 (  0.093750  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1       -2.020735                                       +
-  +           2        3.608533                                       +
+  +           1       -2.020734                                       +
+  +           2        3.608532                                       +
   +           3        3.752377                                       +
-  +           4        3.901318                                       +
+  +           4        3.901319                                       +
   +           5        5.005840                                       +
-  +           6        5.103523                                       +
+  +           6        5.103524                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   80 (  0.062500  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1413,7 +1413,7 @@ Writing model to Fe.check
   +                                                                   +
   +           1       -2.332011                                       +
   +           2        3.688359                                       +
-  +           3        3.697890                                       +
+  +           3        3.697891                                       +
   +           4        3.718385                                       +
   +           5        5.066948                                       +
   +           6        5.079572                                       +
@@ -1426,7 +1426,7 @@ Writing model to Fe.check
   +           3        3.698801                                       +
   +           4        3.698801                                       +
   +           5        5.077942                                       +
-  +           6        5.077943                                       +
+  +           6        5.077942                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   83 (  0.030000  0.010000 -0.010000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1452,7 +1452,7 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1       -2.012468                                       +
-  +           2        3.631862                                       +
+  +           2        3.631863                                       +
   +           3        3.724054                                       +
   +           4        3.871558                                       +
   +           5        4.960538                                       +
@@ -1462,7 +1462,7 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1       -1.740104                                       +
-  +           2        3.590916                                       +
+  +           2        3.590917                                       +
   +           3        3.750562                                       +
   +           4        4.023081                                       +
   +           5        4.888567                                       +
@@ -1485,7 +1485,7 @@ Writing model to Fe.check
   +           2        3.507392                                       +
   +           3        3.744389                                       +
   +           4        4.446153                                       +
-  +           5        4.741201                                       +
+  +           5        4.741202                                       +
   +           6        5.274646                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   89 (  0.210000  0.070000 -0.070000) kpt-group=  1  +
@@ -1516,14 +1516,14 @@ Writing model to Fe.check
   +           3        3.633829                                       +
   +           4        4.646002                                       +
   +           5        5.087482                                       +
-  +           6        5.474462                                       +
+  +           6        5.474461                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   92 (  0.300000  0.100000 -0.100000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        0.809141                                       +
   +           2        3.293950                                       +
-  +           3        3.586958                                       +
+  +           3        3.586957                                       +
   +           4        4.695373                                       +
   +           5        5.311245                                       +
   +           6        5.573724                                       +
@@ -1535,18 +1535,18 @@ Writing model to Fe.check
   +           2        3.259202                                       +
   +           3        3.586149                                       +
   +           4        4.771951                                       +
-  +           5        5.572558                                       +
-  +           6        5.820851                                       +
+  +           5        5.572557                                       +
+  +           6        5.820850                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   94 (  0.360000  0.120000 -0.120000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.410459                                       +
   +           2        3.239954                                       +
-  +           3        3.586561                                       +
+  +           3        3.586562                                       +
   +           4        4.816511                                       +
-  +           5        5.781894                                       +
-  +           6        6.228362                                       +
+  +           5        5.781895                                       +
+  +           6        6.228363                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   95 (  0.390000  0.130000 -0.130000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1564,7 +1564,7 @@ Writing model to Fe.check
   +           1        1.658771                                       +
   +           2        3.272890                                       +
   +           3        3.577211                                       +
-  +           4        4.805175                                       +
+  +           4        4.805176                                       +
   +           5        6.135796                                       +
   +           6        7.497734                                       +
   + ----------------------------------------------------------------- +
@@ -1574,9 +1574,9 @@ Writing model to Fe.check
   +           1        1.710318                                       +
   +           2        3.280681                                       +
   +           3        3.497667                                       +
-  +           4        4.768466                                       +
+  +           4        4.768467                                       +
   +           5        6.223316                                       +
-  +           6        8.225267                                       +
+  +           6        8.225268                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   98 (  0.480000  0.160000 -0.160000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1586,12 +1586,12 @@ Writing model to Fe.check
   +           3        3.426628                                       +
   +           4        4.734858                                       +
   +           5        6.281828                                       +
-  +           6        8.862490                                       +
+  +           6        8.862491                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=   99 (  0.510000  0.170000 -0.170000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        1.808509                                       +
+  +           1        1.808508                                       +
   +           2        3.318881                                       +
   +           3        3.405298                                       +
   +           4        4.708683                                       +
@@ -1604,7 +1604,7 @@ Writing model to Fe.check
   +           1        1.860770                                       +
   +           2        3.213390                                       +
   +           3        3.498345                                       +
-  +           4        4.689748                                       +
+  +           4        4.689747                                       +
   +           5        6.237566                                       +
   +           6        8.987620                                       +
   + ----------------------------------------------------------------- +
@@ -1613,19 +1613,19 @@ Writing model to Fe.check
   +                                                                   +
   +           1        1.895878                                       +
   +           2        3.051892                                       +
-  +           3        3.584396                                       +
+  +           3        3.584395                                       +
   +           4        4.669340                                       +
   +           5        6.108223                                       +
-  +           6        8.520279                                       +
+  +           6        8.520280                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=  102 (  0.600000  0.200000 -0.200000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        1.926387                                       +
+  +           1        1.926388                                       +
   +           2        2.936676                                       +
   +           3        3.700072                                       +
   +           4        4.640770                                       +
-  +           5        5.945601                                       +
+  +           5        5.945602                                       +
   +           6        7.993889                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=  103 (  0.630000  0.210000 -0.210000) kpt-group=  1  +
@@ -1655,7 +1655,7 @@ Writing model to Fe.check
   +           2        3.021354                                       +
   +           3        4.153768                                       +
   +           4        4.421926                                       +
-  +           5        5.271398                                       +
+  +           5        5.271397                                       +
   +           6        6.704290                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=  106 (  0.720000  0.240000 -0.240000) kpt-group=  1  +
@@ -1666,17 +1666,17 @@ Writing model to Fe.check
   +           3        4.235682                                       +
   +           4        4.322859                                       +
   +           5        5.058585                                       +
-  +           6        6.435212                                       +
+  +           6        6.435213                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=  107 (  0.750000  0.250000 -0.250000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.419836                                       +
-  +           2        3.284927                                       +
+  +           2        3.284928                                       +
   +           3        4.235873                                       +
   +           4        4.237278                                       +
   +           5        4.927587                                       +
-  +           6        6.234033                                       +
+  +           6        6.234032                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=  108 (  0.727273  0.227273 -0.227273) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1702,20 +1702,20 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.509364                                       +
-  +           2        3.207418                                       +
+  +           2        3.207419                                       +
   +           3        3.720652                                       +
   +           4        4.493696                                       +
   +           5        5.368107                                       +
-  +           6        6.321912                                       +
+  +           6        6.321913                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=  111 (  0.659091  0.159091 -0.159091) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.533907                                       +
   +           2        3.274758                                       +
-  +           3        3.516967                                       +
+  +           3        3.516968                                       +
   +           4        4.642590                                       +
-  +           5        5.602677                                       +
+  +           5        5.602676                                       +
   +           6        6.386042                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=  112 (  0.636364  0.136364 -0.136364) kpt-group=  1  +
@@ -1726,14 +1726,14 @@ Writing model to Fe.check
   +           3        3.452758                                       +
   +           4        4.773649                                       +
   +           5        5.790385                                       +
-  +           6        6.455809                                       +
+  +           6        6.455810                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=  113 (  0.613636  0.113636 -0.113636) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.477568                                       +
   +           2        3.171436                                       +
-  +           3        3.750062                                       +
+  +           3        3.750064                                       +
   +           4        4.879435                                       +
   +           5        5.974168                                       +
   +           6        6.534662                                       +
@@ -1741,9 +1741,9 @@ Writing model to Fe.check
   +  Spin=1 kpt=  114 (  0.590909  0.090909 -0.090909) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        1.415490                                       +
+  +           1        1.415489                                       +
   +           2        3.021136                                       +
-  +           3        4.069512                                       +
+  +           3        4.069513                                       +
   +           4        4.971789                                       +
   +           5        6.107054                                       +
   +           6        6.560036                                       +
@@ -1751,7 +1751,7 @@ Writing model to Fe.check
   +  Spin=1 kpt=  115 (  0.568182  0.068182 -0.068182) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        1.355488                                       +
+  +           1        1.355487                                       +
   +           2        2.903503                                       +
   +           3        4.452008                                       +
   +           4        5.044078                                       +
@@ -1766,13 +1766,13 @@ Writing model to Fe.check
   +           3        4.849910                                       +
   +           4        5.116316                                       +
   +           5        6.315798                                       +
-  +           6        6.512821                                       +
+  +           6        6.512822                                       +
   + ----------------------------------------------------------------- +
   +  Spin=1 kpt=  117 (  0.522727  0.022727 -0.022727) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.259176                                       +
-  +           2        2.796706                                       +
+  +           2        2.796705                                       +
   +           3        5.111262                                       +
   +           4        5.177538                                       +
   +           5        6.364790                                       +
@@ -1783,9 +1783,9 @@ Writing model to Fe.check
   +                                                                   +
   +           1        1.247474                                       +
   +           2        2.778598                                       +
-  +           3        5.139445                                       +
+  +           3        5.139446                                       +
   +           4        5.284663                                       +
-  +           5        6.380885                                       +
+  +           5        6.380884                                       +
   +           6        6.381245                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=    1 (  0.000000  0.000000  0.000000) kpt-group=  1  +
@@ -1804,7 +1804,7 @@ Writing model to Fe.check
   +           1       -1.968459                                       +
   +           2        5.526665                                       +
   +           3        5.526665                                       +
-  +           4        5.566306                                       +
+  +           4        5.566305                                       +
   +           5        7.302896                                       +
   +           6        7.302896                                       +
   + ----------------------------------------------------------------- +
@@ -1816,17 +1816,17 @@ Writing model to Fe.check
   +           3        5.497724                                       +
   +           4        5.650449                                       +
   +           5        7.286021                                       +
-  +           6        7.286021                                       +
+  +           6        7.286022                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=    4 (  0.039474  0.039474  0.039474) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1       -1.635987                                       +
+  +           1       -1.635988                                       +
   +           2        5.457598                                       +
   +           3        5.457598                                       +
   +           4        5.876853                                       +
   +           5        7.280727                                       +
-  +           6        7.280727                                       +
+  +           6        7.280728                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=    5 (  0.052632  0.052632  0.052632) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1843,20 +1843,20 @@ Writing model to Fe.check
   +                                                                   +
   +           1       -0.993507                                       +
   +           2        5.337124                                       +
-  +           3        5.337124                                       +
+  +           3        5.337125                                       +
   +           4        6.292247                                       +
   +           5        7.255433                                       +
-  +           6        7.255433                                       +
+  +           6        7.255434                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=    7 (  0.078947  0.078947  0.078947) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1       -0.569488                                       +
-  +           2        5.214091                                       +
-  +           3        5.214091                                       +
+  +           2        5.214090                                       +
+  +           3        5.214090                                       +
   +           4        6.574125                                       +
   +           5        7.211690                                       +
-  +           6        7.211690                                       +
+  +           6        7.211691                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=    8 (  0.092105  0.092105  0.092105) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1895,7 +1895,7 @@ Writing model to Fe.check
   +           2        4.682505                                       +
   +           3        4.682505                                       +
   +           4        7.344676                                       +
-  +           5        7.344676                                       +
+  +           5        7.344677                                       +
   +           6        8.174251                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   12 (  0.144737  0.144737  0.144737) kpt-group=  1  +
@@ -1905,7 +1905,7 @@ Writing model to Fe.check
   +           2        4.520437                                       +
   +           3        4.520437                                       +
   +           4        7.363985                                       +
-  +           5        7.363985                                       +
+  +           5        7.363987                                       +
   +           6        8.651865                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   13 (  0.157895  0.157895  0.157895) kpt-group=  1  +
@@ -1935,7 +1935,7 @@ Writing model to Fe.check
   +           2        4.253186                                       +
   +           3        4.253186                                       +
   +           4        7.497421                                       +
-  +           5        7.497421                                       +
+  +           5        7.497422                                       +
   +           6       10.524434                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   16 (  0.197368  0.197368  0.197368) kpt-group=  1  +
@@ -1945,7 +1945,7 @@ Writing model to Fe.check
   +           2        4.212481                                       +
   +           3        4.212481                                       +
   +           4        7.535870                                       +
-  +           5        7.535870                                       +
+  +           5        7.535871                                       +
   +           6       11.316931                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   17 (  0.210526  0.210526  0.210526) kpt-group=  1  +
@@ -1956,17 +1956,17 @@ Writing model to Fe.check
   +           3        4.215773                                       +
   +           4        7.569244                                       +
   +           5        7.569244                                       +
-  +           6       12.208233                                       +
+  +           6       12.208232                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   18 (  0.223684  0.223684  0.223684) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        4.201281                                       +
   +           2        4.201282                                       +
-  +           3        4.324020                                       +
+  +           3        4.324019                                       +
   +           4        7.596794                                       +
   +           5        7.596794                                       +
-  +           6       13.195415                                       +
+  +           6       13.195414                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   19 (  0.236842  0.236842  0.236842) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -1976,17 +1976,17 @@ Writing model to Fe.check
   +           3        4.341867                                       +
   +           4        7.617879                                       +
   +           5        7.617879                                       +
-  +           6       14.259773                                       +
+  +           6       14.259772                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   20 (  0.250000  0.250000  0.250000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        4.226491                                       +
   +           2        4.226491                                       +
-  +           3        4.227622                                       +
+  +           3        4.227621                                       +
   +           4        7.533888                                       +
   +           5        7.533888                                       +
-  +           6       15.290306                                       +
+  +           6       15.290425                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   21 (  0.263158  0.263158  0.263158) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2031,12 +2031,12 @@ Writing model to Fe.check
   +  Spin=2 kpt=   25 (  0.315789  0.315789  0.315789) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        3.891580                                       +
+  +           1        3.891581                                       +
   +           2        4.485712                                       +
   +           3        4.485713                                       +
   +           4        7.503359                                       +
   +           5        7.503359                                       +
-  +           6       13.764302                                       +
+  +           6       13.764301                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   26 (  0.328947  0.328947  0.328947) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2061,18 +2061,18 @@ Writing model to Fe.check
   +  Spin=2 kpt=   28 (  0.355263  0.355263  0.355263) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        4.228588                                       +
-  +           2        4.334759                                       +
-  +           3        4.334759                                       +
+  +           1        4.228589                                       +
+  +           2        4.334760                                       +
+  +           3        4.334760                                       +
   +           4        7.462013                                       +
   +           5        7.462013                                       +
-  +           6       13.708619                                       +
+  +           6       13.708620                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   29 (  0.368421  0.368421  0.368421) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        4.216878                                       +
-  +           2        4.216879                                       +
+  +           2        4.216878                                       +
   +           3        4.483555                                       +
   +           4        7.490204                                       +
   +           5        7.490204                                       +
@@ -2085,28 +2085,28 @@ Writing model to Fe.check
   +           2        4.072026                                       +
   +           3        4.809277                                       +
   +           4        7.543845                                       +
-  +           5        7.543846                                       +
-  +           6       13.983880                                       +
+  +           5        7.543845                                       +
+  +           6       13.983881                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   31 (  0.394737  0.394737  0.394737) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        3.941486                                       +
-  +           2        3.941487                                       +
+  +           2        3.941486                                       +
   +           3        5.202298                                       +
   +           4        7.642942                                       +
   +           5        7.642942                                       +
-  +           6       14.209755                                       +
+  +           6       14.209754                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   32 (  0.407895  0.407895  0.407895) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        3.770548                                       +
   +           2        3.770548                                       +
-  +           3        5.644364                                       +
+  +           3        5.644365                                       +
   +           4        7.729252                                       +
   +           5        7.729252                                       +
-  +           6       14.446015                                       +
+  +           6       14.446016                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   33 (  0.421053  0.421053  0.421053) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2126,7 +2126,7 @@ Writing model to Fe.check
   +           3        6.627713                                       +
   +           4        7.878163                                       +
   +           5        7.878163                                       +
-  +           6       14.976698                                       +
+  +           6       14.976699                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   35 (  0.447368  0.447368  0.447368) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2136,7 +2136,7 @@ Writing model to Fe.check
   +           3        7.096386                                       +
   +           4        7.969428                                       +
   +           5        7.969428                                       +
-  +           6       15.248317                                       +
+  +           6       15.248316                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   36 (  0.460526  0.460526  0.460526) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2146,17 +2146,17 @@ Writing model to Fe.check
   +           3        7.520449                                       +
   +           4        8.048863                                       +
   +           5        8.048863                                       +
-  +           6       15.501696                                       +
+  +           6       15.501694                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   37 (  0.473684  0.473684  0.473684) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        3.072364                                       +
   +           2        3.072364                                       +
-  +           3        7.862774                                       +
+  +           3        7.862773                                       +
   +           4        8.110362                                       +
   +           5        8.110362                                       +
-  +           6       15.713639                                       +
+  +           6       15.713640                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   38 (  0.486842  0.486842  0.486842) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2172,11 +2172,11 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        3.000102                                       +
-  +           2        3.000103                                       +
+  +           2        3.000102                                       +
   +           3        8.162533                                       +
   +           4        8.162533                                       +
   +           5        8.165142                                       +
-  +           6       15.907899                                       +
+  +           6       15.907703                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   40 (  0.500000  0.481481  0.481481) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2193,10 +2193,10 @@ Writing model to Fe.check
   +                                                                   +
   +           1        3.067111                                       +
   +           2        3.075787                                       +
-  +           3        7.892988                                       +
+  +           3        7.892987                                       +
   +           4        8.049073                                       +
   +           5        8.146067                                       +
-  +           6       15.340870                                       +
+  +           6       15.340871                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   42 (  0.500000  0.444444  0.444444) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2206,7 +2206,7 @@ Writing model to Fe.check
   +           3        7.584815                                       +
   +           4        7.919488                                       +
   +           5        8.125290                                       +
-  +           6       14.768680                                       +
+  +           6       14.768679                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   43 (  0.500000  0.425926  0.425926) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2214,9 +2214,9 @@ Writing model to Fe.check
   +           1        3.253315                                       +
   +           2        3.290493                                       +
   +           3        7.202973                                       +
-  +           4        7.758307                                       +
-  +           5        8.095974                                       +
-  +           6       14.123906                                       +
+  +           4        7.758306                                       +
+  +           5        8.095972                                       +
+  +           6       14.123905                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   44 (  0.500000  0.407407  0.407407) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2225,13 +2225,13 @@ Writing model to Fe.check
   +           2        3.438910                                       +
   +           3        6.781787                                       +
   +           4        7.581258                                       +
-  +           5        8.058180                                       +
+  +           5        8.058181                                       +
   +           6       13.463268                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   45 (  0.500000  0.388889  0.388889) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        3.505756                                       +
+  +           1        3.505755                                       +
   +           2        3.605006                                       +
   +           3        6.331509                                       +
   +           4        7.404422                                       +
@@ -2245,15 +2245,15 @@ Writing model to Fe.check
   +           2        3.785543                                       +
   +           3        5.904641                                       +
   +           4        7.275174                                       +
-  +           5        7.962022                                       +
-  +           6       12.201631                                       +
+  +           5        7.962021                                       +
+  +           6       12.201630                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   47 (  0.500000  0.351852  0.351852) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        3.682720                                       +
   +           2        3.951971                                       +
-  +           3        5.551178                                       +
+  +           3        5.551179                                       +
   +           4        7.138639                                       +
   +           5        7.899686                                       +
   +           6       11.646632                                       +
@@ -2261,7 +2261,7 @@ Writing model to Fe.check
   +  Spin=2 kpt=   48 (  0.500000  0.333333  0.333333) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        3.672513                                       +
+  +           1        3.672514                                       +
   +           2        4.101069                                       +
   +           3        5.289209                                       +
   +           4        7.041085                                       +
@@ -2296,7 +2296,7 @@ Writing model to Fe.check
   +           3        4.965716                                       +
   +           4        6.997601                                       +
   +           5        7.681587                                       +
-  +           6       10.062810                                       +
+  +           6       10.062811                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   52 (  0.500000  0.259259  0.259259) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2316,7 +2316,7 @@ Writing model to Fe.check
   +           3        4.768479                                       +
   +           4        7.137984                                       +
   +           5        7.610756                                       +
-  +           6        9.715915                                       +
+  +           6        9.715916                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   54 (  0.500000  0.222222  0.222222) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2333,8 +2333,8 @@ Writing model to Fe.check
   +                                                                   +
   +           1        3.064318                                       +
   +           2        4.356648                                       +
-  +           3        4.506413                                       +
-  +           4        7.316505                                       +
+  +           3        4.506414                                       +
+  +           4        7.316504                                       +
   +           5        7.570208                                       +
   +           6        9.611295                                       +
   + ----------------------------------------------------------------- +
@@ -2355,7 +2355,7 @@ Writing model to Fe.check
   +           2        4.347947                                       +
   +           3        4.348230                                       +
   +           4        7.436493                                       +
-  +           5        7.439059                                       +
+  +           5        7.439058                                       +
   +           6        9.606914                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   58 (  0.500000  0.148148  0.148148) kpt-group=  1  +
@@ -2382,7 +2382,7 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.905495                                       +
-  +           2        4.382345                                       +
+  +           2        4.382344                                       +
   +           3        4.847510                                       +
   +           4        7.352075                                       +
   +           5        7.563150                                       +
@@ -2401,7 +2401,7 @@ Writing model to Fe.check
   +  Spin=2 kpt=   62 (  0.500000  0.074074  0.074074) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        2.699043                                       +
+  +           1        2.699044                                       +
   +           2        4.396116                                       +
   +           3        5.545142                                       +
   +           4        7.338580                                       +
@@ -2413,16 +2413,16 @@ Writing model to Fe.check
   +                                                                   +
   +           1        2.613549                                       +
   +           2        4.403239                                       +
-  +           3        5.926675                                       +
+  +           3        5.926674                                       +
   +           4        7.319777                                       +
-  +           5        7.575788                                       +
+  +           5        7.575789                                       +
   +           6        9.033846                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   64 (  0.500000  0.037037  0.037037) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.553629                                       +
-  +           2        4.433362                                       +
+  +           2        4.433363                                       +
   +           3        6.295773                                       +
   +           4        7.308964                                       +
   +           5        7.586901                                       +
@@ -2435,18 +2435,18 @@ Writing model to Fe.check
   +           2        4.435137                                       +
   +           3        6.590536                                       +
   +           4        7.296557                                       +
-  +           5        7.567524                                       +
+  +           5        7.567523                                       +
   +           6        8.594557                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   66 (  0.500000  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        2.481111                                       +
-  +           2        4.435729                                       +
+  +           1        2.481110                                       +
+  +           2        4.435730                                       +
   +           3        6.712273                                       +
   +           4        7.290291                                       +
   +           5        7.567825                                       +
-  +           6        8.503025                                       +
+  +           6        8.503024                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   67 (  0.468750  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2456,16 +2456,16 @@ Writing model to Fe.check
   +           3        6.590813                                       +
   +           4        7.295520                                       +
   +           5        7.564237                                       +
-  +           6        8.469337                                       +
+  +           6        8.469338                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   68 (  0.437500  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        2.409353                                       +
+  +           1        2.409352                                       +
   +           2        4.479744                                       +
   +           3        6.292033                                       +
   +           4        7.294534                                       +
-  +           5        7.571141                                       +
+  +           5        7.571142                                       +
   +           6        8.370796                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   69 (  0.406250  0.000000  0.000000) kpt-group=  1  +
@@ -2503,8 +2503,8 @@ Writing model to Fe.check
   +                                                                   +
   +           1        1.262833                                       +
   +           2        4.735994                                       +
-  +           3        5.267707                                       +
-  +           4        7.102543                                       +
+  +           3        5.267706                                       +
+  +           4        7.102542                                       +
   +           5        7.470226                                       +
   +           6        7.498920                                       +
   + ----------------------------------------------------------------- +
@@ -2523,7 +2523,7 @@ Writing model to Fe.check
   +                                                                   +
   +           1        0.280166                                       +
   +           2        4.963425                                       +
-  +           3        5.310554                                       +
+  +           3        5.310553                                       +
   +           4        6.922148                                       +
   +           5        7.039158                                       +
   +           6        7.439074                                       +
@@ -2531,7 +2531,7 @@ Writing model to Fe.check
   +  Spin=2 kpt=   75 (  0.218750  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1       -0.205606                                       +
+  +           1       -0.205607                                       +
   +           2        5.083830                                       +
   +           3        5.380519                                       +
   +           4        6.661966                                       +
@@ -2542,10 +2542,10 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1       -0.655752                                       +
-  +           2        5.160704                                       +
-  +           3        5.449814                                       +
+  +           2        5.160703                                       +
+  +           3        5.449813                                       +
   +           4        6.405600                                       +
-  +           5        7.049159                                       +
+  +           5        7.049158                                       +
   +           6        7.361737                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   77 (  0.156250  0.000000  0.000000) kpt-group=  1  +
@@ -2555,7 +2555,7 @@ Writing model to Fe.check
   +           2        5.268672                                       +
   +           3        5.513516                                       +
   +           4        6.194651                                       +
-  +           5        7.093848                                       +
+  +           5        7.093847                                       +
   +           6        7.347864                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   78 (  0.125000  0.000000  0.000000) kpt-group=  1  +
@@ -2566,7 +2566,7 @@ Writing model to Fe.check
   +           3        5.556802                                       +
   +           4        5.948970                                       +
   +           5        7.147727                                       +
-  +           6        7.371341                                       +
+  +           6        7.371342                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   79 (  0.093750  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2576,7 +2576,7 @@ Writing model to Fe.check
   +           3        5.572516                                       +
   +           4        5.755645                                       +
   +           5        7.214209                                       +
-  +           6        7.334701                                       +
+  +           6        7.334700                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   80 (  0.062500  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2586,12 +2586,12 @@ Writing model to Fe.check
   +           3        5.529724                                       +
   +           4        5.628027                                       +
   +           5        7.257284                                       +
-  +           6        7.315982                                       +
+  +           6        7.315981                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   81 (  0.031250  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1       -1.970967                                       +
+  +           1       -1.970968                                       +
   +           2        5.523671                                       +
   +           3        5.535248                                       +
   +           4        5.560251                                       +
@@ -2614,7 +2614,7 @@ Writing model to Fe.check
   +           1       -1.970019                                       +
   +           2        5.526461                                       +
   +           3        5.535271                                       +
-  +           4        5.557719                                       +
+  +           4        5.557720                                       +
   +           5        7.291631                                       +
   +           6        7.314397                                       +
   + ----------------------------------------------------------------- +
@@ -2625,7 +2625,7 @@ Writing model to Fe.check
   +           2        5.498164                                       +
   +           3        5.530411                                       +
   +           4        5.618051                                       +
-  +           5        7.240705                                       +
+  +           5        7.240704                                       +
   +           6        7.330178                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   85 (  0.090000  0.030000 -0.030000) kpt-group=  1  +
@@ -2633,10 +2633,10 @@ Writing model to Fe.check
   +                                                                   +
   +           1       -1.649936                                       +
   +           2        5.454007                                       +
-  +           3        5.547436                                       +
+  +           3        5.547435                                       +
   +           4        5.724835                                       +
-  +           5        7.163174                                       +
-  +           6        7.367310                                       +
+  +           5        7.163175                                       +
+  +           6        7.367311                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   86 (  0.120000  0.040000 -0.040000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2652,8 +2652,8 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1       -1.029949                                       +
-  +           2        5.360589                                       +
-  +           3        5.541757                                       +
+  +           2        5.360588                                       +
+  +           3        5.541758                                       +
   +           4        6.107250                                       +
   +           5        6.971987                                       +
   +           6        7.451262                                       +
@@ -2676,7 +2676,7 @@ Writing model to Fe.check
   +           3        5.451719                                       +
   +           4        6.551809                                       +
   +           5        6.791216                                       +
-  +           6        7.575183                                       +
+  +           6        7.575182                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   90 (  0.240000  0.080000 -0.080000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2695,15 +2695,15 @@ Writing model to Fe.check
   +           2        5.085690                                       +
   +           3        5.284265                                       +
   +           4        6.694221                                       +
-  +           5        7.042479                                       +
-  +           6        7.699715                                       +
+  +           5        7.042480                                       +
+  +           6        7.699716                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   92 (  0.300000  0.100000 -0.100000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        1.384931                                       +
   +           2        5.022267                                       +
-  +           3        5.177399                                       +
+  +           3        5.177401                                       +
   +           4        6.711193                                       +
   +           5        7.294453                                       +
   +           6        7.752378                                       +
@@ -2732,19 +2732,19 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.612394                                       +
-  +           2        4.937773                                       +
+  +           2        4.937774                                       +
   +           3        5.026914                                       +
   +           4        6.806392                                       +
   +           5        8.030358                                       +
-  +           6        8.459441                                       +
+  +           6        8.459440                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   96 (  0.420000  0.140000 -0.140000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.840634                                       +
-  +           2        4.975699                                       +
+  +           2        4.975698                                       +
   +           3        5.009398                                       +
-  +           4        6.821595                                       +
+  +           4        6.821596                                       +
   +           5        8.221227                                       +
   +           6        8.950104                                       +
   + ----------------------------------------------------------------- +
@@ -2752,7 +2752,7 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.990340                                       +
-  +           2        4.941392                                       +
+  +           2        4.941393                                       +
   +           3        4.986725                                       +
   +           4        6.775025                                       +
   +           5        8.327720                                       +
@@ -2763,10 +2763,10 @@ Writing model to Fe.check
   +                                                                   +
   +           1        3.098979                                       +
   +           2        4.873181                                       +
-  +           3        5.042864                                       +
+  +           3        5.042863                                       +
   +           4        6.726378                                       +
   +           5        8.395828                                       +
-  +           6       10.007971                                       +
+  +           6       10.007970                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=   99 (  0.510000  0.170000 -0.170000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2781,7 +2781,7 @@ Writing model to Fe.check
   +  Spin=2 kpt=  100 (  0.540000  0.180000 -0.180000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        3.199713                                       +
+  +           1        3.199714                                       +
   +           2        4.668023                                       +
   +           3        5.221601                                       +
   +           4        6.648682                                       +
@@ -2803,7 +2803,7 @@ Writing model to Fe.check
   +                                                                   +
   +           1        3.107460                                       +
   +           2        4.488220                                       +
-  +           3        5.448146                                       +
+  +           3        5.448147                                       +
   +           4        6.562572                                       +
   +           5        8.010406                                       +
   +           6        9.413526                                       +
@@ -2812,7 +2812,7 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.979004                                       +
-  +           2        4.537462                                       +
+  +           2        4.537461                                       +
   +           3        5.644141                                       +
   +           4        6.495588                                       +
   +           5        7.793583                                       +
@@ -2821,7 +2821,7 @@ Writing model to Fe.check
   +  Spin=2 kpt=  104 (  0.660000  0.220000 -0.220000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
-  +           1        2.774278                                       +
+  +           1        2.774277                                       +
   +           2        4.633045                                       +
   +           3        5.783832                                       +
   +           4        6.387524                                       +
@@ -2842,11 +2842,11 @@ Writing model to Fe.check
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.303957                                       +
-  +           2        4.961775                                       +
+  +           2        4.961776                                       +
   +           3        6.017258                                       +
   +           4        6.119891                                       +
   +           5        7.020379                                       +
-  +           6        8.322954                                       +
+  +           6        8.322953                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=  107 (  0.750000  0.250000 -0.250000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2855,7 +2855,7 @@ Writing model to Fe.check
   +           2        5.121098                                       +
   +           3        6.017127                                       +
   +           4        6.018377                                       +
-  +           5        6.877440                                       +
+  +           5        6.877441                                       +
   +           6        8.201520                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=  108 (  0.727273  0.227273 -0.227273) kpt-group=  1  +
@@ -2866,14 +2866,14 @@ Writing model to Fe.check
   +           3        5.936762                                       +
   +           4        6.076794                                       +
   +           5        6.960415                                       +
-  +           6        8.206710                                       +
+  +           6        8.206709                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=  109 (  0.704545  0.204545 -0.204545) kpt-group=  1  +
   + ----------------------------------------------------------------- +
   +                                                                   +
   +           1        2.155737                                       +
   +           2        4.988237                                       +
-  +           3        5.731958                                       +
+  +           3        5.731959                                       +
   +           4        6.198146                                       +
   +           5        7.137488                                       +
   +           6        8.217021                                       +
@@ -2903,7 +2903,7 @@ Writing model to Fe.check
   +                                                                   +
   +           1        2.431037                                       +
   +           2        4.967329                                       +
-  +           3        5.043944                                       +
+  +           3        5.043945                                       +
   +           4        6.758064                                       +
   +           5        7.828931                                       +
   +           6        8.262786                                       +
@@ -2934,9 +2934,9 @@ Writing model to Fe.check
   +           1        2.515399                                       +
   +           2        4.578197                                       +
   +           3        5.767043                                       +
-  +           4        7.138714                                       +
+  +           4        7.138713                                       +
   +           5        8.096488                                       +
-  +           6        8.319028                                       +
+  +           6        8.319029                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=  116 (  0.545455  0.045455 -0.045455) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2955,8 +2955,8 @@ Writing model to Fe.check
   +           2        4.455409                                       +
   +           3        6.528292                                       +
   +           4        7.278438                                       +
-  +           5        7.699222                                       +
-  +           6        8.483949                                       +
+  +           5        7.699223                                       +
+  +           6        8.483951                                       +
   + ----------------------------------------------------------------- +
   +  Spin=2 kpt=  118 (  0.500000  0.000000  0.000000) kpt-group=  1  +
   + ----------------------------------------------------------------- +
@@ -2966,7 +2966,7 @@ Writing model to Fe.check
   +           3        6.712273                                       +
   +           4        7.290291                                       +
   +           5        7.567825                                       +
-  +           6        8.503025                                       +
+  +           6        8.503026                                       +
   =====================================================================
 
 Writing model to Fe.orbitals
@@ -3007,7 +3007,7 @@ Writing model to Fe.check
  A BibTeX formatted list of references used in this run has been written to 
  Fe.bib
  
-Initialisation time =      6.69 s
-Calculation time    =     11.95 s
+Initialisation time =      6.90 s
+Calculation time    =     11.97 s
 Finalisation time   =      0.02 s
-Total time          =     18.65 s
+Total time          =     18.89 s
