@@ -28,6 +28,7 @@ class CastepParserContext(object):
         self.functionals                       = []
         self.func_total                        = []
         self.relativistic                      = []
+        self.dispersion                        = None
         self.cell                              = []
         self.at_nr                             = 0
         self.atom_type_mass                    = []
@@ -60,7 +61,7 @@ class CastepParserContext(object):
         self.castep_band_energies_1            = []
         self.k_path_nr                         = 0
         self.band_en                           = []
-
+        self.van_der_waals_name                = None
         self.e_spin_1                          = []
         self.e_spin_2                          = []
 
@@ -196,6 +197,24 @@ class CastepParserContext(object):
 # Here we add info about the XC functional and relativistic treatment
     
     def onClose_section_method(self, backend, gIndex, section):
+        self.van_der_waals_name = section["van_der_Waals_method"]
+        if self.van_der_waals_name is not None:
+            dispersion_map = {
+            " OBS correction scheme": "OBS",
+            " G06 correction scheme": "G06",
+            " TS correction scheme" : "TS",
+            " JCHS correction scheme" : "JCHS",
+            }
+            self.dispersion = []
+            for name in self.van_der_waals_name:
+                match = dispersion_map.get(name)
+                if match:
+                    self.dispersion.append(match)    
+            self.dispersion = "_".join(sorted(self.dispersion))
+        else:
+            pass
+        #backend.addValue('van_der_Waals_method',self.dispersion)
+       
         if self.functional_weight is not None:
             self.func_and_weight = []
             for i in range(len(self.functional_types)):
@@ -209,7 +228,10 @@ class CastepParserContext(object):
             backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
             backend.addValue('relativity_method', self.relativistic)
         #if self.functional_weight = 0
-            backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.relativistic)
+            if self.dispersion is not None:
+                backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.dispersion+'_'+self.relativistic)
+            else:
+                backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.relativistic)
         else:
             for i in range(len(self.functionals)):
           #      self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i])
@@ -219,8 +241,10 @@ class CastepParserContext(object):
                 backend.closeSection('section_XC_functionals',gIndex+i)
             backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
             backend.addValue('relativity_method', self.relativistic)
-            backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.relativistic)
-            
+            if self.dispersion is not None:
+                backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion+'_'+self.relativistic)
+            else:
+                backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.relativistic)
             
      
             
@@ -649,11 +673,14 @@ def build_CastepMainFileSimpleMatcher():
 
             SM(name = "van der Waals",
                startReStr = r"\sDFT\+D: Semi-empirical dispersion correction\s*\:\s*",
-               forwardMatch = True,
+               #forwardMatch = True,
               #sections = ["castep_section_relativity_treatment"],
                subMatchers = [
-                 SM(r"\sSEDC with\s*\: *(?P<van_der_Waals_method> [A-Za-z0-9() -]+)")
-                             ]), # CLOSING van der waals           
+                 SM(r"\sSEDC with\s*\: *(?P<van_der_Waals_method> [A-Za-z0-9() -]+)"),
+                             ]), # CLOSING van der waals
+            
+            
+
  
                       ]) # CLOSING SM calculationMethods
 
@@ -845,7 +872,25 @@ def build_CastepMainFileSimpleMatcher():
                         repeats = True),
                      ]), # CLOSING section_atom_topology
                
-                SM(startReStr = r"\-*\s*\<\-\-\sSCF\s*",
+          ############ CASTEP-specific van der Waals method parameters #############################     
+                SM(name = "van der Waals castep TS",
+                   startReStr = r"\s*Dispersion\-correction scheme\s\:\s+",
+                   forwardMatch = True,
+                   sections = ["castep_section_van_der_Waals_parameters"],
+                   subMatchers = [
+                        ######## Method TS #######
+                        SM(r"\s*Parameter sR\s*\: *(?P<Parameter_sR> [0-9.]+)"),
+                        SM(r"\s*Parameter d\s*\: *(?P<Parameter_d> [0-9.]+)"),
+                        ######## Method OBS #######
+                        SM(r"\s*Parameter lambda\s*\: *(?P<Parameter_LAMBDA> [0-9.]+)"),
+                        SM(r"\s*Parameter n\s*\: *(?P<Parameter_n> [0-9.]+)"),
+               
+                        ######## Method G06 #######
+                        SM(r"\s*Parameter s6\s*\: *(?P<Parameter_s6> [0-9.]+)"),
+                        SM(r"\s*Parameter d\s*\: *(?P<Parameter_d> [0-9.]+)")
+                              ]), # CLOSING van der waals castep parameters
+
+               SM(startReStr = r"\-*\s*\<\-\-\sSCF\s*",
                   forwardMatch = True,
                   sections = ["section_single_configuration_calculation"],
                   subMatchers = [                     
