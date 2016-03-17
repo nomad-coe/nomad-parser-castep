@@ -64,7 +64,9 @@ class CastepParserContext(object):
         self.van_der_waals_name                = None
         self.e_spin_1                          = []
         self.e_spin_2                          = []
-
+        #self.van_der_waals_energy              = []
+        self.disp_energy                       = 0 
+        #self.total_energy                      = []
 
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
@@ -316,7 +318,7 @@ class CastepParserContext(object):
 
 # Processing forces acting on atoms (final converged forces)
     def onClose_section_single_configuration_calculation(self, backend, gIndex, section):
-        #get cached values of castep_store_atom_forces
+        
         f_st = section['castep_store_atom_forces']
         for i in range(0, self.at_nr):
             f_st[i] = f_st[i].split()
@@ -358,12 +360,15 @@ class CastepParserContext(object):
         backend.openSection('section_stress_tensor')
         backend.addArrayValues('stress_tensor_value',np.asarray(self.stress_tensor_value))
         backend.closeSection('section_stress_tensor', gIndex)
-        
-        
+  
+        #######Absolute Dispersion energy recovered from totatl energy. ##############      
+        van_der_waals_energy = section['castep_total_dispersion_corrected_energy']
+        total_energy = section['energy_total']
+        for i in range(len(total_energy)):
+            self.disp_energy = abs(van_der_waals_energy[i] - total_energy[i])
+        backend.addValue('energy_van_der_Waals', self.disp_energy)
 
-    
-        
-
+        #get cached values of castep_store_atom_forces
 # Recover SCF k points and eigenvalue from *.band file (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
     def onClose_castep_section_collect_scf_eigenvalues(self, backend, gIndex, section):
 
@@ -459,7 +464,8 @@ class CastepParserContext(object):
 
             self.atom_position.append(pos_a)
         backend.addArrayValues('atom_position', np.asarray(self.atom_position), unit='angstrom')
-
+        
+        
 
 # Backend add the simulation cell
         backend.addArrayValues('simulation_cell', np.asarray(self.cell), unit='angstrom')
@@ -917,6 +923,7 @@ def build_CastepMainFileSimpleMatcher():
 
                       SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
                       SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                      SM(r"Dispersion corrected final energy\*\s=\s*(?P<castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),#total energy including dispersion correction
                       SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"), # matching final converged total free energy
                       SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<energy_total_T0__eV>[-+0-9.eEdD]*)"), # 0K corrected final SCF energy
 
