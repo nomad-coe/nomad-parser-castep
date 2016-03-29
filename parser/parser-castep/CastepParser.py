@@ -838,6 +838,7 @@ def build_CastepMainFileSimpleMatcher():
             startReStr = r"\s\|\s*CCC\s*AA\s*SSS\s*TTTTT\s*EEEEE\s*PPPP\s*\|\s*",
             required = True,
             forwardMatch = True,
+            fixedStartValues={'program_name': 'CASTEP', 'program_basis_set_type': 'plane waves' },
             sections = ['section_run'],
             subMatchers = [
 
