@@ -1,8 +1,8 @@
 package eu.nomad_lab.parsers
 
-import eu.{nomad_lab=>lab}
+import eu.{ nomad_lab => lab }
 import eu.nomad_lab.DefaultPythonInterpreter
-import org.{json4s => jn}
+import org.{ json4s => jn }
 import scala.collection.breakOut
 
 object CastepParser extends SimpleExternalParserGenerator(
@@ -12,8 +12,9 @@ object CastepParser extends SimpleExternalParserGenerator(
       ("parserId" -> jn.JString("CastepParser" + lab.CastepVersionInfo.version)) ::
       ("versionInfo" -> jn.JObject(
         ("nomadCoreVersion" -> jn.JString(lab.NomadCoreVersionInfo.version)) ::
-          (lab.CastepVersionInfo.toMap.map{ case (key, value) =>
-            (key -> jn.JString(value.toString))
+          (lab.CastepVersionInfo.toMap.map {
+            case (key, value) =>
+              (key -> jn.JString(value.toString))
           }(breakOut): List[(String, jn.JString)])
       )) :: Nil
   ),
