@@ -33,6 +33,9 @@ class CastepParserContext(object):
         self.at_nr                             = 0
         self.atom_type_mass                    = []
         self.atom_label                        = []
+        self.atom_optim_position = []
+        self.castep_optimised_atom_position    = [] 
+        self.castep_atom_optim_label           = []
         self.atom_forces                       = []
         self.stress_tensor_value               = []
         self.castep_atom_position              = []
@@ -64,8 +67,9 @@ class CastepParserContext(object):
         self.van_der_waals_name                = None
         self.e_spin_1                          = []
         self.e_spin_2                          = []
-        #self.van_der_waals_energy              = []
-        self.disp_energy                       = 0 
+        self.optim_method                      = []
+        self.disp_energy                       = [] 
+        self.geoConvergence = None
         #self.total_energy                      = []
 
     def initialize_values(self):
@@ -198,8 +202,12 @@ class CastepParserContext(object):
         self.relativistic = "_".join(sorted(self.relativistic))
 # Here we add info about the XC functional and relativistic treatment
     
+    def onClose_castep_section_geom_optimisation_method(self, backend, gIndex, section):
+        self.optim_method = section["castep_geometry_optim_method"]
+
     def onClose_section_method(self, backend, gIndex, section):
         self.van_der_waals_name = section["van_der_Waals_method"]
+        
         if self.van_der_waals_name is not None:
             dispersion_map = {
             " OBS correction scheme": "OBS",
@@ -216,7 +224,8 @@ class CastepParserContext(object):
         else:
             pass
         #backend.addValue('van_der_Waals_method',self.dispersion)
-       
+        
+        
         if self.functional_weight is not None:
             self.func_and_weight = []
             for i in range(len(self.functional_types)):
@@ -247,10 +256,7 @@ class CastepParserContext(object):
                 backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion+'_'+self.relativistic)
             else:
                 backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.relativistic)
-            
-     
-            
-        
+               
         
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_associated(self, backend, gIndex, section):
@@ -265,7 +271,23 @@ class CastepParserContext(object):
         backend.addValue('basis_set_cell_associated_kind', basis_set_kind)
         backend.addValue('basis_set_cell_associated_name', basis_set_name)
 
+    def onClose_castep_section_cell_optim(self, backend, gIndex, section):
+        """trigger called when _castep_section_cell is closed"""
+        # get cached values for castep_cell_vector
+        vet = section['castep_cell_vector_optim']
+     
+        vet[0] = vet[0].split()
+        vet[0] = [float(i) for i in vet[0]]
 
+        vet[1] = vet[1].split()
+        vet[1] = [float(i) for i in vet[1]]
+
+        vet[2] = vet[2].split()
+        vet[2] = [float(i) for i in vet[2]]
+
+        self.cell.append(vet[0])
+        self.cell.append(vet[1])
+        self.cell.append(vet[2]) # Reconstructing the unit cell vector by vector    
 # Storing the unit cell
     def onClose_castep_section_cell(self, backend, gIndex, section):
         """trigger called when _castep_section_cell is closed"""
@@ -285,7 +307,7 @@ class CastepParserContext(object):
         self.cell.append(vet[1])
         self.cell.append(vet[2]) # Reconstructing the unit cell vector by vector
 
-
+     
 # Here we recover the unit cell dimensions (both magnitudes and angles) (useful to convert fractional coordinates to cartesian)
     def onClose_castep_section_atom_position(self, backend, gIndex, section):
         """trigger called when _castep_section_atom_position is closed"""
@@ -303,7 +325,22 @@ class CastepParserContext(object):
                                      * math.cos(np.deg2rad(self.beta[0]))
                                      * math.cos(np.deg2rad(self.gamma[0])) ) * self.a[0]*self.b[0]*self.c[0]
 
-
+    def onClose_castep_section_atom_position_optim(self, backend, gIndex, section):
+        """trigger called when _castep_section_atom_position is closed"""
+        # get cached values for cell magnitudes and angles
+        self.a = section['castep_cell_length_a_optim']
+        self.b = section['castep_cell_length_b_optim']
+        self.c = section['castep_cell_length_c_optim']
+        self.alpha = section['castep_cell_angle_alpha_optim']
+        self.beta  = section['castep_cell_angle_beta_optim']
+        self.gamma = section['castep_cell_angle_gamma_optim']
+        self.volume = np.sqrt( 1 - math.cos(np.deg2rad(self.alpha[0]))**2
+                                 - math.cos(np.deg2rad(self.beta[0]))**2
+                                 - math.cos(np.deg2rad(self.gamma[0]))**2
+                                 + 2 * math.cos(np.deg2rad(self.alpha[0]))
+                                     * math.cos(np.deg2rad(self.beta[0]))
+                                     * math.cos(np.deg2rad(self.gamma[0])) ) * self.a[0]*self.b[0]*self.c[0]    
+       
 # Storing the total energy of each SCF iteration in an array
     def onClose_section_scf_iteration(self, backend, gIndex, section):
         """trigger called when _section_scf_iteration is closed"""
@@ -315,19 +352,24 @@ class CastepParserContext(object):
         backend.addArrayValues('energy_total_scf_iteration_list', np.asarray(self.energy_total_scf_iteration_list))
         backend.addValue('scf_dft_number_of_iterations', self.scfIterNr)
 
-
+ 
 # Processing forces acting on atoms (final converged forces)
     def onClose_section_single_configuration_calculation(self, backend, gIndex, section):
-        
+         
+
         f_st = section['castep_store_atom_forces']
-        for i in range(0, self.at_nr):
-            f_st[i] = f_st[i].split()
-            f_st[i] = [float(j) for j in f_st[i]]
-            f_st_int = f_st[i]
-            self.atom_forces.append(f_st_int)
-        backend.addArrayValues('atom_forces', np.asarray(self.atom_forces))
-  
-       
+      
+        if f_st is not None:
+            for i in range(0, self.at_nr):
+                f_st[i] = f_st[i].split()
+                f_st[i] = [float(j) for j in f_st[i]]
+                f_st_int = f_st[i]
+                 
+                self.atom_forces.append(f_st_int)
+                self.atom_forces = self.atom_forces[-3:] 
+            backend.addArrayValues('atom_forces', np.asarray(self.atom_forces))
+        else: 
+            pass        
 # Add SCF k points and eigenvalue from *.band file to the backend (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
         if len(self.e_spin_1) != 0:
             gIndexGroup = backend.openSection('section_eigenvalues_group')
@@ -357,16 +399,21 @@ class CastepParserContext(object):
             else:
                 backend.closeSection('section_eigenvalues_group', gIndexGroup)
         
-        backend.openSection('section_stress_tensor')
-        backend.addArrayValues('stress_tensor_value',np.asarray(self.stress_tensor_value))
-        backend.closeSection('section_stress_tensor', gIndex)
-  
-        #######Absolute Dispersion energy recovered from totatl energy. ##############      
-        van_der_waals_energy = section['castep_total_dispersion_corrected_energy']
-        total_energy = section['energy_total']
-        for i in range(len(total_energy)):
-            self.disp_energy = abs(van_der_waals_energy[i] - total_energy[i])
-        backend.addValue('energy_van_der_Waals', self.disp_energy)
+        
+        
+        
+        #backend.openSection('section_stress_tensor')
+        backend.addArrayValues('stress_tensor',np.asarray(self.stress_tensor_value))
+        #backend.closeSection('section_stress_tensor', gIndex)
+        #backend.addValue('time_calculation', self.time_calc)
+
+        #######Total Dispersion energy recovered from totatl energy. ##############      
+        if self.dispersion is not None:
+            van_der_waals_energy = section['castep_total_dispersion_corrected_energy']
+            total_energy = section['energy_total']
+            for i in range(len(total_energy)):
+                self.disp_energy = abs(van_der_waals_energy[i] - total_energy[i])
+            backend.addValue('energy_van_der_Waals', self.disp_energy)
 
         #get cached values of castep_store_atom_forces
 # Recover SCF k points and eigenvalue from *.band file (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
@@ -402,21 +449,24 @@ class CastepParserContext(object):
 
     def onClose_castep_section_stress_tensor(self, backend, gIndex, section): 
      #get cached values for stress tensor
+        stress_tens =[]
         stress_tens = section['castep_store_stress_tensor']
+    
         for i in range(len(stress_tens)):
             stress_tens[i] = stress_tens[i].split()
             stress_tens[i] = [float(j) for j in stress_tens[i]]
             stress_tens_int = stress_tens[i]
             stress_tens_int = [x / 10e9 for x in stress_tens_int] #converting GPa in Pa.
             self.stress_tensor_value.append(stress_tens_int)
-    
+        self.stress_tensor_value = self.stress_tensor_value[-3:]     
+
     def onClose_castep_section_time(self, backend, gIndex, section): 
         initial_time = section['castep_initialisation_time']  
         calc_time = section['castep_calculation_time']
         final_time = section['castep_finalisation_time']
         for i in range(len(initial_time)):
             self.time_calc = (initial_time[i] + calc_time[i] + final_time[i])
-        backend.addValue('time_calculation', self.time_calc)
+        
 
 ######################################################################################
 ################ Triggers on closure section_system_description ######################
@@ -427,32 +477,34 @@ class CastepParserContext(object):
 
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
         #get cached values of castep_store_atom_position
+        
         pos = section['castep_store_atom_position']
-        self.at_nr = len(pos)
-        for i in range(0, self.at_nr):
-            pos[i] = pos[i].split()
-            pos[i] = [float(j) for j in pos[i]]
-            self.castep_atom_position.append(pos[i])
-        backend.addArrayValues('castep_atom_position', np.asarray(self.castep_atom_position))
+        if pos:
+            self.at_nr = len(pos)
+            for i in range(0, self.at_nr):
+                pos[i] = pos[i].split()
+                pos[i] = [float(j) for j in pos[i]]
+                self.castep_atom_position.append(pos[i])
+            backend.addArrayValues('castep_atom_position', np.asarray(self.castep_atom_position),unit='angstrom')
 
 
 # Backend add the total number of atoms in the simulation cell
-        backend.addValue('number_of_atoms', self.at_nr)
+            backend.addValue('number_of_atoms', self.at_nr)
 
 
 # Processing the atom labels
         #get cached values of castep_store_atom_label
-        lab = section['castep_store_atom_label']
-        for i in range(0, self.at_nr):
-            lab[i] = re.sub('\s+', ' ', lab[i]).strip()
-        self.atom_label.append(lab)
-        backend.addArrayValues('atom_label', np.asarray(self.atom_label))
+            lab = section['castep_store_atom_label']
+            for i in range(0, self.at_nr):
+                lab[i] = re.sub('\s+', ' ', lab[i]).strip()
+            self.atom_label.append(lab)
+            backend.addArrayValues('atom_label', np.asarray(self.atom_label))
 
 
 # Converting the fractional atomic positions (x) to cartesian coordinates (X) ( X = M^-1 x )
-        for i in range(0, self.at_nr):
+            for i in range(0, self.at_nr):
 
-            pos_a = [   self.a[0] * self.castep_atom_position[i][0]
+                pos_a = [   self.a[0] * self.castep_atom_position[i][0]
                       + self.b[0] * math.cos(np.deg2rad(self.gamma[0])) * self.castep_atom_position[i][1]
                       + self.c[0] * math.cos(np.deg2rad(self.beta[0])) * self.castep_atom_position[i][2],
 
@@ -462,13 +514,44 @@ class CastepParserContext(object):
 
                        (self.volume / (self.a[0]*self.b[0] * math.sin(np.deg2rad(self.gamma[0])))) * self.castep_atom_position[i][2] ]
 
-            self.atom_position.append(pos_a)
-        backend.addArrayValues('atom_position', np.asarray(self.atom_position), unit='angstrom')
-        
+                self.atom_position.append(pos_a)
+                
+            backend.addArrayValues('atom_position', np.asarray(self.atom_position), unit='angstrom')
+    
         
 
 # Backend add the simulation cell
-        backend.addArrayValues('simulation_cell', np.asarray(self.cell), unit='angstrom')
+        pos_opt = section['castep_store_optimised_atom_position']
+        if pos_opt:
+
+            backend.addArrayValues('atom_label', np.asarray(self.atom_label[-self.at_nr:]))
+            
+            self.at_nr_opt = len(pos_opt)
+            for i in range(0, self.at_nr_opt):
+                pos_opt[i] = pos_opt[i].split()
+                pos_opt[i] = [float(j) for j in pos_opt[i]]
+                self.castep_optimised_atom_position.append(pos_opt[i])
+        # #     print pos_opt[i]    
+       
+# Converting the fractional atomic positions (x) to cartesian coordinates (X) ( X = M^-1 x )
+            for i in range(0, self.at_nr_opt):
+
+                pos_opt_a = [   self.a[0] * self.castep_optimised_atom_position[i][0]
+                      + self.b[0] * math.cos(np.deg2rad(self.gamma[0])) * self.castep_optimised_atom_position[i][1]
+                      + self.c[0] * math.cos(np.deg2rad(self.beta[0])) * self.castep_optimised_atom_position[i][2],
+
+                        self.b[0] * math.sin(self.gamma[0]) * self.castep_optimised_atom_position[i][1]
+                      + self.c[0] * self.castep_optimised_atom_position[i][2] * (( math.cos(np.deg2rad(self.alpha[0]))
+                      - math.cos(np.deg2rad(self.beta[0])) * math.cos(np.deg2rad(self.gamma[0])) ) / math.sin(np.deg2rad(self.gamma[0])) ),
+
+                       (self.volume / (self.a[0]*self.b[0] * math.sin(np.deg2rad(self.gamma[0])))) * self.castep_optimised_atom_position[i][2] ]
+
+                self.atom_optim_position.append(pos_opt_a)
+             
+            backend.addArrayValues('atom_position', np.asarray(self.atom_optim_position[-self.at_nr_opt:]), unit='angstrom')
+        else:
+            pass
+        backend.addArrayValues('simulation_cell', np.asarray(self.cell[-3:]), unit='angstrom')    
 
 
 ######################################################################################
@@ -609,7 +692,15 @@ class CastepParserContext(object):
         else: 
             pass    
 
-    
+    def onClose_section_run(self, backend, gIndex, section):
+        #optim_succ = section['CASTEP_geom_converged']
+        if section['CASTEP_geom_converged'] is not None:
+            if section['CASTEP_geom_converged'][-1] == 'successfully':
+                self.geoConvergence = True
+            else:
+                self.geoConvergence = False
+        if self.geoConvergence is not None:
+            backend.addValue('geometry_optimization_converged', self.geoConvergence)        
 ################################################################################################################################################################
 ################################################################################################################################################################
 ################################################################################################################################################################
@@ -680,15 +771,22 @@ def build_CastepMainFileSimpleMatcher():
             SM(name = "van der Waals",
                startReStr = r"\sDFT\+D: Semi-empirical dispersion correction\s*\:\s*",
                #forwardMatch = True,
-              #sections = ["castep_section_relativity_treatment"],
+               #sections = ["castep_section_relativity_treatment"],
                subMatchers = [
                  SM(r"\sSEDC with\s*\: *(?P<van_der_Waals_method> [A-Za-z0-9() -]+)"),
                              ]), # CLOSING van der waals
             
+            SM(name = "converged_optimisation",
+               sections = ["castep_section_geom_optimisation_method"],
+               startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\ Geometry Optimization Parameters \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
+               subMatchers = [
+                     SM(r"\soptimization method\s*\:\s*(?P<castep_geometry_optim_method>[a-zA-Z]+)"),
             
+                         
+                                      ]), # CLOSING converged optmisation
+              
 
- 
-                      ]) # CLOSING SM calculationMethods
+              ]) # CLOSING SM calculationMethods
 
 
 
@@ -746,9 +844,8 @@ def build_CastepMainFileSimpleMatcher():
 
                       ]) # CLOSING SM systemDescription
 
+   
 
-
-    ########################################
     # submatcher for band structure
     bandStructureSubMatcher = SM (name = 'BandStructure',
         startReStr = r"\s*\+\s*B A N D   S T R U C T U R E   C A L C U L A T I O N\s*",
@@ -824,7 +921,230 @@ def build_CastepMainFileSimpleMatcher():
 
         ]) # CLOSING SM BandStructure
 
+    singlepointSubMatcher = SM(name = 'single_point',
+                #startReStr = r"ciao#",
+                startReStr = r"\-*\s*\<\-\-\sSCF\s*",
+                forwardMatch = True,
+                sections = ["section_single_configuration_calculation"],
+                subMatchers = [                     
+                 
+                      SM(name = 'ScfIterations',
+                         startReStr = r"SCF\sloop\s*Energy\s*Fermi\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
+                         sections = ['section_scf_iteration'],
+                         subMatchers = [
+                     
+                            SM(r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                               repeats = True),
 
+                                   ]), # CLOSING section_scf_iteration
+
+                      SM(name = 'ScfIterations',
+                         startReStr = r"SCF\sloop\s*Energy\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
+                         sections = ['section_scf_iteration'],
+                         subMatchers = [
+
+                            SM(r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                               repeats = True),
+
+                                   ]), # CLOSING section_scf_iteration
+
+                    
+                     
+                      SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                      SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                      SM(r"Dispersion corrected final energy\*\s=\s*(?P<castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),#total energy including dispersion correction
+                      SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"), # matching final converged total free energy
+                      SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<energy_total_T0__eV>[-+0-9.eEdD]*)") # 0K corrected final SCF energy
+                 ])     
+    ########################################
+    # Sub matcher for geometry optimisation 
+    ########################################
+    geomOptimSubMatcher_init = SM (name = 'geometry_optimisation_0',
+        startReStr = r"\+\-\-\-*\sMEMORY AND SCRATCH DISK ESTIMATES PER PROCESS\s\-\-\-*\+",
+        #startReStr = r"Calculating total energy with cut-off of",
+        sections = ['section_single_configuration_calculation'],
+        endReStr = r"\sStarting BFGS iteration\s*[0-9]+\s\.\.\.\s*",
+        #forwardMatch = True,
+        #endReStr = r"\s\[A-Za-z]+\:\sGeometry\soptimization\scompleted\ssuccessfully.\s*",
+        repeats = True,
+        subMatchers = [               
+               
+                 
+
+                SM(r"Calculating total energy with cut\-off of  (?P<castep_basis_set_plan_wave_cutoff_iteration_0>[0-9.]+)"),
+                SM(name = 'ScfIterations',
+                        startReStr = r"SCF\sloop\s*Energy\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
+                        sections = ['section_scf_iteration'],
+                        repeats = True,
+                        subMatchers = [
+                           SM(r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                              repeats = True),
+
+                                  ]),
+                                  
+                SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"),
+                SM(#startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
+                        startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
+                        
+                        subMatchers = [
+                           SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                              repeats = True)
+                                      ]),
+                SM(name = 'stresstensor',
+                         #startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\** Stress Tensor \*\*\*\*\*\*\*\*\*\*\**\s*",
+                         startReStr = r"\s\*\*\*\*\** Stress Tensor \*\*\*\*\**\s*",
+                         repeats = True,
+                         sections = ['castep_section_stress_tensor'],
+                         subMatchers = [
+                            SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                               repeats = True),  
+                                       ])
+                                    ])    # CLOSING section_stress_tensor
+  
+    
+    geomOptimSubMatcher =  SM (name = 'geometry_optimisation',
+            startReStr = r"\sStarting BFGS iteration\s*[0-9]+\s\.\.\.\s*",
+            sections = ['section_single_configuration_calculation','section_system_description'],
+            endReStr = r"\s*Atomic\sPopulations\s\(Mulliken\)\s*",
+            #endReStr = r"\s\[A-Za-z]+\:\sGeometry\soptimization\scompleted\ssuccessfully.\s*",
+            repeats = True,
+            subMatchers = [               
+                 # SM(r"Calculating total energy with cut\-off of  (?P<castep_basis_set_plan_wave_cutoff_iteration_0>[0-9.]+)"),
+            
+                         SM(name = 'cellInformation',
+                            startReStr = r"\s*Unit Cell\s*",
+                            forwardMatch = True,
+                            sections = ["castep_section_cell_optim"],
+                            subMatchers = [
+                                SM(r"\s*(?P<castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                 #SM(r"\s*(?P<castep_cell_vector>[\d\.]+\s+[\d\.]+\s+[\d\.]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                                endReStr = "\n",
+                            repeats = True),
+
+                             ]), # CLOSING castep_section_cell
+
+
+           # atomic positions and cell dimesions
+                         SM(startReStr = r"\s*Lattice parameters",
+                            forwardMatch = True,
+                            sections = ["castep_section_atom_position_optim"],
+                            subMatchers = [
+
+                            SM(r"\s*a \=\s*(?P<castep_cell_length_a_optim>[\d\.]+)\s*alpha \=\s*(?P<castep_cell_angle_alpha_optim>[\d\.]+)"),
+                            SM(r"\s*b \=\s*(?P<castep_cell_length_b_optim>[\d\.]+)\s*beta  \=\s*(?P<castep_cell_angle_beta_optim>[\d\.]+)"),
+                            SM(r"\s*c \=\s*(?P<castep_cell_length_c_optim>[\d\.]+)\s*gamma \=\s*(?P<castep_cell_angle_gamma_optim>[\d\.]+)"),
+
+                             ]), # CLOSING castep_section_atom_position
+
+                         SM(r"\s*x\s*(?P<castep_store_optimised_atom_label>[A-Za-z]+\s*[0-9]+)\s*(?P<castep_store_optimised_atom_position>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)",
+                            endReStr = "\n",
+                            repeats = True),
+
+                                      
+
+                        SM(name = 'ScfIterations',
+                        startReStr = r"SCF\sloop\s*Energy\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
+                        sections = ['section_scf_iteration'],
+                        repeats = True,
+                        subMatchers = [
+                           SM(r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                              repeats = True),
+
+                                  ]),
+                                  
+                SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                 #SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<castep_energy_free>[-+0-9.eEdD]*)"),
+                
+                
+                SM(#startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
+                        startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
+                        
+                        subMatchers = [
+                           SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                              repeats = True)
+                                      ]),
+
+                SM(name = 'stresstensor',
+                         #startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\** Stress Tensor \*\*\*\*\*\*\*\*\*\*\**\s*",
+                         startReStr = r"\s\*\*\*\*\** Stress Tensor \*\*\*\*\**\s*",
+                         repeats = True,
+                         sections = ['castep_section_stress_tensor'],
+                         subMatchers = [
+                            SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                               repeats = True),  
+                                       ]), # CLOSING section_stress_tensor
+
+                SM(r"\s[A-Za-z]+\:\sGeometry\soptimization\scompleted\s(?P<CASTEP_geom_converged>[a-z]+)\.\s*"),
+                
+           #     SM(startReStr = r"\sBFGS\:\sFinal Configuration\:",
+           #          forwardMatch = True,
+           #          #endReStr = r"\sBFGS\: Final Enthalpy+",
+           #          sections = ["castep_section_optimised_geometry"],
+           #          subMatchers = [
+           #               SM(name = 'cellInformation',
+           #                  startReStr = r"\s*Unit Cell\s*",
+           #                  forwardMatch = True,
+           #                  sections = ["castep_section_cell_optim"],
+           #                  subMatchers = [
+           #                      SM(r"\s*(?P<castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+           #       #SM(r"\s*(?P<castep_cell_vector>[\d\.]+\s+[\d\.]+\s+[\d\.]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+           #                      endReStr = "\n",
+           #                  repeats = True),
+
+           #                   ]), # CLOSING castep_section_cell
+
+
+           # # atomic positions and cell dimesions
+           #               SM(startReStr = r"\s*Lattice parameters",
+           #                  forwardMatch = True,
+           #                  sections = ["castep_section_atom_position_optim"],
+           #                  subMatchers = [
+
+           #                  SM(r"\s*a \=\s*(?P<castep_cell_length_a_optim>[\d\.]+)\s*alpha \=\s*(?P<castep_cell_angle_alpha_optim>[\d\.]+)"),
+           #                  SM(r"\s*b \=\s*(?P<castep_cell_length_b_optim>[\d\.]+)\s*beta  \=\s*(?P<castep_cell_angle_beta_optim>[\d\.]+)"),
+           #                  SM(r"\s*c \=\s*(?P<castep_cell_length_c_optim>[\d\.]+)\s*gamma \=\s*(?P<castep_cell_angle_gamma_optim>[\d\.]+)"),
+
+           #                   ]), # CLOSING castep_section_atom_position
+
+           #               SM(r"\s*x\s*(?P<castep_store_optimised_atom_label>[A-Za-z]+\s*[0-9]+)\s*(?P<castep_store_optimised_atom_position>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)",
+           #                  endReStr = "\n",
+           #                  repeats = True),
+
+           #            ]),
+
+                SM(#startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
+                        startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
+                        
+                        subMatchers = [
+                           SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                              repeats = True)
+                                      ]),
+                SM(#startReStr = r"\sBFGS\:\sFinal\sbulk\smodulus\sunchanged\sfrom\sinitial\svalue\s*",
+                        startReStr = r"\s\*\*\*\*\**\sSymmetrised\sForces\s\*\*\*\*\**\s*",
+                        repeats = True,
+                        subMatchers = [
+                           SM(r"\s\*\s[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                              repeats = True)
+                                      ]), 
+
+                
+                SM(name = 'stresstensor',
+                        #startReStr = r"\s\*\*\*\*\*\*\*\*\*\ Symmetrised Stress Tensor \*\*\*\*\*\*\*\*\*\*\*\s*",
+                        startReStr = r"\s\*\*\*\*\** Symmetrised Stress Tensor \*\*\*\*\**\s*",
+                        sections = ['castep_section_stress_tensor'],
+                        subMatchers = [
+                           SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                              repeats = True),  
+                                      ]), # CLOSING section_stress_tensor
+
+               
+
+
+                ])
+    
 
     ########################################
     # return main Parser ###################
@@ -838,12 +1158,11 @@ def build_CastepMainFileSimpleMatcher():
             startReStr = r"\s\|\s*CCC\s*AA\s*SSS\s*TTTTT\s*EEEEE\s*PPPP\s*\|\s*",
             required = True,
             forwardMatch = True,
-            fixedStartValues={'program_name': 'CASTEP', 'program_basis_set_type': 'plane waves' },
             sections = ['section_run'],
             subMatchers = [
-
+                
     
-
+            
                SM(name = 'ProgramHeader',
                   startReStr = r"\s\|\s*CCC\s*AA\s*SSS\s*TTTTT\s*EEEEE\s*PPPP\s*\|\s*",
                   subMatchers = [
@@ -857,16 +1176,23 @@ def build_CastepMainFileSimpleMatcher():
 
                                   ]), # CLOSING SM ProgramHeader
                   
+              
+              
+               
                scfEigenvaluesSubMatcher, # export section_eigenvalues_group to the correct nesting
 
 
                calculationMethodSubMatcher, # section_method
 
-
+               
                basisSetCellAssociatedSubMatcher, # section_basis_set_cell_associated
 
 
                systemDescriptionSubMatcher, # section_system_description subMatcher
+               
+
+                   
+
                SM(name = 'Atom_topology',
                   startReStr = r"\s*Mass of species in AMU\s*",              
                   endReStr = "\n",
@@ -879,6 +1205,7 @@ def build_CastepMainFileSimpleMatcher():
                         repeats = True),
                      ]), # CLOSING section_atom_topology
                
+
           ############ CASTEP-specific van der Waals method parameters #############################     
                 SM(name = "van der Waals castep TS",
                    startReStr = r"\s*Dispersion\-correction scheme\s\:\s+",
@@ -896,62 +1223,53 @@ def build_CastepMainFileSimpleMatcher():
                         SM(r"\s*Parameter s6\s*\: *(?P<Parameter_s6> [0-9.]+)"),
                         SM(r"\s*Parameter d\s*\: *(?P<Parameter_d> [0-9.]+)")
                               ]), # CLOSING van der waals castep parameters
+              
 
-               SM(startReStr = r"\-*\s*\<\-\-\sSCF\s*",
-                  forwardMatch = True,
-                  sections = ["section_single_configuration_calculation"],
-                  subMatchers = [                     
-                 
-                     SM(name = 'ScfIterations',
-                        startReStr = r"SCF\sloop\s*Energy\s*Fermi\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
-                        sections = ['section_scf_iteration'],
-                        subMatchers = [
-                     
-                           SM(r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
-                              repeats = True),
-
-                                  ]), # CLOSING section_scf_iteration
-
-                     SM(name = 'ScfIterations',
-                        startReStr = r"SCF\sloop\s*Energy\s*Energy\sgain\s*Timer\s*<\-\-\sSCF\s*",
-                        sections = ['section_scf_iteration'],
-                        subMatchers = [
-
-                           SM(r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
-                              repeats = True),
-
-                                  ]), # CLOSING section_scf_iteration
-
-                      SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
-                      SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
-                      SM(r"Dispersion corrected final energy\*\s=\s*(?P<castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),#total energy including dispersion correction
-                      SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"), # matching final converged total free energy
-                      SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<energy_total_T0__eV>[-+0-9.eEdD]*)"), # 0K corrected final SCF energy
-
+                     singlepointSubMatcher,
                      bandStructureSubMatcher,  # band structure subMatcher
-                     
-                     
-
-                     SM(startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
+                                       
+                    
+                     SM(#startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
+                        startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
+                        
                         subMatchers = [
                            SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                               repeats = True)
                                       ]),
 
-                     SM(startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Symmetrised Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
+                     
+                     SM(#startReStr = r"\sBFGS\:\sFinal\sbulk\smodulus\sunchanged\sfrom\sinitial\svalue\s*",
+                        startReStr = r"\s\*\*\*\*\**\sSymmetrised Forces\s\*\*\*\*\**\s*",
                         subMatchers = [
-                           SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                           SM(r"\s\*\s[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                               repeats = True)
                                       ]),
                      
                      SM(name = 'stresstensor',
-                        startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\* Symmetrised Stress Tensor \*\*\*\*\*\*\*\*\*\*\*\s*",
+                        #startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\** Stress Tensor \*\*\*\*\*\*\*\*\*\*\**\s*",
+                        startReStr = r"\s\*\*\*\*\** Stress Tensor \*\*\*\*\**\s*",
+                        #GGGrepeats = True,
                         sections = ['castep_section_stress_tensor'],
                         subMatchers = [
                            SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                               repeats = True),  
                                       ]), # CLOSING section_stress_tensor
+                   
                      
+                     SM(name = 'stresstensor',
+                        #startReStr = r"\s\*\*\*\*\*\*\*\*\*\ Symmetrised Stress Tensor \*\*\*\*\*\*\*\*\*\*\*\s*",
+                        startReStr = r"\s\*\*\*\*\** Symmetrised Stress Tensor \*\*\*\*\**\s*",
+                        sections = ['castep_section_stress_tensor'],
+                        subMatchers = [
+                           SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                              repeats = True),  
+                                      ]), # CLOSING section_stress_tensor
+
+                     geomOptimSubMatcher_init,
+                     geomOptimSubMatcher,
+                       
+                     
+                   
                      SM(name = 'calc_time',
                         startReStr = r" A BibTeX formatted list of references used in this run has been written to",
                         sections = ['castep_section_time'],
@@ -960,8 +1278,8 @@ def build_CastepMainFileSimpleMatcher():
                            SM(r"Calculation time    =\s*(?P<castep_calculation_time>[0-9.]*)"),
                            SM(r"Finalisation time   =\s*(?P<castep_finalisation_time>[0-9.]*)"),
                                       ]), # CLOSING section_castep_time
-                                        ]) # CLOSING section_single_configuration_calculation                
-                
+                                        
+                  
                 
                            ]) # CLOSING SM NewRun        
                 
