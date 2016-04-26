@@ -1,0 +1,554 @@
+ +-------------------------------------------------+
+ |                                                 |
+ |      CCC   AA    SSS  TTTTT  EEEEE  PPPP        |
+ |     C     A  A  S       T    E      P   P       |
+ |     C     AAAA   SS     T    EEE    PPPP        |
+ |     C     A  A     S    T    E      P           |
+ |      CCC  A  A  SSS     T    EEEEE  P           |
+ |                                                 |
+ +-------------------------------------------------+
+ |                                                 |
+ | Welcome to Academic Release CASTEP version 16.1 |          
+ | Ab Initio Total Energy Program                  |
+ |                                                 |
+ | Authors:                                        |
+ | M. Segall, M. Probert, C. Pickard, P. Hasnip,   |
+ | S. Clark, K. Refson, J. R. Yates, M. Payne      |
+ |                                                 |
+ | Contributors:                                   |
+ | P. Lindan, P. Haynes, J. White, V. Milman,      |
+ | N. Govind, M. Gibson, P. Tulip, V. Cocula,      |
+ | B. Montanari, D. Quigley, M. Glover,            |
+ | L. Bernasconi, A. Perlov, M. Plummer,           |
+ | E. McNellis, J. Meyer, J. Gale, D. Jochym       |
+ | J. Aarons, B. Walker, R. Gillen, D. Jones       |
+ | T. Green, I. J. Bush, C. J. Armstrong,          |
+ | E. J. Higgins, E. L. Brown, M. S. McFly         |
+ |                                                 |
+ | Copyright (c) 2000 - 2015                       |
+ |                                                 |
+ |     Distributed under the terms of an           |
+ |     Agreement between the United Kingdom        |
+ |     Car-Parrinello (UKCP) Consortium,           |
+ |     Daresbury Laboratory and Accelrys, Inc.     |
+ |                                                 |
+ | Please cite                                     |
+ |                                                 |
+ |     "First principles methods using CASTEP"     |
+ |                                                 |
+ |         Zeitschrift fuer Kristallographie       |
+ |           220(5-6) pp. 567-570 (2005)           |
+ |                                                 |
+ | S. J. Clark, M. D. Segall, C. J. Pickard,       |
+ | P. J. Hasnip, M. J. Probert, K. Refson,         |
+ | M. C. Payne                                     |
+ |                                                 |
+ |       in all publications arising from          |
+ |              your use of CASTEP                 |
+ |                                                 |
+ +-------------------------------------------------+
+
+
+ Compiled for darwin_x86_64_gfortran5.0 on Fri, 19 Feb 2016 13:44:46 +0000
+ from code version Version unavailable
+ Compiler: GNU Fortran 5.3.0; Optimisation: intermediate
+ MATHLIBS: default (LAPACK version 3.2.1)
+ FFT Lib : default
+ Fundamental constants values: CODATA 2010
+
+ Run started: Mon, 25 Apr 2016 12:12:29 +0100
+ Warning - deprecated keyword PHONON_SUM_RULE found in input file
+         - preferred usage is PHONON_SUM_RULE_METHOD
+
+ Warning in parameters_validate: current value of 
+   ELEC_ENERGY_TOL = 0.100000E-07eV
+   is too large to achieve desired level of convergence of response properties.
+   This may cause convergence failures and/or inaccuracy of results
+   of PHONON calculations - recommend you use a smaller value, e.g. 
+   ELEC_ENERGY_TOL ~ 0.221894E-09eV
+
+ Warning in parameters_validate: current value of 
+   ELEC_EIGENVALUE_TOL = 0.500000E-08eV
+   is too large to achieve desired level of convergence of response properties.
+   This may cause convergence failures and/or inaccuracy of results
+   of PHONON calculations - recommend you use a smaller value, e.g. 
+   ELEC_EIGENVALUE_TOL = 0.221894E-09eV
+ +-------------------------------------------------+
+ |                                                 |
+ |  D D D D    F F F F F  P P P P     T T T T T    |
+ |  D       D  F          P       P       T        |
+ |  D       D  F F F F    P P P P         T        |
+ |  D       D  F          P               T        |
+ |  D D D D    F          P               T        |
+ |                                                 |
+ +-------------------------------------------------+
+ |                                                 |
+ | Welcome to Castep Linear Response (DFPT)        |
+ |                                                 |
+ | Copyright (c) 2006 - 2015                       |
+ |                                                 |
+ | Please cite the following publications in all   |
+ | work arising from your use of CASTEP LR.        |
+ |                                                 |
+ | K. Refson, S. J. Clark and P. R. Tulip          |
+ | Variational density functional perturbation     |
+ | theory for dielectrics and lattice dynamics     |
+ | Phys. Rev. B 73(15), 155114 (2006)              |
+ +-------------------------------------------------+
+
+
+ Pseudo atomic calculation performed for Si 3s2 3p2
+
+ Converged in 21 iterations to a total energy of -101.5800 eV
+
+ Calculation not parallelised.
+
+ ************************************ Title ************************************
+ 
+
+ ***************************** General Parameters ******************************
+  
+ output verbosity                               : normal  (1)
+ write checkpoint data to                       : Si2-phonon.check
+ type of calculation                            : phonon calculation
+ stress calculation                             : off
+ density difference calculation                 : off
+ electron localisation func (ELF) calculation   : off
+ Hirshfeld analysis                             : off
+ unlimited duration calculation
+ timing information                             : on
+ memory usage estimate                          : on
+ write final potential to formatted file        : off
+ write final density to formatted file          : off
+ write BibTeX reference list                    : on
+ write OTFG pseudopotential files               : on
+ checkpoint writing                             : both castep_bin and check files
+  
+ output         length unit                     : A
+ output           mass unit                     : amu
+ output           time unit                     : ps
+ output         charge unit                     : e
+ output           spin unit                     : hbar/2
+ output         energy unit                     : eV
+ output          force unit                     : eV/A
+ output       velocity unit                     : A/ps
+ output       pressure unit                     : GPa
+ output     inv_length unit                     : 1/A
+ output      frequency unit                     : cm-1
+ output force constant unit                     : eV/A**2
+ output         volume unit                     : A**3
+ output   IR intensity unit                     : (D/A)**2/amu
+ output         dipole unit                     : D
+ output         efield unit                     : eV/A/e
+ output        entropy unit                     : J/mol/K
+  
+ wavefunctions paging                           : none
+ random number generator seed                   :       1234
+ data distribution                              : optimal for this architecture
+ optimization strategy                          : maximize speed(+++)
+
+ *********************** Exchange-Correlation Parameters ***********************
+  
+ using functional                               : Local Density Approximation
+ relativistic treatment                         : Koelling-Harmon
+ DFT+D: Semi-empirical dispersion correction    : off
+
+ ************************* Pseudopotential Parameters **************************
+  
+ pseudopotential representation                 : reciprocal space
+ <beta|phi> representation                      : reciprocal space
+ spin-orbit coupling                            : off
+
+ **************************** Basis Set Parameters *****************************
+  
+ plane wave basis set cut-off                   :   150.0000   eV
+ size of standard grid                          :     2.0000
+ size of   fine   gmax                          :    12.5491   1/A
+ finite basis set correction                    : none
+
+ **************************** Electronic Parameters ****************************
+  
+ number of  electrons                           :  8.000    
+ net charge of system                           :  0.000    
+ treating system as non-spin-polarized
+ number of bands                                :          4
+
+ ********************* Electronic Minimization Parameters **********************
+  
+ Method: Treating system as non-metallic,
+         and number of  SD  steps               :          1
+         and number of  CG  steps               :          4
+  
+ total energy / atom convergence tol.           : 0.1000E-07   eV
+ eigen-energy convergence tolerance             : 0.5000E-08   eV
+ max force / atom convergence tol.              : ignored
+ convergence tolerance window                   :          3   cycles
+ max. number of SCF cycles                      :         30
+ periodic dipole correction                     : NONE
+
+ ************************** Density Mixing Parameters **************************
+  
+ density-mixing scheme                          : Broyden
+ max. length of mixing history                  :         20
+ charge density mixing amplitude                : 0.8000    
+ cut-off energy for mixing                      :  150.0       eV
+
+ *********************** Population Analysis Parameters ************************
+  
+ Population analysis with cutoff                :  3.000       A
+
+ ****************************** Phonon Parameters ******************************
+  
+ phonon calculation method                      : linear response
+ phonon convergence tolerance                   : 0.1000E-04   eV/A**2
+ max. number of phonon cycles                   :         50
+ max. number of phonon CG steps                 :          0
+ convergence tolerance window                   :          2   cycles
+ DFPT solver method                             : AllBands (Gonze variational method)
+ preconditioning scheme                         : TPA     
+ fine phonon calculation method                 : none
+ LO/TO splitting term                           : included
+ acoustic phonon sum rule                       : correct D(q) in recip-space
+ Born effective charges                         : calculated
+ Born charge sum rule                           : not explicitly enforced
+ Raman intensities                              : not calculated
+ phonon k-points                                : use reduced set
+ phonon DOS                                     : not calculated
+ no timed backups
+ band convergence tolerance                     : 0.1000E-08   eV
+
+ *******************************************************************************
+  
+
+                           -------------------------------
+                                      Unit Cell
+                           -------------------------------
+        Real Lattice(A)                      Reciprocal Lattice(1/A)
+   2.6954645   2.6954645   0.0000000        1.1655107   1.1655107  -1.1655107
+   2.6954645   0.0000000   2.6954645        1.1655107  -1.1655107   1.1655107
+   0.0000000   2.6954645   2.6954645       -1.1655107   1.1655107   1.1655107
+
+                       Lattice parameters(A)       Cell Angles
+                    a =    3.811962          alpha =   60.000000
+                    b =    3.811962          beta  =   60.000000
+                    c =    3.811962          gamma =   60.000000
+
+                       Current cell volume =   39.167950       A**3
+
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+                         Total number of ions in cell =    2
+                      Total number of species in cell =    1
+                        Max number of any one species =    2
+
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom        Fractional coordinates of atoms  x
+            x            Number           u          v          w      x
+            x----------------------------------------------------------x
+            x  Si           1         0.000000   0.000000   0.000000   x 
+            x  Si           2         0.250000   0.250000   0.250000   x 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+                         No user defined ionic velocities
+
+                           -------------------------------
+                                   Details of Species
+                           -------------------------------
+
+                               Mass of species in AMU
+                                    Si   28.0855000
+
+                          Electric Quadrupole Moment (Barn)
+                                    Si    1.0000000 No Isotope Defined
+
+                          Files used for pseudopotentials:
+                                    Si Si_00.recpot
+
+                           -------------------------------
+                              k-Points For BZ Sampling
+                           -------------------------------
+                       Number of kpoints used =             2
+
+                           -------------------------------
+                               Symmetry and Constraints
+                           -------------------------------
+
+                      Maximum deviation from symmetry =  0.00000         ANG
+
+                      Number of symmetry operations   =          48
+                      Number of ionic constraints     =           3
+                      Point group of crystal =    32: Oh, m-3m, 4/m -3 2/m
+                      Space group of crystal =   227: Fd-3m, F 4d 2 3 -1d
+
+             Set iprint > 1 for details on symmetry rotations/translations
+
+                         Centre of mass is constrained
+             Set iprint > 1 for details of linear ionic constraints
+
+                         Number of cell constraints= 5
+                         Cell constraints are:  1 1 1 0 0 0
+
+                         External pressure/stress (GPa)
+                          0.00000   0.00000   0.00000
+                                    0.00000   0.00000
+                                              0.00000
+  
++---------------- MEMORY AND SCRATCH DISK ESTIMATES PER PROCESS --------------+
+|                                                     Memory          Disk    |
+| Baseline code, static data and system overhead        0.0 MB         0.0 MB |
+| BLAS internal memory storage                          0.0 MB         0.0 MB |
+| Model and support data                                2.6 MB         0.0 MB |
+| Electronic energy minimisation requirements           0.5 MB         0.0 MB |
+| Force calculation requirements                        0.5 MB         0.0 MB |
+|                                               ----------------------------- |
+| Approx. total storage required per process            3.2 MB         0.0 MB |
+|                                                                             |
+| Requirements will fluctuate during execution and may exceed these estimates |
++-----------------------------------------------------------------------------+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy                           Energy gain       Timer   <-- SCF
+                                               per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial   1.33877123E+002                                          0.17  <-- SCF
+      1  -1.77543493E+002                    1.55710308E+002       0.18  <-- SCF
+      2  -2.15004391E+002                    1.87304489E+001       0.19  <-- SCF
+      3  -2.15390432E+002                    1.93020830E-001       0.20  <-- SCF
+      4  -2.15144534E+002                   -1.22949195E-001       0.21  <-- SCF
+      5  -2.15127526E+002                   -8.50371479E-003       0.23  <-- SCF
+      6  -2.15127992E+002                    2.32783644E-004       0.24  <-- SCF
+      7  -2.15128050E+002                    2.89671665E-005       0.25  <-- SCF
+      8  -2.15128050E+002                    3.62723999E-008       0.26  <-- SCF
+      9  -2.15128050E+002                    1.07197978E-008       0.28  <-- SCF
+     10  -2.15128050E+002                    1.27491597E-009       0.29  <-- SCF
+     11  -2.15128050E+002                    3.18759204E-010       0.30  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy =  -215.1280499669     eV
+(energy not corrected for finite basis set)
+ 
+
+Writing analysis data to Si2-phonon.castep_bin
+
+Writing model to Si2-phonon.check
+
+ Efield perturbation    1:  X                                             0.35s
+  +---------------- MEMORY AND SCRATCH DISK ESTIMATES PER PROCESS --------------+
+  |                                                     Memory          Disk    |
+  | Baseline code, static data and system overhead        0.0 MB         0.0 MB |
+  | BLAS internal memory storage                          0.0 MB         0.0 MB |
+  | Model and support data                                2.6 MB         0.0 MB |
+  | DFPT E-field response requirements                    0.5 MB         0.0 MB |
+  |                                               ----------------------------- |
+  | Approx. total storage required per process            3.2 MB         0.0 MB |
+  |                                                                             |
+  | Requirements will fluctuate during execution and may exceed these estimates |
+  +-----------------------------------------------------------------------------+
+ Perturbation    1 (of    1): Si    1 X at q=( 0.000, 0.000, 0.000):      0.62s
+  +---------------- MEMORY AND SCRATCH DISK ESTIMATES PER PROCESS --------------+
+  |                                                     Memory          Disk    |
+  | Baseline code, static data and system overhead        0.0 MB         0.0 MB |
+  | BLAS internal memory storage                          0.0 MB         0.0 MB |
+  | Model and support data                                2.6 MB         0.0 MB |
+  | DFPT phonon calculation requirements                  1.0 MB         0.0 MB |
+  |                                               ----------------------------- |
+  | Approx. total storage required per process            3.6 MB         0.0 MB |
+  |                                                                             |
+  | Requirements will fluctuate during execution and may exceed these estimates |
+  +-----------------------------------------------------------------------------+
+
+ Phonon calculation: q-point   1 (of    4) ( 0.000, 0.000, 0.000):        1.01s
+ -------------------------------------------------------------------------------
+
+ Phonon calculation: q-point   2 (of    4) ( 0.500, 0.500, 0.000):        1.01s
+ -------------------------------------------------------------------------------
+ Perturbation    1 (of    2): Si    1 X at q=(-0.500,-0.500, 0.000):      1.01s
+ Perturbation    2 (of    2): Si    1 Y at q=(-0.500,-0.500, 0.000):      1.41s
+  +---------------- MEMORY AND SCRATCH DISK ESTIMATES PER PROCESS --------------+
+  |                                                     Memory          Disk    |
+  | Baseline code, static data and system overhead        0.0 MB         0.0 MB |
+  | BLAS internal memory storage                          0.0 MB         0.0 MB |
+  | Model and support data                                2.6 MB         0.0 MB |
+  | DFPT phonon calculation requirements                  2.1 MB         0.0 MB |
+  |                                               ----------------------------- |
+  | Approx. total storage required per process            4.7 MB         0.0 MB |
+  |                                                                             |
+  | Requirements will fluctuate during execution and may exceed these estimates |
+  +-----------------------------------------------------------------------------+
+
+ Phonon calculation: q-point   3 (of    4) ( 0.500, 0.500, 0.500):        2.22s
+ -------------------------------------------------------------------------------
+ Perturbation    1 (of    1): Si    1 X at q=(-0.500,-0.500,-0.500):      2.22s
+
+ Phonon calculation: q-point   4 (of    4) ( 0.500, 0.750, 0.250):        2.92s
+ -------------------------------------------------------------------------------
+ Perturbation    1 (of    2): Si    1 X at q=(-0.500,-0.250, 0.250):      2.92s
+  +---------------- MEMORY AND SCRATCH DISK ESTIMATES PER PROCESS --------------+
+  |                                                     Memory          Disk    |
+  | Baseline code, static data and system overhead        0.0 MB         0.0 MB |
+  | BLAS internal memory storage                          0.0 MB         0.0 MB |
+  | Model and support data                                2.6 MB         0.0 MB |
+  | DFPT phonon calculation requirements                  3.9 MB         0.0 MB |
+  |                                               ----------------------------- |
+  | Approx. total storage required per process            6.5 MB         0.0 MB |
+  |                                                                             |
+  | Requirements will fluctuate during execution and may exceed these estimates |
+  +-----------------------------------------------------------------------------+
+ Perturbation    2 (of    2): Si    1 Z at q=(-0.500,-0.250, 0.250):      4.50s
+ 
+ ==============================================================================
+ +                           Vibrational Frequencies                          +
+ +                           -----------------------                          +
+ +                                                                            +
+ + Performing frequency calculation at  4 wavevectors (q-pts)                 +
+ + ========================================================================== +
+ +                                                                            +
+ + -------------------------------------------------------------------------- +
+ +  q-pt=    1 (  0.000000  0.000000  0.000000)     0.2500000000              +
+ +  q->0 along (  0.500000  0.500000  0.000000)                               +
+ + -------------------------------------------------------------------------- +
+ +  Acoustic sum rule correction <   2.869918 cm-1 applied                    +
+ +     N      Frequency irrep.    ir intensity active            raman active + 
+ +                (cm-1)         ((D/A)**2/amu)                               + 
+ +                                                                            +
+ +     1      -0.026685   a          0.0000000  N                       N     + 
+ +     2      -0.026685   a          0.0000000  N                       N     + 
+ +     3      66.963723   b          0.0000000  N                       N     + 
+ +     4     523.064812   c          0.0000000  N                       Y     + 
+ +     5     523.064812   c          0.0000000  N                       Y     + 
+ +     6     523.064812   c          0.0000000  N                       Y     + 
+ + .......................................................................... +
+ +        Character table from group theory analysis of eigenvectors          +
+ +                           Point Group =  32, Oh                            +
+ + (Due to LO/TO splitting this character table may not contain some symmetry +
+ +  operations of the full crystallographic point group.  Additional          +
+ +  representations may be also be present corresponding to split LO modes.   +
+ +  A conventional analysis can be generated by specifying an additional null +
+ +  (all zero) field direction or one along any unique crystallographic axis  +
+ +  in %BLOCK PHONON_GAMMA_DIRECTIONS in <seedname>.cell.)                    +
+ + .......................................................................... +
+ +  Rep  Mul |    E  2'   2  2"   4   I m_v m_h m_v  -4                       +
+ +           | ----------------------------------------                       +
+ + a Eu    1 |    2   0  -2   0   0  -2   0   2   0   0                       +
+ + b A2u   1 |    1  -1   1  -1   1  -1   1  -1   1  -1                       +
+ + c Tg    1 |    3  -1  -1   1  -1   3  -1  -1   1  -1                       +
+ + -------------------------------------------------------------------------- +
+ +  q-pt=    2 (  0.500000  0.500000  0.000000)     0.2500000000              +
+ + -------------------------------------------------------------------------- +
+ +  Acoustic sum rule correction <   0.027603 cm-1 applied                    +
+ +     N      Frequency irrep.                                                + 
+ +                (cm-1)                                                      + 
+ +                                                                            +
+ +     1     151.996857   a                                                   + 
+ +     2     151.996857   a                                                   + 
+ +     3     416.934514   b                                                   + 
+ +     4     416.934514   b                                                   + 
+ +     5     466.393619   a                                                   + 
+ +     6     466.393619   a                                                   + 
+ + .......................................................................... +
+ +        Character table from group theory analysis of eigenvectors          +
+ +                           Point Group =  32, Oh                            +
+ + .......................................................................... +
+ +  Rep  Mul |    E   2   2   2   4   I   m   m   m  -4                       +
+ +           | ----------------------------------------                       +
+ + a       2 |    2   0  -2   0   0   0   0   0   0   0                       +
+ + b       1 |    2   0   2   0   0   0   0   0   2   0                       +
+ + -------------------------------------------------------------------------- +
+ +  q-pt=    3 (  0.500000  0.500000  0.500000)     0.2500000000              +
+ + -------------------------------------------------------------------------- +
+ +  Acoustic sum rule correction <   0.011026 cm-1 applied                    +
+ +     N      Frequency irrep.                                                + 
+ +                (cm-1)                                                      + 
+ +                                                                            +
+ +     1     106.528612   a                                                   + 
+ +     2     106.528612   a                                                   + 
+ +     3     380.508821   b                                                   + 
+ +     4     416.087685   c                                                   + 
+ +     5     499.753306   d                                                   + 
+ +     6     499.753306   d                                                   + 
+ + .......................................................................... +
+ +        Character table from group theory analysis of eigenvectors          +
+ +                           Point Group =  32, Oh                            +
+ + .......................................................................... +
+ +  Rep  Mul |    E   2   3   I   m  -3                                       +
+ +           | ------------------------                                       +
+ + a       1 |    2   0  -1  -1   0   1                                       +
+ + b       1 |    1   1   1   1   1   1                                       +
+ + c       1 |    1  -1   1  -1   1  -1                                       +
+ + d       1 |    2   0  -1   1   0  -1                                       +
+ + -------------------------------------------------------------------------- +
+ +  q-pt=    4 (  0.500000  0.750000  0.250000)     0.2500000000              +
+ + -------------------------------------------------------------------------- +
+ +  Acoustic sum rule correction <   0.015710 cm-1 applied                    +
+ +     N      Frequency irrep.                                                + 
+ +                (cm-1)                                                      + 
+ +                                                                            +
+ +     1     210.209568   a                                                   + 
+ +     2     210.209568   a                                                   + 
+ +     3     360.183436   b                                                   + 
+ +     4     360.183436   b                                                   + 
+ +     5     468.748753   a                                                   + 
+ +     6     468.748753   a                                                   + 
+ + .......................................................................... +
+ +        Character table from group theory analysis of eigenvectors          +
+ +                           Point Group =  32, Oh                            +
+ + .......................................................................... +
+ +  Rep  Mul |    E   2   2   m  -4                                           +
+ +           | --------------------                                           +
+ + a       2 |    2   0   0   0  -1                                           +
+ + b       1 |    2   0   0   0   1                                           +
+ ==============================================================================
+ ===================================================
+                   Born Effective Charges
+                   ----------------------
+   Si      1        -1.01675     0.00000     0.00000
+                     0.00000    -1.01675     0.00000
+                     0.00000     0.00000    -1.01675
+   Si      2        -1.01675     0.00000     0.00000
+                     0.00000    -1.01675     0.00000
+                     0.00000     0.00000    -1.01675
+ ===================================================
+
+ ***************** Symmetrised Forces *****************
+ *                                                    *
+ *            Cartesian components (eV/A)             *
+ * -------------------------------------------------- *
+ *                   x            y            z      *
+ *                                                    *
+ * Si        1      0.00000      0.00000      0.00000 *
+ * Si        2      0.00000      0.00000      0.00000 *
+ *                                                    *
+ ******************************************************
+
+ Pseudo atomic calculation performed for Si 3s2 3p2
+
+ Converged in 21 iterations to a total energy of -101.5800 eV
+
+Charge spilling parameter for spin component 1 = 0.78%
+
+     Atomic Populations (Mulliken)
+     -----------------------------
+Species   Ion     s      p      d      f     Total  Charge (e)
+==============================================================
+  Si       1     1.32   2.68   0.00   0.00   4.00     0.00
+  Si       2     1.32   2.68   0.00   0.00   4.00     0.00
+==============================================================
+
+            Bond              Population      Length (A)
+============================================================
+         Si 1 -- Si 2              3.06        2.33434
+============================================================
+
+
+Writing analysis data to Si2-phonon.castep_bin
+
+Writing model to Si2-phonon.check
+ 
+ A BibTeX formatted list of references used in this run has been written to 
+ Si2-phonon.bib
+ 
+Initialisation time =      0.14 s
+Calculation time    =      5.96 s
+Finalisation time   =      0.00 s
+Total time          =      6.10 s
