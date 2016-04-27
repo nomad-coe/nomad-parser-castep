@@ -73,7 +73,12 @@ class CastepParserContext(object):
         self.disp_energy                       = [] 
         self.geoConvergence = None
         self.total_energy_corrected_for_finite_basis = []
-
+        self.contr_s =[]
+        self.contr_p =[]
+        self.contr_d = []
+        self.contr_f = []
+        self.total_contribution = []
+        self.total_charge = []
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
         self.pippo = None
@@ -370,6 +375,7 @@ class CastepParserContext(object):
                  
                 self.atom_forces.append(f_st_int)
                 self.atom_forces = self.atom_forces[-self.at_nr:] 
+                
             backend.addArrayValues('atom_forces', np.asarray(self.atom_forces))
         else: 
             pass        
@@ -575,6 +581,37 @@ class CastepParserContext(object):
 
         backend.addArrayValues('simulation_cell', np.asarray(self.cell[-3:]))    
 
+    def onClose_castep_section_population_analysis(self, backend, gIndex, section):
+        orb_contr = section['castep_orbital_contributions']
+        tot_charge = section ['castep_mulliken_charge_store']
+        if orb_contr:
+            for i in range(0, self.at_nr):
+                orb_contr[i] = orb_contr[i].split()
+                orb_contr[i] = [float(j) for j in orb_contr[i]]
+                orb_contr_a = orb_contr[i]
+                tot= orb_contr_a[0]+orb_contr_a[1]+orb_contr_a[2]+orb_contr_a[3]
+                
+                self.total_contribution.append(tot)
+                
+                self.contr_s.append(orb_contr_a[0])
+                self.contr_p.append(orb_contr_a[1])
+                self.contr_d.append(orb_contr_a[2])
+                self.contr_f.append(orb_contr_a[3])
+                 
+            
+            backend.addArrayValues('castep_orbital_s', np.asarray(self.contr_s))
+            backend.addArrayValues('castep_orbital_p', np.asarray(self.contr_p))
+            backend.addArrayValues('castep_orbital_d', np.asarray(self.contr_d))
+            backend.addArrayValues('castep_orbital_f', np.asarray(self.contr_f))
+            backend.addValue('castep_total_orbital',self.total_contribution)
+        
+        if tot_charge:
+            for i in range(0, self.at_nr):                
+                tot_charge[i] = tot_charge[i].split()
+                tot_charge[i] = [float(j) for j in tot_charge[i]]
+                total_charge_list = tot_charge[i]
+                self.total_charge.append(total_charge_list)
+            backend.addArrayValues('castep_mulliken_charge', np.asarray(self.total_charge))
 
 ######################################################################################
 ###################### Storing k band points and band energies #######################
@@ -725,7 +762,7 @@ class CastepParserContext(object):
                 f_st_int = f_st[i]
                  
                 self.atom_forces_band.append(f_st_int)
-                self.atom_forces_band = self.atom_forces_band[-3:] 
+                self.atom_forces_band = self.atom_forces_band[-self.at_nr:] 
             backend.addArrayValues('castep_atom_forces', np.asarray(self.atom_forces_band))
         else: 
             pass        
@@ -1253,6 +1290,16 @@ def build_CastepMainFileSimpleMatcher():
                 
     
 
+    Mulliken_SubMatcher = SM (name = 'Mulliken population analysis',
+            startReStr = r"\s*Atomic Populations\s\(Mulliken\)\s*",
+            sections = ['castep_section_population_analysis'],
+            #endReStr = r"\s*Bond\s*Population\s*Length\s\(A\)\s*",
+            #repeats = False,
+            subMatchers = [ 
+                SM(r"\s*[A-Z]\s*[0-9.]+\s*(?P<castep_orbital_contributions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)\s*[-+0-9.eEdD]+\s*(?P<castep_mulliken_charge_store>[-+0-9.eEdD]+)\s*",       
+                    endReStr = r"\s*Bond\s*Population\s*Length\s\(A\)\s*",
+                    repeats = True),
+                 ]) 
     ########################################
     # return main Parser ###################
     ########################################
@@ -1395,6 +1442,8 @@ def build_CastepMainFileSimpleMatcher():
                 geomOptimSubMatcher,
                 
                 geomOptim_finalSubMatcher,            
+                
+                Mulliken_SubMatcher,
                 
                 SM(name = 'calc_time',
                     startReStr = r" A BibTeX formatted list of references used in this run has been written to",
