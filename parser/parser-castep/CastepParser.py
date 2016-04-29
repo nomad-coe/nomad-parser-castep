@@ -79,6 +79,12 @@ class CastepParserContext(object):
         self.contr_f = []
         self.total_contribution = []
         self.total_charge = []
+        self.frequencies = []
+        self.ir_intens = []
+        self.raman_act = []
+        self.irr_repres = []
+        self.nr_iter =[]
+
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
         self.pippo = None
@@ -581,11 +587,79 @@ class CastepParserContext(object):
 
         backend.addArrayValues('simulation_cell', np.asarray(self.cell[-3:]))    
 
+    
+    def onClose_castep_section_vibrational_frequencies(self, backend, gIndex, section):
+        frequ = section['castep_vibrationl_frequencies_store']
+        ##### in this case the name castep_ir_store sands for irreducible representation in the point group.
+        irr_rep = section ['castep_ir_store']
+        ##### in this case the name castep_ir_intesities_store sands for Infra-red intensities. 
+        ir_intensities = section['castep_ir_intensity_store']
+     
+        self.nr_iter =section['castep_n_iterations_phonons']
+
+        raman_activity = section['castep_raman_activity_store']
+        
+        #raman_act = section['castep_raman_active_store']
+        
+        if frequ and ir_intensities and raman_activity:
+                for i in range(0,len(frequ)):
+                    frequ[i] = frequ[i].split()
+                    frequ[i] = [float(j) for j in frequ[i]]
+                    frequ_list = frequ[i]
+                    self.frequencies.append(frequ_list)    
+                    irr_rep[i] = irr_rep[i].split()
+                    irr_rep_list = irr_rep[i]
+                    self.irr_repres.append(irr_rep_list)
+                    ir_intensities[i] = ir_intensities[i].split()
+                    ir_intensities[i] = [float(j) for j in ir_intensities[i]]
+                    ir_intens_list = ir_intensities[i]
+                    self.ir_intens.append(ir_intens_list) 
+                    
+                    raman_activity[i] = raman_activity[i].split()
+                   
+                    raman_activity[i] = [float(j) for j in raman_activity[i]]
+                    raman_list = raman_activity[i]
+                    self.raman_act.append(raman_list)  
+                    
+                backend.addArrayValues('castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
+                backend.addArrayValues('castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):])) 
+                backend.addArrayValues('castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
+                backend.addArrayValues('castep_raman_activity', np.asarray(self.raman_act[-len(self.nr_iter):]))
+        elif frequ and ir_intensities:
+                for i in range(0,len(frequ)):
+                    frequ[i] = frequ[i].split()
+                    frequ[i] = [float(j) for j in frequ[i]]
+                    frequ_list = frequ[i]
+                    self.frequencies.append(frequ_list)    
+                    irr_rep[i] = irr_rep[i].split()
+                    irr_rep_list = irr_rep[i]
+                    self.irr_repres.append(irr_rep_list)
+                    ir_intensities[i] = ir_intensities[i].split()
+                    ir_intensities[i] = [float(j) for j in ir_intensities[i]]
+                    ir_intens_list = ir_intensities[i]
+                    self.ir_intens.append(ir_intens_list)
+                backend.addArrayValues('castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
+                backend.addArrayValues('castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):]))    
+                backend.addArrayValues('castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
+        elif frequ:
+                for i in range(0,len(frequ)):
+                    frequ[i] = frequ[i].split()
+                    frequ[i] = [float(j) for j in frequ[i]]
+                    frequ_list = frequ[i]
+                    self.frequencies.append(frequ_list)    
+                    irr_rep[i] = irr_rep[i].split()
+                    irr_rep_list = irr_rep[i]
+                    self.irr_repres.append(irr_rep_list) 
+                backend.addArrayValues('castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):])) 
+                backend.addArrayValues('castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
+            
     def onClose_castep_section_population_analysis(self, backend, gIndex, section):
         orb_contr = section['castep_orbital_contributions']
         tot_charge = section ['castep_mulliken_charge_store']
+        
         if orb_contr:
             for i in range(0, self.at_nr):
+                
                 orb_contr[i] = orb_contr[i].split()
                 orb_contr[i] = [float(j) for j in orb_contr[i]]
                 orb_contr_a = orb_contr[i]
@@ -1294,9 +1368,9 @@ def build_CastepMainFileSimpleMatcher():
             startReStr = r"\s*Atomic Populations\s\(Mulliken\)\s*",
             sections = ['castep_section_population_analysis'],
             #endReStr = r"\s*Bond\s*Population\s*Length\s\(A\)\s*",
-            #repeats = False,
+            repeats = True,
             subMatchers = [ 
-                SM(r"\s*[A-Z]\s*[0-9.]+\s*(?P<castep_orbital_contributions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)\s*[-+0-9.eEdD]+\s*(?P<castep_mulliken_charge_store>[-+0-9.eEdD]+)\s*",       
+                SM(r"\s*[a-zA-Z]+\s*[0-9.]+\s*(?P<castep_orbital_contributions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)\s*[-+0-9.eEdD]+\s*(?P<castep_mulliken_charge_store>[-+0-9.eEdD]+)\s*",       
                     endReStr = r"\s*Bond\s*Population\s*Length\s\(A\)\s*",
                     repeats = True),
                  ]) 
@@ -1396,18 +1470,19 @@ def build_CastepMainFileSimpleMatcher():
 
                 SM(name = "Vibrational_frequencies",
                     sections = ["castep_section_vibrational_frequencies"],
-                    startReStr = r"\s\+\s*Vibrational Frequencies\s*\+\s*",
+                    startReStr = r"\s\+\s*q\-pt\=\s*[0-9.]+",
+                    #startReStr = r"\s\+\s*Vibrational Frequencies\s*\+\s*",
                     repeats = True,
                     subMatchers = [
-                        SM(r"\s\+\s*[0-9.]+\s*(?P<castep_vibrationl_frequencies>[-\d\.]+)\s*(?P<castep_ir>[a-z])\s*(?P<castep_ir_intensity>[-\d\.]+)\s*[A-Z]\s*(?P<castep_raman_activity>[-\d\.]+)\s*[A-Z]\s*\+\s*",       
+                        SM(r"\s\+\s*(?P<castep_n_iterations_phonons>[0-9.]+)\s*(?P<castep_vibrationl_frequencies_store>[-\d\.]+)\s*(?P<castep_ir_store>[a-z])\s*(?P<castep_ir_intensity_store>[-\d\.]+)\s*[A-Z]\s*(?P<castep_raman_activity_store>[-\d\.]+)\s*[A-Z]\s*\+\s*",       
                             repeats = True,
                             endReStr = r"\s\+\s\.*\s\+\s*",
                              ),
-                        SM(r"\s\+\s*[0-9.]+\s*(?P<castep_vibrationl_frequencies>[-\d\.]+)\s*(?P<castep_ir>[a-z])\s*(?P<castep_ir_intensity>[-\d\.]+)\s*[A-Z]\s*[A-Z]\s*\+\s*",       
+                        SM(r"\s\+\s*(?P<castep_n_iterations_phonons>[0-9.]+)\s*(?P<castep_vibrationl_frequencies_store>[-\d\.]+)\s*(?P<castep_ir_store>[a-z])\s*(?P<castep_ir_intensity_store>[-\d\.]+)\s*[A-Z]\s*[A-Z]\s*\+\s*",       
                             repeats = True,
                             endReStr = r"\s\+\s\.*\s\+\s*",
                              ),
-                        SM(r"\s\+\s*[0-9.]+\s*(?P<castep_vibrationl_frequencies>[-\d\.]+)\s*(?P<castep_ir>[a-z])\s*\+\s*",          
+                        SM(r"\s\+\s*(?P<castep_n_iterations_phonons>[0-9.]+)\s*(?P<castep_vibrationl_frequencies_store>[-\d\.]+)\s*(?P<castep_ir_store>[a-z])\s*\+\s*",          
                             repeats = True,
                             endReStr = r"\s\+\s\.*\s\+\s*",
                             ),
@@ -1473,8 +1548,15 @@ def get_cachingLevelForMetaName(metaInfoEnv):
         Dictionary with metaname as key and caching level as value.
     """
     # manually adjust caching of metadata
-    cachingLevelForMetaName = {
-                                #'band_energies' : CachingLevel.Cache,
+    cachingLevelForMetaName = { 'castep_ir_intensity_store' : CachingLevel.Cache,
+                                'castep_ir_store' : CachingLevel.Cache,
+                                'castep_vibrationl_frequencies_store' : CachingLevel.Cache,
+                                'castep_n_iterations_phonons' : CachingLevel.Cache,
+                                'castep_mulliken_charge_store' : CachingLevel.Cache,
+                                'castep_orbital_contributions' : CachingLevel.Cache,
+                                'castep_section_cell_optim': CachingLevel.Cache,
+                                'castep_section_atom_position_optim' : CachingLevel.Cache,
+                                'band_energies' : CachingLevel.Cache,
                                 #'band_k_points' : CachingLevel.Cache,
                                 'castep_basis_set_plan_wave_cutoff' : CachingLevel.Cache,
                                 #'eigenvalues_eigenvalues': CachingLevel.Cache,
