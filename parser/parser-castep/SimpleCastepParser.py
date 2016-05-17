@@ -158,7 +158,7 @@ class CastepParserContext(object):
 
 
 # Here we add basis set name and kind for the plane wave code
-    def onClose_section_basis_set_cell_associated(self, backend, gIndex, section):
+    def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
         ecut_str = section['castep_basis_set_plan_wave_cutoff']
         self.ecut = float(ecut_str[0])
         eVtoRy = 0.073498618
@@ -167,17 +167,17 @@ class CastepParserContext(object):
         basis_set_kind = 'plane_waves'
         basis_set_name = 'PW_'+str(ecut_str_name)
         backend.addValue('basis_set_plan_wave_cutoff', self.ecut)
-        backend.addValue('basis_set_cell_associated_kind', basis_set_kind)
-        backend.addValue('basis_set_cell_associated_name', basis_set_name)
+        backend.addValue('basis_set_cell_dependent_kind', basis_set_kind)
+        backend.addValue('basis_set_cell_dependent_name', basis_set_name)
 
 
 
 ######################################################################################
-################ Triggers on closure section_system_description ######################
+################ Triggers on closure section_system ######################
 ######################################################################################
 
-    def onClose_section_system_description(self, backend, gIndex, section):
-        """trigger called when _section_system_description is closed"""
+    def onClose_section_system(self, backend, gIndex, section):
+        """trigger called when _section_system is closed"""
 
 
 # Processing forces acting on atoms (final converged forces)
@@ -356,7 +356,7 @@ mainFileDescription = SM(name = 'root',
 
 
                                 SM(startReStr = r"\sCalculation not parallelised\.",
-                                   sections = ["section_system_description"],
+                                   sections = ["section_system"],
                                    subMatchers = [
 
                                        # XC functional
@@ -385,12 +385,12 @@ mainFileDescription = SM(name = 'root',
                                        SM(name = 'planeWave basis set',
                                           startReStr = r"\sbasis set accuracy\s*",
                                           forwardMatch = True,
-                                          sections = ["section_basis_set_cell_associated"],
+                                          sections = ["section_basis_set_cell_dependent"],
                                           subMatchers = [
 
                                               SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<castep_basis_set_plan_wave_cutoff>[0-9.]+)")
 
-                                          ]), # CLOSING section_basis_set_cell_associated
+                                          ]), # CLOSING section_basis_set_cell_dependent
 
 
                                        # cell information
@@ -526,7 +526,7 @@ mainFileDescription = SM(name = 'root',
                                           ]), # CLOSING SM SinglePointEvaluation
 
 
-                                ]), # CLOSING section_system_description
+                                ]), # CLOSING section_system
 
 
     ]), # CLOSING SM newRun
@@ -554,8 +554,8 @@ cachingLevelForMetaName = {'energy_total': CachingLevel.Cache,
                            'atom_position': CachingLevel.Forward,
                            'basis_set_plan_wave_cutoff': CachingLevel.Forward,
                            'castep_basis_set_plan_wave_cutoff': CachingLevel.Cache,
-                           'basis_set_cell_associated_kind': CachingLevel.Forward,
-                           'basis_set_cell_associated_name': CachingLevel.Forward,
+                           'basis_set_cell_dependent_kind': CachingLevel.Forward,
+                           'basis_set_cell_dependent_name': CachingLevel.Forward,
 
                            'castep_band_kpoints': CachingLevel.Forward,
                            'castep_band_energies': CachingLevel.Forward,

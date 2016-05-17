@@ -272,7 +272,7 @@ class CastepParserContext(object):
                
         
 # Here we add basis set name and kind for the plane wave code
-    def onClose_section_basis_set_cell_associated(self, backend, gIndex, section):
+    def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
         ecut_str = section['castep_basis_set_plan_wave_cutoff']
         self.ecut = float(ecut_str[0])
         eVtoRy = 0.073498618
@@ -281,8 +281,8 @@ class CastepParserContext(object):
         basis_set_kind = 'plane_waves'
         basis_set_name = 'PW_'+str(ecut_str_name)
         backend.addValue('basis_set_plan_wave_cutoff', self.ecut)
-        backend.addValue('basis_set_cell_associated_kind', basis_set_kind)
-        backend.addValue('basis_set_cell_associated_name', basis_set_name)
+        backend.addValue('basis_set_cell_dependent_kind', basis_set_kind)
+        backend.addValue('basis_set_cell_dependent_name', basis_set_name)
 
     def onClose_castep_section_cell_optim(self, backend, gIndex, section):
         """trigger called when _castep_section_cell is closed"""
@@ -499,11 +499,11 @@ class CastepParserContext(object):
         
 
 ######################################################################################
-################ Triggers on closure section_system_description ######################
+################ Triggers on closure section_system ######################
 ######################################################################################
 
-    def onClose_section_system_description(self, backend, gIndex, section):
-        """trigger called when _section_system_description is closed"""
+    def onClose_section_system(self, backend, gIndex, section):
+        """trigger called when _section_system is closed"""
 
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
         #get cached values of castep_store_atom_position
@@ -933,12 +933,12 @@ def build_CastepMainFileSimpleMatcher():
 
 
     ########################################
-    # submatcher for section_basis_set_cell_associated
+    # submatcher for section_basis_set_cell_dependent
 
     basisSetCellAssociatedSubMatcher = SM(name = 'planeWaveBasisSet',
         startReStr = r"\s\*\*\** Basis Set Parameters \*\*\**\s*",
         forwardMatch = True,
-        sections = ["section_basis_set_cell_associated"],
+        sections = ["section_basis_set_cell_dependent"],
         subMatchers = [
 
             SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<castep_basis_set_plan_wave_cutoff>[0-9.]+)")
@@ -971,7 +971,7 @@ def build_CastepMainFileSimpleMatcher():
     systemDescriptionSubMatcher = SM(name = "systemDescription",
         startReStr = r"\s*Unit Cell\s*",
         forwardMatch = True,
-        sections = ["section_system_description"],
+        sections = ["section_system"],
         subMatchers = [
 
            # cell information
@@ -1216,7 +1216,7 @@ def build_CastepMainFileSimpleMatcher():
                  ])
     geomOptimSubMatcher =  SM (name = 'geometry_optimisation',
             startReStr = r"\sStarting [A-Za-z]+ iteration\s*(?P<CASTEP_geom_iteration_index>[0-9]+)\s\.\.\.\s*",
-            sections = ['section_single_configuration_calculation','section_system_description'],
+            sections = ['section_single_configuration_calculation','section_system'],
             endReStr = r"\s*Atomic\sPopulations\s\(Mulliken\)\s*",
             #endReStr = r"\s\[A-Za-z]+\:\sGeometry\soptimization\scompleted\ssuccessfully.\s*",
             repeats = True,
@@ -1295,7 +1295,7 @@ def build_CastepMainFileSimpleMatcher():
 
     geomOptim_finalSubMatcher = SM (name = 'geometry_optimisation_final_configuration',
             startReStr = r"\s[A-Za-z]+\:\sFinal Configuration\:",
-            sections = ['section_single_configuration_calculation','section_system_description'],
+            sections = ['section_single_configuration_calculation','section_system'],
 
             repeats = True,
             subMatchers = [                  
@@ -1413,7 +1413,7 @@ def build_CastepMainFileSimpleMatcher():
                 calculationMethodSubMatcher, # section_method
 
                
-                basisSetCellAssociatedSubMatcher, # section_basis_set_cell_associated
+                basisSetCellAssociatedSubMatcher, # section_basis_set_cell_dependent
                 
                 ElectronicParameterSubMatcher,
                 
@@ -1421,7 +1421,7 @@ def build_CastepMainFileSimpleMatcher():
                 
                 phononCalculationSubMatcher,
                 
-                systemDescriptionSubMatcher, # section_system_description subMatcher
+                systemDescriptionSubMatcher, # section_system subMatcher
         
                 SM(name = 'Atom_topology',
                   startReStr = r"\s*Mass of species in AMU\s*",              
