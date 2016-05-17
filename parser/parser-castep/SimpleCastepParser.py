@@ -22,10 +22,10 @@ class CastepParserContext(object):
     def __init__(self):
         self.cell                              = []
         self.at_nr                             = 0
-        self.atom_label                        = []
+        self.atom_labels                        = []
         self.atom_forces                       = []
-        self.castep_atom_position              = []
-        self.atom_position                     = []
+        self.castep_atom_positions              = []
+        self.atom_positions                     = []
         self.a                                 = []
         self.b                                 = []
         self.c                                 = []
@@ -134,13 +134,13 @@ class CastepParserContext(object):
         self.energy_total_scf_iteration_list.append(ev)
 
         backend.addArrayValues('energy_total_scf_iteration_list', np.asarray(self.energy_total_scf_iteration_list))
-        backend.addValue('scf_dft_number_of_iterations', self.scfIterNr)
+        backend.addValue('number_of_scf_iterations', self.scfIterNr)
 
 
 
 # Here we recover the unit cell dimensions (both magnitudes and angles) (useful to convert fractional coordinates to cartesian)
-    def onClose_castep_section_atom_position(self, backend, gIndex, section):
-        """trigger called when _castep_section_atom_position is closed"""
+    def onClose_castep_section_atom_positions(self, backend, gIndex, section):
+        """trigger called when _castep_section_atom_positions is closed"""
         # get cached values for cell magnitudes and angles
         self.a = section['castep_cell_length_a']
         self.b = section['castep_cell_length_b']
@@ -159,14 +159,14 @@ class CastepParserContext(object):
 
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
-        ecut_str = section['castep_basis_set_plan_wave_cutoff']
+        ecut_str = section['castep_basis_set_planewave_cutoff']
         self.ecut = float(ecut_str[0])
         eVtoRy = 0.073498618
         ecut_str_name = int(round(eVtoRy*self.ecut))
 
         basis_set_kind = 'plane_waves'
         basis_set_name = 'PW_'+str(ecut_str_name)
-        backend.addValue('basis_set_plan_wave_cutoff', self.ecut)
+        backend.addValue('basis_set_planewave_cutoff', self.ecut)
         backend.addValue('basis_set_cell_dependent_kind', basis_set_kind)
         backend.addValue('basis_set_cell_dependent_name', basis_set_name)
 
@@ -194,41 +194,41 @@ class CastepParserContext(object):
 
 
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
-        #get cached values of castep_store_atom_position
-        pos = section['castep_store_atom_position']
+        #get cached values of castep_store_atom_positions
+        pos = section['castep_store_atom_positions']
         for i in range(0, self.at_nr):
             pos[i] = pos[i].split()
             pos[i] = [float(j) for j in pos[i]]
-            self.castep_atom_position.append(pos[i])
-        backend.addArrayValues('castep_atom_position', np.asarray(self.castep_atom_position))
+            self.castep_atom_positions.append(pos[i])
+        backend.addArrayValues('castep_atom_positions', np.asarray(self.castep_atom_positions))
 
 
 
 # Processing the atom labels
-        #get cached values of castep_store_atom_label
-        lab = section['castep_store_atom_label']
+        #get cached values of castep_store_atom_labels
+        lab = section['castep_store_atom_labels']
         for i in range(0, self.at_nr):
             lab[i] = re.sub('\s+', ' ', lab[i]).strip()
-        self.atom_label.append(lab)
-        backend.addArrayValues('atom_label', np.asarray(self.atom_label))
+        self.atom_labels.append(lab)
+        backend.addArrayValues('atom_labels', np.asarray(self.atom_labels))
 
 
 
 # Converting the fractional atomic positions (x) to cartesian coordinates (X) ( X = M^-1 x )
         for i in range(0, self.at_nr):
 
-            pos_a = [   self.a[0] * self.castep_atom_position[i][0]
-                      + self.b[0] * math.cos(np.deg2rad(self.gamma[0])) * self.castep_atom_position[i][1]
-                      + self.c[0] * math.cos(np.deg2rad(self.beta[0])) * self.castep_atom_position[i][2],
+            pos_a = [   self.a[0] * self.castep_atom_positions[i][0]
+                      + self.b[0] * math.cos(np.deg2rad(self.gamma[0])) * self.castep_atom_positions[i][1]
+                      + self.c[0] * math.cos(np.deg2rad(self.beta[0])) * self.castep_atom_positions[i][2],
 
-                        self.b[0] * math.sin(self.gamma[0]) * self.castep_atom_position[i][1]
-                      + self.c[0] * self.castep_atom_position[i][2] * (( math.cos(np.deg2rad(self.alpha[0]))
+                        self.b[0] * math.sin(self.gamma[0]) * self.castep_atom_positions[i][1]
+                      + self.c[0] * self.castep_atom_positions[i][2] * (( math.cos(np.deg2rad(self.alpha[0]))
                       - math.cos(np.deg2rad(self.beta[0])) * math.cos(np.deg2rad(self.gamma[0])) ) / math.sin(np.deg2rad(self.gamma[0])) ),
 
-                       (self.volume / (self.a[0]*self.b[0] * math.sin(np.deg2rad(self.gamma[0])))) * self.castep_atom_position[i][2] ]
+                       (self.volume / (self.a[0]*self.b[0] * math.sin(np.deg2rad(self.gamma[0])))) * self.castep_atom_positions[i][2] ]
 
-            self.atom_position.append(pos_a)
-        backend.addArrayValues('atom_position', np.asarray(self.atom_position))
+            self.atom_positions.append(pos_a)
+        backend.addArrayValues('atom_positions', np.asarray(self.atom_positions))
 
 
 
@@ -388,7 +388,7 @@ mainFileDescription = SM(name = 'root',
                                           sections = ["section_basis_set_cell_dependent"],
                                           subMatchers = [
 
-                                              SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<castep_basis_set_plan_wave_cutoff>[0-9.]+)")
+                                              SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<castep_basis_set_planewave_cutoff>[0-9.]+)")
 
                                           ]), # CLOSING section_basis_set_cell_dependent
 
@@ -409,17 +409,17 @@ mainFileDescription = SM(name = 'root',
 
                                        # atomic positions and cell dimesions
                                        SM(startReStr = r"\s*Lattice parameters",
-                                          sections = ["castep_section_atom_position"],
+                                          sections = ["castep_section_atom_positions"],
                                           subMatchers = [
 
                                             SM(r"\s*a \=\s*(?P<castep_cell_length_a>[\d\.]+)\s*alpha \=\s*(?P<castep_cell_angle_alpha>[\d\.]+)"),
                                             SM(r"\s*b \=\s*(?P<castep_cell_length_b>[\d\.]+)\s*beta  \=\s*(?P<castep_cell_angle_beta>[\d\.]+)"),
                                             SM(r"\s*c \=\s*(?P<castep_cell_length_c>[\d\.]+)\s*gamma \=\s*(?P<castep_cell_angle_gamma>[\d\.]+)"),
-                                            SM(r"\s*x\s*(?P<castep_store_atom_label>[A-Za-z0-9]+\s+[\d\.]+)\s*[0-9]\s*(?P<castep_store_atom_position>[\d\.]+\s+[\d\.]+\s+[\d\.]+)",
+                                            SM(r"\s*x\s*(?P<castep_store_atom_labels>[A-Za-z0-9]+\s+[\d\.]+)\s*[0-9]\s*(?P<castep_store_atom_positions>[\d\.]+\s+[\d\.]+\s+[\d\.]+)",
                                                endReStr = "\n",
                                                repeats = True)
 
-                                          ]), # CLOSING castep_section_atom_position
+                                          ]), # CLOSING castep_section_atom_positions
 
 
                                        # SCF Single Point Evaluation (energies and forces)
@@ -548,12 +548,12 @@ parserInfo = {'name':'castep-parser', 'version': '1.0'}
 cachingLevelForMetaName = {'energy_total': CachingLevel.Cache,
                            'energy_total_scf_iteration_list': CachingLevel.Forward,
                            'atom_forces': CachingLevel.Forward,
-                           'atom_label': CachingLevel.Forward,
+                           'atom_labels': CachingLevel.Forward,
                            'number_of_atoms': CachingLevel.Forward,
-                           'castep_atom_position': CachingLevel.Forward,
-                           'atom_position': CachingLevel.Forward,
-                           'basis_set_plan_wave_cutoff': CachingLevel.Forward,
-                           'castep_basis_set_plan_wave_cutoff': CachingLevel.Cache,
+                           'castep_atom_positions': CachingLevel.Forward,
+                           'atom_positions': CachingLevel.Forward,
+                           'basis_set_planewave_cutoff': CachingLevel.Forward,
+                           'castep_basis_set_planewave_cutoff': CachingLevel.Cache,
                            'basis_set_cell_dependent_kind': CachingLevel.Forward,
                            'basis_set_cell_dependent_name': CachingLevel.Forward,
 
@@ -566,7 +566,7 @@ cachingLevelForMetaName = {'energy_total': CachingLevel.Cache,
                            'castep_store_k_points_1': CachingLevel.Cache,
                            'castep_store_eigenvalues_1': CachingLevel.Cache,
                            'castep_store_atom_forces': CachingLevel.Cache,
-                           'castep_store_atom_label': CachingLevel.Cache,
+                           'castep_store_atom_labels': CachingLevel.Cache,
                            }
 
 if __name__ == "__main__":

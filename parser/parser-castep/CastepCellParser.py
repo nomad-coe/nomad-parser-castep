@@ -44,7 +44,7 @@ class CastepCellParserContext(object):
         # allows to reset values if the same superContext is used to parse different files
         self.band_energies = None
         self.band_k_points = None
-        self.band_occupation = None
+        self.band_occupations = None
 
         self.k_crd = []
         self.k_sgt_start_end = []

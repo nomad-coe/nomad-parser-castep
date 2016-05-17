@@ -52,7 +52,7 @@ class CastepBandParserContext(object):
         self.k_nr                       = 0
         self.e_nr                       = 0
         self.eigenvalues_kpoints        = []
-        self.eigenvalues_eigenvalues    = []
+        self.eigenvalues_values    = []
 
         self.e_spin_1                   = []
         self.e_spin_2                   = []
