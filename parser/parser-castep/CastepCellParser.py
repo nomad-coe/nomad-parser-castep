@@ -72,8 +72,8 @@ class CastepCellParserContext(object):
 
 
         backend.addArrayValues('castep_k_path', np.asarray(self.k_crd))
-        backend.addArrayValues('band_segm_start_end', np.asarray(self.k_sgt_start_end))
-        backend.addValue('number_of_k_point_segments', len(self.k_sgt_start_end))
+        # backend.addArrayValues('band_segm_start_end', np.asarray(self.k_sgt_start_end))
+        # backend.addValue('number_of_k_point_segments', len(self.k_sgt_start_end))
 
 
 def build_CastepCellFileSimpleMatcher():
