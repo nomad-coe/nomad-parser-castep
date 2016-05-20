@@ -547,7 +547,7 @@ class CastepParserContext(object):
         #get cached values of castep_store_atom_positions
         n_electrons = section['castep_number_of_electrons_store']
         if n_electrons:
-            backend.addValue('castep_number_of_electrons', n_electrons)
+            backend.addValue('castep_number_of_electrons', n_electrons[0])
         pos = section['castep_store_atom_positions']
         if pos:
             self.at_nr = len(pos)
