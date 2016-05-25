@@ -64,7 +64,7 @@ class CastepBandParserContext(object):
     def onClose_castep_section_spin_number(self, backend, gIndex, section):
 
         self.n_spin = section['castep_spin_number']
-
+        
 
 # Storing the k point coordinates
     def onClose_castep_section_scf_k_points(self, backend, gIndex, section):
@@ -99,6 +99,7 @@ class CastepBandParserContext(object):
         e_st_1, e_st_2 = split_list(e_st)
         e_st_1 = [x * Ha_to_J for x in e_st_1]
         e_st_2 = [x * Ha_to_J for x in e_st_2]
+        
         if self.n_spin[0] == 1:
             self.e_nr = len(e_st_0)
             self.e_spin_1.append(e_st_0)            
@@ -109,7 +110,7 @@ class CastepBandParserContext(object):
             self.e_spin_1.append(e_st_1)          
             self.e_spin_2.append(e_st_2) 
             
-         
+       
 
 
 

@@ -103,6 +103,9 @@ class CastepParserContext(object):
         self.total_energy_frame = []
         self.frame_energies =[]
         self.scfgIndex=[]
+        self.n_spin_channels = []
+        self.n_spin_channels_bands = []
+
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
         self.pippo = None
@@ -287,8 +290,10 @@ class CastepParserContext(object):
                 backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion+'_'+self.relativistic)
             else:
                 backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.relativistic)
-               
         
+        if self.n_spin_channels:
+            backend.addValue('number_of_spin_channels', self.n_spin_channels)
+    
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
         ecut_str = section['castep_basis_set_planewave_cutoff']
@@ -404,35 +409,37 @@ class CastepParserContext(object):
         else: 
             pass        
 # Add SCF k points and eigenvalue from *.band file to the backend (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
-        if len(self.e_spin_1) != 0:
-            # gIndexGroup = backend.openSection('section_eigenvalues_group')
+        for i in range(len(self.n_spin_channels)):
+            if self.n_spin_channels[i]==1:
+  
+                backend.openSection('section_eigenvalues') # opening first section_eigenvalues
+                backend.addArrayValues('eigenvalues_kpoints', np.asarray(self.k_points_scf))
+                backend.addArrayValues('eigenvalues_values', np.asarray(self.e_spin_1))
+                backend.addValue('number_of_eigenvalues_kpoints', self.k_nr_scf)
+                backend.addValue('number_of_eigenvalues', self.e_nr_scf)
 
-            backend.openSection('section_eigenvalues') # opening first section_eigenvalues
+                backend.closeSection('section_eigenvalues', gIndex)
+       
+            if self.n_spin_channels[i]==2:         
+                self.e_spin_2.append(self.e_spin_1)
+                backend.openSection('section_eigenvalues') # opening the second section_eigenvalues (only for spin polarised calculations)
+                backend.addArrayValues('eigenvalues_kpoints', np.asarray(self.k_points_scf))
+                backend.addArrayValues('eigenvalues_values', np.asarray(self.e_spin_2))
+                backend.addValue('number_of_eigenvalues_kpoints', self.k_nr_scf)
+                backend.addValue('number_of_eigenvalues', self.e_nr_scf)
 
-            backend.addArrayValues('eigenvalues_kpoints', np.asarray(self.k_points_scf))
-            backend.addArrayValues('eigenvalues_values', np.asarray(self.e_spin_1))
-            backend.addValue('number_of_eigenvalues_kpoints', self.k_nr_scf)
-            backend.addValue('number_of_eigenvalues', self.e_nr_scf)
-
-            backend.closeSection('section_eigenvalues', gIndex)
-
-        if len(self.e_spin_2) != 0:
-
-            backend.openSection('section_eigenvalues') # opening the second section_eigenvalues (only for spin polarised calculations)
-
-            backend.addArrayValues('eigenvalues_kpoints', np.asarray(self.k_points_scf))
-            backend.addArrayValues('eigenvalues_values', np.asarray(self.e_spin_2))
-            backend.addValue('number_of_eigenvalues_kpoints', self.k_nr_scf)
-            backend.addValue('number_of_eigenvalues', self.e_nr_scf)
-
-            backend.closeSection('section_eigenvalues', gIndex+1)
+                backend.closeSection('section_eigenvalues', gIndex)
 
             #     backend.closeSection('section_eigenvalues_group', gIndexGroup)
 
             # else:
             #     backend.closeSection('section_eigenvalues_group', gIndexGroup)
         
-        
+        # if len(self.e_spin_2) != 0:
+        #     self.n_spin_channels = 2
+            
+        #     self.n_spin_channels = 1    
+        # backend.addValue('castep_number_of_spin_channels', self.n_spin_channels)       
         
         
         #backend.openSection('section_stress_tensor')
@@ -448,8 +455,7 @@ class CastepParserContext(object):
             for i in range(len(total_energy)):
                 self.disp_energy = abs(van_der_waals_energy[i] - total_energy[i])
             backend.addValue('energy_van_der_Waals', self.disp_energy)
-
-        
+  
     def onClose_castep_section_SCF_iteration_frame(self, backend, gIndex, section):
         self.frame_energies = section['castep_SCF_frame_energy']
                        
@@ -493,12 +499,17 @@ class CastepParserContext(object):
 
 
                 self.k_nr_scf     = bandSuperContext.k_nr
+                self.n_spin_channels = bandSuperContext.n_spin
+            
                 self.e_nr_scf     = bandSuperContext.e_nr
                 self.k_points_scf = bandSuperContext.eigenvalues_kpoints
                 self.e_spin_1     = bandSuperContext.e_spin_1
                 self.e_spin_2     = bandSuperContext.e_spin_2
+                
             else: 
                 pass # if no .bands is found in the same folder as .castep file than skip and continue     
+                
+
         #self.n_spin = bandSuperContext.n_spin
 
     def onClose_castep_section_stress_tensor(self, backend, gIndex, section): 
@@ -545,9 +556,9 @@ class CastepParserContext(object):
 
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
         #get cached values of castep_store_atom_positions
-        n_electrons = section['castep_number_of_electrons_store']
-        if n_electrons:
-            backend.addValue('castep_number_of_electrons', n_electrons)
+        # n_electrons = section['castep_number_of_electrons_store']
+        # if n_electrons:
+        #     backend.addValue('castep_number_of_electrons', n_electrons)
         pos = section['castep_store_atom_positions']
         if pos:
             self.at_nr = len(pos)
@@ -632,11 +643,6 @@ class CastepParserContext(object):
         else:
             pass
         
-        # if self.volume:
-        #     backend.addValue('CASTEP_cell_volume', self.volume) 
-       
-        # if self.cell: 
-        #     backend.addArrayValues('simulation_cell', np.asarray(self.cell[-3:]))
 
     def onClose_castep_section_vibrational_frequencies(self, backend, gIndex, section):
         frequ = section['castep_vibrationl_frequencies_store']
@@ -755,8 +761,9 @@ class CastepParserContext(object):
             k_st[i] = [float(j) for j in k_st[i]]
             k_st_int = k_st[i]
             self.castep_band_kpoints.append(k_st_int)
-
-
+            # print self.castep_band_kpoints,'martina'
+        self.n_spin_channels_bands = 1    
+        
 # Storing the eigenvalues (SPIN 1)
     def onClose_castep_section_eigenvalues(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
@@ -786,7 +793,8 @@ class CastepParserContext(object):
             self.castep_band_kpoints_1.append(k_st_1_int)
 
         self.k_nr_1 = self.k_nr  # clean double counting
-
+        
+        self.n_spin_channels_bands = 2
 
 # Storing the eigenvalues (SPIN 2)
     def onClose_castep_section_eigenvalues_1(self, backend, gIndex, section):
@@ -829,6 +837,11 @@ class CastepParserContext(object):
            
         self.k_start_end = cellSuperContext.k_sgt_start_end  # recover k path segments coordinartes from *.cell file
         self.k_path_nr = len(self.k_start_end)
+        # backend.openSection('section_single_configuration_to_calculation_ref')
+        if self.n_spin_channels_bands:
+            backend.openSection('section_method')
+            backend.addValue('number_of_spin_channels',self.n_spin_channels_bands)     
+            backend.closeSection('section_method',gIndex+1)
         
         ########################################################################################
         def get_last_index(el, check):  # function that returns end index for each k path segment
@@ -868,33 +881,36 @@ class CastepParserContext(object):
             for i in range(self.k_path_nr):
                 a = self.band_en[ path_end_index[i] : path_end_index[i+1]+1 ]
                 band_en_path.append(a)          # storing the band energies for each segment, k point and spin channel
-
+           
             for i in range(self.k_path_nr):    
+              
                 backend.openSection('section_k_band_segment')
                 backend.addArrayValues('band_k_points', np.asarray(k_point_path[i]))
                 backend.addArrayValues('band_energies', np.asarray(band_en_path[i]))
                 backend.addArrayValues('band_segm_start_end', np.asarray(self.k_start_end[i])) 
                 backend.addValue('number_of_k_points_per_segment', len(k_point_path[i])) 
                 backend.closeSection('section_k_band_segment',i)
+            
         else: 
             pass    
 
     def onClose_section_run(self, backend, gIndex, section):
-        f_st = section['castep_store_atom_forces_band']
-        time_list = self.time_0
-        if f_st:
+        
+        f_st_band = section['castep_store_atom_forces_band']
+        
+        if f_st_band:
+            gindex_band = 1
             for i in range(0, self.at_nr):
-                f_st[i] = f_st[i].split()
-                f_st[i] = [float(j) for j in f_st[i]]
+                f_st_band[i] = f_st_band[i].split()
+                f_st_band[i] = [float(j) for j in f_st_band[i]]
 
-                f_st_int = f_st[i]
+                f_st_int_band = f_st_band[i]
                  
-                self.atom_forces_band.append(f_st_int)
+                self.atom_forces_band.append(f_st_int_band)
                 self.atom_forces_band = self.atom_forces_band[-self.at_nr:] 
-            backend.addArrayValues('castep_atom_forces', np.asarray(self.atom_forces_band))
-        else: 
-            pass        
-        #optim_succ = section['CASTEP_geom_converged']
+            backend.addArrayValues('castep_atom_forces', np.asarray(self.atom_forces_band))        
+
+        time_list = self.time_0
         if section['CASTEP_geom_converged'] is not None:
             if section['CASTEP_geom_converged'][-1] == 'successfully':
                 self.geoConvergence = True
@@ -980,6 +996,7 @@ class CastepParserContext(object):
                 pass
         else:
             pass            
+
 ################################################################################################################################################################
 ################################################################################################################################################################
 ################################################################################################################################################################
@@ -1096,7 +1113,7 @@ def build_CastepMainFileSimpleMatcher():
         sections = ["section_system"],
         startReStr = r"\s\*\*\** Electronic Parameters \*\*\**\s*",
         subMatchers = [
-            SM(r"\s*number of  electrons\s*\:\s*(?P<castep_number_of_electrons_store>[0-9.]+)"),
+            SM(r"\s*number of  electrons\s*\:\s*(?P<castep_number_of_electrons>[0-9.]+)"),
             ])
     
     MDParameterSubMatcher = SM(name = 'MD_parameters' ,            
@@ -1585,9 +1602,7 @@ def build_CastepMainFileSimpleMatcher():
                      SM(r"\sFundamental constants values\: *(?P<castep_constants_reference>[a-zA-Z0-9.() ]*)\s*"),
 
                                   ]), # CLOSING SM ProgramHeader
-                  
-              
-              
+                                
                
                 scfEigenvaluesSubMatcher, # export section_eigenvalues_group to the correct nesting
 
@@ -1686,18 +1701,19 @@ def build_CastepMainFileSimpleMatcher():
                               repeats = True),  
                                       ]), # CLOSIN
 
+                # SM(startReStr = r"\s\*\*\*\*\**\sSymmetrised Forces\s\*\*\*\*\**\s*",
+                #         subMatchers = [
+                #            SM(r"\s\*\s[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces_band>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                #               repeats = True)
+                #                       ]),
                 # SM(startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
                 #     subMatchers = [
-                #            SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                #            SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces_band>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                 #               repeats = True)
                 #                       ]),
 
                      
-                SM(startReStr = r"\s\*\*\*\*\**\sSymmetrised Forces\s\*\*\*\*\**\s*",
-                        subMatchers = [
-                           SM(r"\s\*\s[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces_band>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
-                              repeats = True)
-                                      ]),
+                
                     
                 geomOptimSubMatcher,
                 
@@ -1744,13 +1760,13 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 'castep_section_eigenvalues':CachingLevel.Cache,
                                 'castep_section_k_points':CachingLevel.Cache,
                                 'castep_section_k_band':CachingLevel.Cache,
-                                'band_energies' : CachingLevel.Cache,
-                                #'band_k_points' : CachingLevel.Cache,
+                                # 'band_energies' : CachingLevel.Cache,
+                                # 'band_k_points' : CachingLevel.Cache,
                                 'castep_basis_set_planewave_cutoff' : CachingLevel.Cache,
-                                'eigenvalues_values': CachingLevel.Cache,
-                                'eigenvalues_kpoints':CachingLevel.Cache,
+                                # 'eigenvalues_values': CachingLevel.Cache,
+                                # 'eigenvalues_kpoints':CachingLevel.Cache,
                                 'castep_number_of_electrons_store':CachingLevel.Cache,
-                                 'castep_frame_time':CachingLevel.Cache,
+                                'castep_frame_time':CachingLevel.Cache,
                                 'castep_section_SCF_iteration_frame':CachingLevel.Cache,
                                 'castep_SCF_frame_energy':CachingLevel.Cache}
 
