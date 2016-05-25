@@ -1185,9 +1185,14 @@ def build_CastepMainFileSimpleMatcher():
     bandStructureSubMatcher = SM (name = 'BandStructure',
         startReStr = r"\s*\+\s*B A N D   S T R U C T U R E   C A L C U L A T I O N\s*",
         #startReStr = r"\stype\sof\scalculation\s*\:\sband\sstructure\s*",
-        sections = ['section_k_band'],
+        # sections = ['section_k_band'],
+        sections = ['section_single_configuration_calculation'],
         subMatchers = [
 
+         SM(startReStr = "\s*\+\s*Spin\=1\skpt\=\s*",
+               sections = ["section_k_band"],
+               # forwardMatch = True,
+               subMatchers = [
 
             # First spin channel
             SM(startReStr = "\s*\+\s*Spin\=1\skpt\=\s*",
@@ -1254,9 +1259,9 @@ def build_CastepMainFileSimpleMatcher():
                               ]), # CLOSING 2nd section_eigenvalues
 
 
-        ]) # CLOSING SM BandStructure
+        ]), # CLOSING SM BandStructure
 
-
+         ])
     singlepointSubMatcher = SM(name = 'single_point',
                 startReStr = r"\-*\s*\<\-\-\sSCF\s*",             
                 #endReStr = r"BFGS\: finished iteration     0 with enthalpy\= \-2\.14201700E\+002 eV",
