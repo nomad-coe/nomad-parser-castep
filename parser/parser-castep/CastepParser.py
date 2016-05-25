@@ -556,15 +556,9 @@ class CastepParserContext(object):
 
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
         #get cached values of castep_store_atom_positions
-<<<<<<< HEAD
         # n_electrons = section['castep_number_of_electrons_store']
         # if n_electrons:
         #     backend.addValue('castep_number_of_electrons', n_electrons)
-=======
-        n_electrons = section['castep_number_of_electrons_store']
-        if n_electrons:
-            backend.addValue('castep_number_of_electrons', n_electrons[0])
->>>>>>> eef397fec9b922609dd209700d8ed56c7ee49ae1
         pos = section['castep_store_atom_positions']
         if pos:
             self.at_nr = len(pos)
@@ -1771,7 +1765,7 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 'castep_basis_set_planewave_cutoff' : CachingLevel.Cache,
                                 # 'eigenvalues_values': CachingLevel.Cache,
                                 # 'eigenvalues_kpoints':CachingLevel.Cache,
-                                'castep_number_of_electrons_store':CachingLevel.Cache,
+                                
                                 'castep_frame_time':CachingLevel.Cache,
                                 'castep_section_SCF_iteration_frame':CachingLevel.Cache,
                                 'castep_SCF_frame_energy':CachingLevel.Cache}
