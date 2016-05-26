@@ -457,7 +457,7 @@ class CastepParserContext(object):
             backend.addValue('energy_van_der_Waals', self.disp_energy)
         
 
-        J_converter = 1.602176565e-19
+        J_converter = float(1.602176565e-19)
         finite_basis_corr_energy = section['CASTEP_total_energy_corrected_for_finite_basis_store'] ###Conversion to Jule
         for i in range(len(finite_basis_corr_energy)):
             finite_basis_corr_energy = [x * J_converter for x in finite_basis_corr_energy]
@@ -472,7 +472,7 @@ class CastepParserContext(object):
                 
                 # self.energy_frame =[]
             for i in range(len(self.frame_energies)):
-                J_converter = 1.602176565e-19
+                J_converter = float(1.602176565e-19)
                 self.frame_energies[i]=self.frame_energies[i].split()
                 self.frame_energies[i]=[float(j) for j in self.frame_energies[i]]
                 energies = self.frame_energies[i] ###Conversion to Jule
