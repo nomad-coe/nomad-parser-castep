@@ -24,7 +24,7 @@ object CastepParserSpec1 extends Specification {
   }
 }
 
-object CastepParserSpec extends Specification {
+object CastepParserSpec2 extends Specification {
   "CastepParserTest" >> {
     "test with json-events" >> {
       ParserRun.parse(CastepParser, "parsers/castep/test/examples/Si2_singlepoint/LDA/Si2.castep_v_2", "json-events") must_== ParseResult.ParseSuccess
