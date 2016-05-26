@@ -34,4 +34,13 @@ object CastepParserSpec2 extends Specification {
     }
   }
 }
-
+object CastepParserSpec3 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/Si2_singlepoint/LDA/Spin_polarised/Si2_sp.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/Si2_singlepoint/LDA/Spin_polarised/Si2_sp.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
