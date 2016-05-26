@@ -850,7 +850,7 @@ class CastepParserContext(object):
         # backend.openSection('section_single_configuration_to_calculation_ref')
         if self.n_spin_channels_bands:
             backend.openSection('section_method')
-            backend.addValue('number_of_spin_channels',self.n_spin_channels_bands[0])     
+            backend.addValue('number_of_spin_channels',self.n_spin_channels_bands)     
             backend.closeSection('section_method',gIndex+1)
         
         ########################################################################################
