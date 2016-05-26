@@ -12,3 +12,15 @@ object CastepParserSpec extends Specification {
     }
   }
 }
+
+object CastepParserSpec1 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/KCl-stress.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/KCl-stress.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
+

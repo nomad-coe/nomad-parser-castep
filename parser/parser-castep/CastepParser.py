@@ -382,7 +382,7 @@ class CastepParserContext(object):
     # def onClose_section_scf_iteration(self, backend, gIndex, section):
     #     """trigger called when _section_scf_iteration is closed"""
     #     # get cached values for energy_total_scf_iteration
-    #     ev = section['energy_total_scf_iteration']
+       
     #     self.scfIterNr = len(ev)
     #     self.energy_total_scf_iteration_list.append(ev)
 
@@ -455,7 +455,14 @@ class CastepParserContext(object):
             for i in range(len(total_energy)):
                 self.disp_energy = abs(van_der_waals_energy[i] - total_energy[i])
             backend.addValue('energy_van_der_Waals', self.disp_energy)
-  
+        
+
+        J_converter = 1.602176565e-19
+        finite_basis_corr_energy = section['CASTEP_total_energy_corrected_for_finite_basis_store'] ###Conversion to Jule
+        for i in range(len(finite_basis_corr_energy)):
+            finite_basis_corr_energy = [x * J_converter for x in finite_basis_corr_energy]
+        backend.addValue('CASTEP_total_energy_corrected_for_finite_basis', finite_basis_corr_energy)
+    
     def onClose_castep_section_SCF_iteration_frame(self, backend, gIndex, section):
         self.frame_energies = section['castep_SCF_frame_energy']
                        
@@ -465,10 +472,11 @@ class CastepParserContext(object):
                 
                 # self.energy_frame =[]
             for i in range(len(self.frame_energies)):
-                     
+                J_converter = 1.602176565e-19
                 self.frame_energies[i]=self.frame_energies[i].split()
                 self.frame_energies[i]=[float(j) for j in self.frame_energies[i]]
-                energies = self.frame_energies[i]
+                energies = self.frame_energies[i] ###Conversion to Jule
+                energies = [x * J_converter for x in energies]
                 self.energy_frame.append(energies)   
 
             if frame_time:
@@ -1283,7 +1291,7 @@ def build_CastepMainFileSimpleMatcher():
                     
                     SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
                     SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
-                    SM(r"\sTotal energy corrected for finite basis set\s\=\s*(?P<CASTEP_total_energy_corrected_for_finite_basis>[-+0-9.eEdD]+)\s+"),
+                    SM(r"\sTotal energy corrected for finite basis set\s\=\s*(?P<CASTEP_total_energy_corrected_for_finite_basis_store>[-+0-9.eEdD]+)\s+"),
                     SM(r"Dispersion corrected final energy\*\s=\s*(?P<castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),#total energy including dispersion correction
                     SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"), # matching final converged total free energy
                     SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<energy_total_T0__eV>[-+0-9.eEdD]*)"), # 0K corrected final SCF energy
@@ -1341,7 +1349,6 @@ def build_CastepMainFileSimpleMatcher():
                     SM(r"\s*[0-9]+\s*(?P<castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                         endReStr = "\n",
                         repeats = True),                
-                    
                     SM(startReStr = r"\s*x\s*MD\sData\:\s*x",
                          subMatchers = [
                             SM(r"\s*x\s*time\s*\:\s*(?P<castep_frame_time>[+0-9.eEdD]+)\s*ps\s*x\s*"),
@@ -1770,7 +1777,7 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 'castep_basis_set_planewave_cutoff' : CachingLevel.Cache,
                                 # 'eigenvalues_values': CachingLevel.Cache,
                                 # 'eigenvalues_kpoints':CachingLevel.Cache,
-                                
+                                'CASTEP_total_energy_corrected_for_finite_basis_store': CachingLevel.Cache,
                                 'castep_frame_time':CachingLevel.Cache,
                                 'castep_section_SCF_iteration_frame':CachingLevel.Cache,
                                 'castep_SCF_frame_energy':CachingLevel.Cache}
