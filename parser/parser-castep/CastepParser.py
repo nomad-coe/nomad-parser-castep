@@ -459,9 +459,14 @@ class CastepParserContext(object):
 
         # J_converter = float(1.602176565e-19)
         finite_basis_corr_energy = section['CASTEP_total_energy_corrected_for_finite_basis_store'] ###Conversion to Jule
+        print finite_basis_corr_energy,'ciao'
+        J_converter = 1.602176565e-19
+        J_float = float(J_converter)
+
         if finite_basis_corr_energy:
-            finite_basis_corr_energy = [float(j) for j in finite_basis_corr_energy]
-            finite_basis_corr_energy = [x * 1.602176565e-19 for x in finite_basis_corr_energy]
+            finite_basis_corr_energy = float(finite_basis_corr_energy[0]) * J_float
+            # finite_basis_corr_energy = [float(j) for j in finite_basis_corr_energy]
+            # finite_basis_corr_energy = [x * J_float for x in finite_basis_corr_energy]
             backend.addValue('CASTEP_total_energy_corrected_for_finite_basis', finite_basis_corr_energy)
     
     def onClose_castep_section_SCF_iteration_frame(self, backend, gIndex, section):
