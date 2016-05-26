@@ -417,14 +417,16 @@ class CastepParserContext(object):
                 backend.addArrayValues('eigenvalues_values', np.asarray(self.e_spin_1))
                 backend.addValue('number_of_eigenvalues_kpoints', self.k_nr_scf)
                 backend.addValue('number_of_eigenvalues', self.e_nr_scf)
-
                 backend.closeSection('section_eigenvalues', gIndex)
        
             if self.n_spin_channels[i]==2:         
-                self.e_spin_2.append(self.e_spin_1)
+                # print self.n_spin_channels,'ciao'
+                # self.e_spin_2.(self.e_spin_1)
+                both_spin = [[self.e_spin_2],[self.e_spin_1]]
+                # 
                 backend.openSection('section_eigenvalues') # opening the second section_eigenvalues (only for spin polarised calculations)
                 backend.addArrayValues('eigenvalues_kpoints', np.asarray(self.k_points_scf))
-                backend.addArrayValues('eigenvalues_values', np.asarray(self.e_spin_2))
+                backend.addArrayValues('eigenvalues_values', np.asarray(both_spin))
                 backend.addValue('number_of_eigenvalues_kpoints', self.k_nr_scf)
                 backend.addValue('number_of_eigenvalues', self.e_nr_scf)
 
