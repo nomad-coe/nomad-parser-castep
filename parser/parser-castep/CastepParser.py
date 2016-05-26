@@ -292,7 +292,7 @@ class CastepParserContext(object):
                 backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.relativistic)
         
         if self.n_spin_channels:
-            backend.addValue('number_of_spin_channels', self.n_spin_channels)
+            backend.addValue('number_of_spin_channels', self.n_spin_channels[0])
     
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
@@ -850,7 +850,7 @@ class CastepParserContext(object):
         # backend.openSection('section_single_configuration_to_calculation_ref')
         if self.n_spin_channels_bands:
             backend.openSection('section_method')
-            backend.addValue('number_of_spin_channels',self.n_spin_channels_bands)     
+            backend.addValue('number_of_spin_channels',self.n_spin_channels_bands[0])     
             backend.closeSection('section_method',gIndex+1)
         
         ########################################################################################
