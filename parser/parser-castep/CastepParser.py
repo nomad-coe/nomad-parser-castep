@@ -129,8 +129,8 @@ class CastepParserContext(object):
     def onClose_section_topology(self, backend, gIndex, section):
     # Processing the atom masses and type
         #get cached values of castep_store_atom_mass and type
-        mass = section['castep_store_atom_mass']
-        name = section['castep_store_atom_name']
+        mass = section['x_castep_store_atom_mass']
+        name = section['x_castep_store_atom_name']
         for i in range(len(mass)):
             #converting mass in Kg from AMU
             mass[i] = float(mass[i]) * 1.66053904e-27
@@ -143,13 +143,13 @@ class CastepParserContext(object):
     
 
 # Translating the XC functional name to the NOMAD standard
-    def onClose_castep_section_functionals(self, backend, gIndex, section):
+    def onClose_x_castep_section_functionals(self, backend, gIndex, section):
         """When all the functional definitions have been gathered, matches them
         with the nomad correspondents and combines into one single string which
         is put into the backend.
         """
         # Get the list of functional and relativistic names
-        functional_names = section["castep_functional_name"]
+        functional_names = section["x_castep_functional_name"]
         
         #relativistic_names = section["castep_relativity_treatment_scf"]
 
@@ -185,10 +185,10 @@ class CastepParserContext(object):
         #self.functionals = "_".join(sorted(self.functionals))
         
 
-    def onClose_castep_section_functional_definition(self, backend, gIndex, section):
+    def onClose_x_castep_section_functional_definition(self, backend, gIndex, section):
 
-        self.functional_types = section["castep_functional_type"]
-        self.functional_weight = section["castep_functional_weight"]
+        self.functional_types = section["x_castep_functional_type"]
+        self.functional_weight = section["x_castep_functional_weight"]
         
 
         # Define a mapping for the functionals
@@ -220,8 +220,8 @@ class CastepParserContext(object):
                 self.functionals.append(match)
         #self.functionals = "_".join(sorted(self.functionals))
         
-    def onClose_castep_section_relativity_treatment(self, backend, gIndex, section):
-        relativistic_names = section["castep_relativity_treatment_scf"]
+    def onClose_x_castep_section_relativity_treatment(self, backend, gIndex, section):
+        relativistic_names = section["x_castep_relativity_treatment_scf"]
         
         # Define a mapping for the relativistic treatments
         relativistic_map = {
@@ -236,8 +236,8 @@ class CastepParserContext(object):
         self.relativistic = "_".join(sorted(self.relativistic))
 # Here we add info about the XC functional and relativistic treatment
     
-    def onClose_castep_section_geom_optimisation_method(self, backend, gIndex, section):
-        self.optim_method = section["castep_geometry_optim_method"]
+    def onClose_x_castep_section_geom_optimisation_method(self, backend, gIndex, section):
+        self.optim_method = section["x_castep_geometry_optim_method"]
 
     def onClose_section_method(self, backend, gIndex, section):
         self.van_der_waals_name = section["van_der_Waals_method"]
@@ -296,7 +296,7 @@ class CastepParserContext(object):
     
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
-        ecut_str = section['castep_basis_set_planewave_cutoff']
+        ecut_str = section['x_castep_basis_set_planewave_cutoff']
         self.ecut = float(ecut_str[0])
         eVtoRy = 0.073498618
         ecut_str_name = int(round(eVtoRy*self.ecut))
@@ -307,10 +307,10 @@ class CastepParserContext(object):
         backend.addValue('basis_set_cell_dependent_kind', basis_set_kind)
         backend.addValue('basis_set_cell_dependent_name', basis_set_name)
 
-    def onClose_castep_section_cell_optim(self, backend, gIndex, section):
+    def onClose_x_castep_section_cell_optim(self, backend, gIndex, section):
         """trigger called when _castep_section_cell is closed"""
         # get cached values for castep_cell_vector
-        vet = section['castep_cell_vector_optim']
+        vet = section['x_castep_cell_vector_optim']
      
         vet[0] = vet[0].split()
         vet[0] = [float(i) for i in vet[0]]
@@ -325,10 +325,10 @@ class CastepParserContext(object):
         self.cell.append(vet[1])
         self.cell.append(vet[2]) # Reconstructing the unit cell vector by vector    
 # Storing the unit cell
-    def onClose_castep_section_cell(self, backend, gIndex, section):
+    def onClose_x_castep_section_cell(self, backend, gIndex, section):
         """trigger called when _castep_section_cell is closed"""
         # get cached values for castep_cell_vector
-        vet = section['castep_cell_vector']
+        vet = section['x_castep_cell_vector']
 
         vet[0] = vet[0].split()
         vet[0] = [float(i) for i in vet[0]]
@@ -345,15 +345,15 @@ class CastepParserContext(object):
 
      
 # Here we recover the unit cell dimensions (both magnitudes and angles) (useful to convert fractional coordinates to cartesian)
-    def onClose_castep_section_atom_positions(self, backend, gIndex, section):
+    def onClose_x_castep_section_atom_positions(self, backend, gIndex, section):
         """trigger called when _castep_section_atom_positions is closed"""
         # get cached values for cell magnitudes and angles
-        self.a = section['castep_cell_length_a']
-        self.b = section['castep_cell_length_b']
-        self.c = section['castep_cell_length_c']
-        self.alpha = section['castep_cell_angle_alpha']
-        self.beta  = section['castep_cell_angle_beta']
-        self.gamma = section['castep_cell_angle_gamma']
+        self.a = section['x_castep_cell_length_a']
+        self.b = section['x_castep_cell_length_b']
+        self.c = section['x_castep_cell_length_c']
+        self.alpha = section['x_castep_cell_angle_alpha']
+        self.beta  = section['x_castep_cell_angle_beta']
+        self.gamma = section['x_castep_cell_angle_gamma']
         self.volume = np.sqrt( 1 - math.cos(np.deg2rad(self.alpha[0]))**2
                                  - math.cos(np.deg2rad(self.beta[0]))**2
                                  - math.cos(np.deg2rad(self.gamma[0]))**2
@@ -361,16 +361,16 @@ class CastepParserContext(object):
                                      * math.cos(np.deg2rad(self.beta[0]))
                                      * math.cos(np.deg2rad(self.gamma[0])) ) * self.a[0]*self.b[0]*self.c[0]
 
-    def onClose_castep_section_atom_positions_optim(self, backend, gIndex, section):
+    def onClose_x_castep_section_atom_positions_optim(self, backend, gIndex, section):
         """trigger called when _castep_section_atom_positions is closed"""
         # get cached values for cell magnitudes and angles
     
-        self.a = section['castep_cell_length_a_optim']
-        self.b = section['castep_cell_length_b_optim']
-        self.c = section['castep_cell_length_c_optim']
-        self.alpha = section['castep_cell_angle_alpha_optim']
-        self.beta  = section['castep_cell_angle_beta_optim']
-        self.gamma = section['castep_cell_angle_gamma_optim']
+        self.a = section['x_castep_cell_length_a_optim']
+        self.b = section['x_castep_cell_length_b_optim']
+        self.c = section['x_castep_cell_length_c_optim']
+        self.alpha = section['x_castep_cell_angle_alpha_optim']
+        self.beta  = section['x_castep_cell_angle_beta_optim']
+        self.gamma = section['x_castep_cell_angle_gamma_optim']
         self.volume = np.sqrt( 1 - math.cos(np.deg2rad(self.alpha[0]))**2
                                  - math.cos(np.deg2rad(self.beta[0]))**2
                                  - math.cos(np.deg2rad(self.gamma[0]))**2
@@ -379,22 +379,19 @@ class CastepParserContext(object):
                                      * math.cos(np.deg2rad(self.gamma[0])) ) * self.a[0]*self.b[0]*self.c[0]    
        
 # Storing the total energy of each SCF iteration in an array
-    # def onClose_section_scf_iteration(self, backend, gIndex, section):
-    #     """trigger called when _section_scf_iteration is closed"""
-    #     # get cached values for energy_total_scf_iteration
-       
-    #     self.scfIterNr = len(ev)
-    #     self.energy_total_scf_iteration_list.append(ev)
+    def onClose_section_scf_iteration(self, backend, gIndex, section):
+        """trigger called when _section_scf_iteration is closed"""
+        # get cached values for energy_total_scf_iteration
+        ev = section['energy_total_scf_iteration']
+        if ev:
+            self.scfIterNr = len(ev)
+            self.energy_total_scf_iteration_list.append(ev)
 
-    #     backend.addArrayValues('energy_total_scf_iteration_list', np.asarray(self.energy_total_scf_iteration_list))
-    #     backend.addValue('number_of_scf_iterations', self.scfIterNr)
-
- 
 # Processing forces acting on atoms (final converged forces)
     def onClose_section_single_configuration_calculation(self, backend, gIndex, section):
-        self.time_0 = section['castep_frame_time_0'] 
+        self.time_0 = section['x_castep_frame_time_0'] 
 
-        f_st = section['castep_store_atom_forces']
+        f_st = section['x_castep_store_atom_forces']
       
         if f_st is not None:
             for i in range(0, self.at_nr):
@@ -452,25 +449,27 @@ class CastepParserContext(object):
 
         #######Total Dispersion energy recovered from totatl energy. ##############      
         if self.dispersion is not None:
-            van_der_waals_energy = section['castep_total_dispersion_corrected_energy']
+            van_der_waals_energy = section['x_castep_total_dispersion_corrected_energy']
             total_energy = section['energy_total']
             for i in range(len(total_energy)):
                 self.disp_energy = abs(van_der_waals_energy[i] - total_energy[i])
             backend.addValue('energy_van_der_Waals', self.disp_energy)
         
 
-        finite_basis_corr_energy = section['CASTEP_total_energy_corrected_for_finite_basis_store'] ###Conversion to Jule
+        finite_basis_corr_energy = section['x_castep_total_energy_corrected_for_finite_basis_store'] ###Conversion to Jule
         J_converter = 1.602176565e-19
         J_float = float(J_converter)
 
         if finite_basis_corr_energy:
             finite_basis_corr_energy[0] = float(finite_basis_corr_energy[0]) * J_float
-            backend.addValue('CASTEP_total_energy_corrected_for_finite_basis', finite_basis_corr_energy[0])
+            backend.addValue('x_castep_total_energy_corrected_for_finite_basis', finite_basis_corr_energy[0])
+        
+        backend.addValue('number_of_scf_iterations', len(self.energy_total_scf_iteration_list))
     
-    def onClose_castep_section_SCF_iteration_frame(self, backend, gIndex, section):
-        self.frame_energies = section['castep_SCF_frame_energy']
+    def onClose_x_castep_section_SCF_iteration_frame(self, backend, gIndex, section):
+        self.frame_energies = section['x_castep_SCF_frame_energy']
                        
-        frame_time = section['castep_frame_time']
+        frame_time = section['x_castep_frame_time']
 
         if self.frame_energies:
                 
@@ -489,7 +488,7 @@ class CastepParserContext(object):
                     
         #get cached values of castep_store_atom_forces
 # Recover SCF k points and eigenvalue from *.band file (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
-    def onClose_castep_section_collect_scf_eigenvalues(self, backend, gIndex, section):
+    def onClose_x_castep_section_collect_scf_eigenvalues(self, backend, gIndex, section):
 
         bandSuperContext = CastepBandParser.CastepBandParserContext(False)
         bandParser = AncillaryParser(
@@ -524,10 +523,10 @@ class CastepParserContext(object):
 
         #self.n_spin = bandSuperContext.n_spin
 
-    def onClose_castep_section_stress_tensor(self, backend, gIndex, section): 
+    def onClose_x_castep_section_stress_tensor(self, backend, gIndex, section): 
      #get cached values for stress tensor
         stress_tens =[]
-        stress_tens = section['castep_store_stress_tensor']
+        stress_tens = section['x_castep_store_stress_tensor']
     
         for i in range(len(stress_tens)):
             stress_tens[i] = stress_tens[i].split()
@@ -537,10 +536,10 @@ class CastepParserContext(object):
             self.stress_tensor_value.append(stress_tens_int)
         self.stress_tensor_value = self.stress_tensor_value[-3:]     
 
-    def onClose_section_castep_raman_tensor(self, backend, gIndex, section): 
+    def onClose_x_castep_section_raman_tensor(self, backend, gIndex, section): 
      #get cached values for stress tensor
         ram_tens =[]
-        ram_tens = section['castep_store_raman_tensor']
+        ram_tens = section['x_castep_store_raman_tensor']
         
         for i in range(len(ram_tens)):
             ram_tens[i] = ram_tens[i].split()
@@ -549,12 +548,12 @@ class CastepParserContext(object):
             self.raman_tensor_value.append(ram_tens_int)
         self.raman_tensor_value = self.raman_tensor_value[-3:]         
         if self.raman_tensor_value:
-            backend.addArrayValues('castep_ramen_tensor',np.asarray(self.raman_tensor_value))    
+            backend.addArrayValues('x_castep_ramen_tensor',np.asarray(self.raman_tensor_value))    
     
-    def onClose_castep_section_time(self, backend, gIndex, section): 
-        initial_time = section['castep_initialisation_time']  
-        calc_time = section['castep_calculation_time']
-        final_time = section['castep_finalisation_time']
+    def onClose_x_castep_section_time(self, backend, gIndex, section): 
+        initial_time = section['x_castep_initialisation_time']  
+        calc_time = section['x_castep_calculation_time']
+        final_time = section['x_castep_finalisation_time']
         for i in range(len(initial_time)):
             self.time_calc = (initial_time[i] + calc_time[i] + final_time[i])
             
@@ -567,18 +566,15 @@ class CastepParserContext(object):
         """trigger called when _section_system is closed"""
 
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
-        #get cached values of castep_store_atom_positions
-        # n_electrons = section['castep_number_of_electrons_store']
-        # if n_electrons:
-        #     backend.addValue('castep_number_of_electrons', n_electrons)
-        pos = section['castep_store_atom_positions']
+     
+        pos = section['x_castep_store_atom_positions']
         if pos:
             self.at_nr = len(pos)
             for i in range(0, self.at_nr):
                 pos[i] = pos[i].split()
                 pos[i] = [float(j) for j in pos[i]]
                 self.castep_atom_positions.append(pos[i])
-            backend.addArrayValues('castep_atom_positions', np.asarray(self.castep_atom_positions))
+            backend.addArrayValues('x_castep_atom_positions', np.asarray(self.castep_atom_positions))
 
 
 # Backend add the total number of atoms in the simulation cell
@@ -587,7 +583,7 @@ class CastepParserContext(object):
 
 # Processing the atom labels
         #get cached values of castep_store_atom_labels
-            lab = section['castep_store_atom_labels']
+            lab = section['x_castep_store_atom_labels']
             for i in range(0, self.at_nr):
                 lab[i] = re.sub('\s+', ' ', lab[i]).strip()
             self.atom_labels.append(lab)
@@ -610,18 +606,18 @@ class CastepParserContext(object):
                 self.atom_positions.append(pos_a)
             
             backend.addArrayValues('simulation_cell', np.asarray(self.cell[-3:]))
-            backend.addValue('CASTEP_cell_volume', self.volume)     
+            backend.addValue('x_castep_cell_volume', self.volume)     
             backend.addArrayValues('atom_positions', np.asarray(self.atom_positions))
         
-        vel = section['castep_store_atom_ionic_velocities']
+        vel = section['x_castep_store_atom_ionic_velocities']
         if vel:
             for i in range(0, self.at_nr):
                 # vel[i] = [float(j) for j in vel[i]]
                 self.castep_atom_velocities.append(vel[i])
-            backend.addArrayValues('castep_atom_ionic_velocities', np.asarray(self.castep_atom_velocities))
+            backend.addArrayValues('x_castep_atom_ionic_velocities', np.asarray(self.castep_atom_velocities))
 
 # Backend add the simulation cell
-        pos_opt = section['castep_store_optimised_atom_positions']
+        pos_opt = section['x_castep_store_optimised_atom_positions']
         if pos_opt:
 
             backend.addArrayValues('atom_labels', np.asarray(self.atom_labels[-self.at_nr:]))
@@ -631,7 +627,7 @@ class CastepParserContext(object):
                 pos_opt[i] = pos_opt[i].split()
                 pos_opt[i] = [float(j) for j in pos_opt[i]]
                 self.castep_optimised_atom_positions.append(pos_opt[i])
-            backend.addArrayValues('castep_atom_positions', np.asarray(self.castep_optimised_atom_positions[-self.at_nr_opt:]))
+            backend.addArrayValues('x_castep_atom_positions', np.asarray(self.castep_optimised_atom_positions[-self.at_nr_opt:]))
         # #     print pos_opt[i]    
        
 # Converting the fractional atomic positions (x) to cartesian coordinates (X) ( X = M^-1 x )
@@ -651,21 +647,21 @@ class CastepParserContext(object):
             
             backend.addArrayValues('simulation_cell', np.asarray(self.cell[-3:])) 
             backend.addArrayValues('atom_positions', np.asarray(self.atom_optim_position[-self.at_nr_opt:]))
-            backend.addValue('CASTEP_cell_volume', self.volume) 
+            backend.addValue('x_castep_cell_volume', self.volume) 
         else:
             pass
         
 
-    def onClose_castep_section_vibrational_frequencies(self, backend, gIndex, section):
-        frequ = section['castep_vibrationl_frequencies_store']
-        ##### in this case the name castep_ir_store sands for irreducible representation in the point group.
-        irr_rep = section ['castep_ir_store']
-        ##### in this case the name castep_ir_intesities_store sands for Infra-red intensities. 
-        ir_intensities = section['castep_ir_intensity_store']
+    def onClose_x_castep_section_vibrational_frequencies(self, backend, gIndex, section):
+        frequ = section['x_castep_vibrationl_frequencies_store']
+        ##### in this case the name x_castep_ir_store sands for irreducible representation in the point group.
+        irr_rep = section ['x_castep_ir_store']
+        ##### in this case the name x_castep_ir_intesities_store sands for Infra-red intensities. 
+        ir_intensities = section['x_castep_ir_intensity_store']
      
-        self.nr_iter =section['castep_n_iterations_phonons']
+        self.nr_iter =section['x_castep_n_iterations_phonons']
 
-        raman_activity = section['castep_raman_activity_store']
+        raman_activity = section['x_castep_raman_activity_store']
         
         #raman_act = section['castep_raman_active_store']
         
@@ -689,10 +685,10 @@ class CastepParserContext(object):
                     raman_list = raman_activity[i]
                     self.raman_act.append(raman_list)  
                     
-                backend.addArrayValues('castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
-                backend.addArrayValues('castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):])) 
-                backend.addArrayValues('castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
-                backend.addArrayValues('castep_raman_activity', np.asarray(self.raman_act[-len(self.nr_iter):]))
+                backend.addArrayValues('x_castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
+                backend.addArrayValues('x_castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):])) 
+                backend.addArrayValues('x_castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
+                backend.addArrayValues('x_castep_raman_activity', np.asarray(self.raman_act[-len(self.nr_iter):]))
         elif frequ and ir_intensities:
                 for i in range(0,len(frequ)):
                     frequ[i] = frequ[i].split()
@@ -706,9 +702,9 @@ class CastepParserContext(object):
                     ir_intensities[i] = [float(j) for j in ir_intensities[i]]
                     ir_intens_list = ir_intensities[i]
                     self.ir_intens.append(ir_intens_list)
-                backend.addArrayValues('castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
-                backend.addArrayValues('castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):]))    
-                backend.addArrayValues('castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
+                backend.addArrayValues('x_castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
+                backend.addArrayValues('x_castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):]))    
+                backend.addArrayValues('x_castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
         elif frequ:
                 for i in range(0,len(frequ)):
                     frequ[i] = frequ[i].split()
@@ -718,12 +714,12 @@ class CastepParserContext(object):
                     irr_rep[i] = irr_rep[i].split()
                     irr_rep_list = irr_rep[i]
                     self.irr_repres.append(irr_rep_list) 
-                backend.addArrayValues('castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):])) 
-                backend.addArrayValues('castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
+                backend.addArrayValues('x_castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):])) 
+                backend.addArrayValues('x_castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
             
-    def onClose_castep_section_population_analysis(self, backend, gIndex, section):
-        orb_contr = section['castep_orbital_contributions']
-        tot_charge = section ['castep_mulliken_charge_store']
+    def onClose_x_castep_section_population_analysis(self, backend, gIndex, section):
+        orb_contr = section['x_castep_orbital_contributions']
+        tot_charge = section ['x_castep_mulliken_charge_store']
         
         if orb_contr:
             for i in range(0, self.at_nr):
@@ -741,11 +737,11 @@ class CastepParserContext(object):
                 self.contr_f.append(orb_contr_a[3])
                  
             
-            backend.addArrayValues('castep_orbital_s', np.asarray(self.contr_s))
-            backend.addArrayValues('castep_orbital_p', np.asarray(self.contr_p))
-            backend.addArrayValues('castep_orbital_d', np.asarray(self.contr_d))
-            backend.addArrayValues('castep_orbital_f', np.asarray(self.contr_f))
-            backend.addValue('castep_total_orbital',self.total_contribution)
+            backend.addArrayValues('x_castep_orbital_s', np.asarray(self.contr_s))
+            backend.addArrayValues('x_castep_orbital_p', np.asarray(self.contr_p))
+            backend.addArrayValues('x_castep_orbital_d', np.asarray(self.contr_d))
+            backend.addArrayValues('x_castep_orbital_f', np.asarray(self.contr_f))
+            backend.addValue('x_castep_total_orbital',self.total_contribution)
         
         if tot_charge:
             for i in range(0, self.at_nr):                
@@ -753,7 +749,7 @@ class CastepParserContext(object):
                 tot_charge[i] = [float(j) for j in tot_charge[i]]
                 total_charge_list = tot_charge[i]
                 self.total_charge.append(total_charge_list)
-            backend.addArrayValues('castep_mulliken_charge', np.asarray(self.total_charge))
+            backend.addArrayValues('x_castep_mulliken_charge', np.asarray(self.total_charge))
 
 ######################################################################################
 ###################### Storing k band points and band energies #######################
@@ -761,11 +757,11 @@ class CastepParserContext(object):
 ######################################################################################
 
 # Storing the k point coordinates (SPIN 1)
-    def onClose_castep_section_k_points(self, backend, gIndex, section):
+    def onClose_x_castep_section_k_points(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
 # Processing k points (given in fractional coordinates)
         #get cached values of castep_store_k_points
-        k_st = section['castep_store_k_points']
+        k_st = section['x_castep_store_k_points']
         self.k_count = len(k_st)
         self.k_nr   += 1
         for i in range(0, self.k_count):
@@ -777,10 +773,10 @@ class CastepParserContext(object):
         self.n_spin_channels_bands = 1    
         
 # Storing the eigenvalues (SPIN 1)
-    def onClose_castep_section_eigenvalues(self, backend, gIndex, section):
+    def onClose_x_castep_section_eigenvalues(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
         #get cached values of castep_store_k_points
-        e_st = section['castep_store_eigenvalues']
+        e_st = section['x_castep_store_eigenvalues']
         self.e_nr = len(e_st)
         self.castep_band_energies.append(e_st)
 
@@ -791,11 +787,11 @@ class CastepParserContext(object):
 ######################################################################################
 
 # Storing the k point coordinates (SPIN 2)
-    def onClose_castep_section_k_points_1(self, backend, gIndex, section):
+    def onClose_x_castep_section_k_points_1(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
 # Processing k points (given in fractional coordinates)
         #get cached values of castep_store_k_points
-        k_st_1 = section['castep_store_k_points_1']
+        k_st_1 = section['x_castep_store_k_points_1']
         self.k_count_1 = len(k_st_1)
         self.k_nr_1   += 1
         for i in range(0, self.k_count_1):
@@ -809,10 +805,10 @@ class CastepParserContext(object):
         self.n_spin_channels_bands = 2
 
 # Storing the eigenvalues (SPIN 2)
-    def onClose_castep_section_eigenvalues_1(self, backend, gIndex, section):
+    def onClose_x_castep_section_eigenvalues_1(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
         #get cached values of castep_store_k_points
-        e_st_1 = section['castep_store_eigenvalues_1']
+        e_st_1 = section['x_castep_store_eigenvalues_1']
         self.e_nr_1 = len(e_st_1)
         self.castep_band_energies_1.append(e_st_1)
 
@@ -908,7 +904,7 @@ class CastepParserContext(object):
 
     def onClose_section_run(self, backend, gIndex, section):
         
-        f_st_band = section['castep_store_atom_forces_band']
+        f_st_band = section['x_castep_store_atom_forces_band']
         
         if f_st_band:
             gindex_band = 1
@@ -920,7 +916,7 @@ class CastepParserContext(object):
                  
                 self.atom_forces_band.append(f_st_int_band)
                 self.atom_forces_band = self.atom_forces_band[-self.at_nr:] 
-            backend.addArrayValues('castep_atom_forces', np.asarray(self.atom_forces_band))        
+            backend.addArrayValues('x_castep_atom_forces', np.asarray(self.atom_forces_band))        
 
         time_list = self.time_0
         if section['CASTEP_geom_converged'] is not None:
@@ -975,7 +971,7 @@ class CastepParserContext(object):
                     backend.addArrayValues('atom_labels', np.asarray(self.atom_labels))
                     backend.addArrayValues('atom_positions', np.asarray(self.frame_position[i]))
                     backend.addArrayValues('simulation_cell', np.asarray(self.frame_cell[i]))
-                    backend.addArrayValues('castep_velocities_cell_vector',np.asarray(self.frame_vet_velocities[i]))
+                    backend.addArrayValues('x_castep_velocities_cell_vector',np.asarray(self.frame_vet_velocities[i]))
                     backend.closeSection('section_system',i+2)
                     
                     backend.openSection('section_single_configuration_calculation')
@@ -990,10 +986,9 @@ class CastepParserContext(object):
                             
                             backend.openSection('section_scf_iteration')
                             backend.addValue('energy_total_scf_iteration', self.energy_frame[s])
-                            
                             backend.closeSection('section_scf_iteration',s+gIndexGroupscf)
                                      
-                    
+                    backend.addValue('number_of_scf_iterations', len(self.frame_energies))
                     backend.closeSection('section_single_configuration_calculation',i+1) 
 
                 backend.openSection('section_frame_sequence')
@@ -1034,7 +1029,7 @@ def build_CastepMainFileSimpleMatcher():
     # submatcher for
     scfEigenvaluesSubMatcher = SM(name = 'scfEigenvalues',
        startReStr = r"\stype\sof\scalculation\s*\:\ssingle\spoint\senergy\s*",
-       sections = ["castep_section_collect_scf_eigenvalues"]
+       sections = ["x_castep_section_collect_scf_eigenvalues"]
 
        ) # CLOSING SM scfEigenvalues
 
@@ -1050,10 +1045,10 @@ def build_CastepMainFileSimpleMatcher():
            SM(name = "castepXC",
               startReStr = r"\susing functional\s*\:",
               forwardMatch = True,
-              sections = ["castep_section_functionals"],
+              sections = ["x_castep_section_functionals"],
               subMatchers = [
 
-                 SM(r"\susing functional\s*\: *(?P<castep_functional_name> [A-Za-z0-9() ]*)"),
+                 SM(r"\susing functional\s*\: *(?P<x_castep_functional_name> [A-Za-z0-9() ]*)"),
                  #SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]*)")
                              ]), # CLOSING castep_section_functionals
             
@@ -1061,9 +1056,9 @@ def build_CastepMainFileSimpleMatcher():
               startReStr = r"\susing custom XC functional definition\:",
               #endReStr = r"\srelativistic treatment\s*\:\s*",
               forwardMatch = True,
-              sections = ["castep_section_functional_definition"],
+              sections = ["x_castep_section_functional_definition"],
               subMatchers = [     
-                 SM(r"\s*(?P<castep_functional_type>[A-Za-z0-9]+)\s*(?P<castep_functional_weight>[0-9.]+)",
+                 SM(r"\s*(?P<x_castep_functional_type>[A-Za-z0-9]+)\s*(?P<x_castep_functional_weight>[0-9.]+)",
                         repeats = True),
                  #SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]*)")              
                               ]), # CLOSING castep_section_functional_definition
@@ -1071,9 +1066,9 @@ def build_CastepMainFileSimpleMatcher():
            SM(name = "castep_relativ",
               startReStr = r"\srelativistic treatment\s*\:\s*",
               forwardMatch = True,
-              sections = ["castep_section_relativity_treatment"],
+              sections = ["x_castep_section_relativity_treatment"],
               subMatchers = [
-                 SM(r"\srelativistic treatment\s*\: *(?P<castep_relativity_treatment_scf> [A-Za-z0-9() -]+)")
+                 SM(r"\srelativistic treatment\s*\: *(?P<x_castep_relativity_treatment_scf> [A-Za-z0-9() -]+)")
                              ]), # CLOSING castep_section_relativistic_treatment           
 
             SM(name = "van der Waals",
@@ -1100,32 +1095,32 @@ def build_CastepMainFileSimpleMatcher():
         sections = ["section_basis_set_cell_dependent"],
         subMatchers = [
 
-            SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<castep_basis_set_planewave_cutoff>[0-9.]+)")
+            SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<x_castep_basis_set_planewave_cutoff>[0-9.]+)")
             
                       ]) # CLOSING SM planeWaveBasisSet
 
 
     phononCalculationSubMatcher = SM(name = 'phonon_calculation',
-        sections = ["castep_section_phonons"],
+        sections = ["x_castep_section_phonons"],
         startReStr = r"\s\*\*\** Phonon Parameters \*\*\**\s*",
         subMatchers = [
-            SM(r"\sphonon calculation method\s*\:\s*(?P<castep_phonon_method>[a-zA-Z]+\s[a-zA-Z]+)"),
-            SM(r"\sDFPT solver method\s*\:\s*(?P<castep_DFPT_solver_method>[a-zA-Z0-9.() ]+)"),
+            SM(r"\sphonon calculation method\s*\:\s*(?P<x_castep_phonon_method>[a-zA-Z]+\s[a-zA-Z]+)"),
+            SM(r"\sDFPT solver method\s*\:\s*(?P<x_castep_DFPT_solver_method>[a-zA-Z0-9.() ]+)"),
                           ])
 
     GeomOptimParameterSubMatcher = SM(name = 'optimistation_parameters',
-        sections = ["castep_section_geom_optimisation_method"],
+        sections = ["x_castep_section_geom_optimisation_method"],
         startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\ Geometry Optimization Parameters \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
         subMatchers = [
             
-            SM(r"\soptimization method\s*\:\s*(?P<castep_geometry_optim_method>[a-zA-Z]+)"),
+            SM(r"\soptimization method\s*\:\s*(?P<x_castep_geometry_optim_method>[a-zA-Z]+)"),
                                             ]) # CLOSING converged optmisation
     
     ElectronicParameterSubMatcher = SM(name = 'Elec_parameters' ,            
         sections = ["section_system"],
         startReStr = r"\s\*\*\** Electronic Parameters \*\*\**\s*",
         subMatchers = [
-            SM(r"\s*number of  electrons\s*\:\s*(?P<castep_number_of_electrons>[0-9.]+)"),
+            SM(r"\s*number of  electrons\s*\:\s*(?P<x_castep_number_of_electrons>[0-9.]+)"),
             ])
     
     MDParameterSubMatcher = SM(name = 'MD_parameters' ,            
@@ -1133,13 +1128,13 @@ def build_CastepMainFileSimpleMatcher():
         startReStr = r"\s\*\*\** Molecular Dynamics Parameters \*\*\**\s*",
         subMatchers = [
             SM(r"\s*ensemble\s*\:\s*(?P<ensemble_type>[A-Za-z]+)"),
-            SM(r"\s*temperature\s*\:\s*(?P<castep_thermostat_target_temperature>[0-9.]+\.)"),
-            SM(r"\s*using\s*\:\s*(?P<castep_barostat_type>[A-Za-z]+\-[A-Za-z]+)\s+"),
-            SM(r"\s*with characteristic cell time\s*\:\s*(?P<castep_barostat_tau>[-+0-9.eEd]+)"),
-            SM(r"\s*using\s*\:\s*(?P<castep_thermostat_type>[A-Za-z]+\-[A-Za-z]+)\s+"),
-            SM(r"\s*with characteristic ionic time\s*\:\s*(?P<castep_thermostat_tau>[-+0-9.eEd]+)"),
-            SM(r"\s*time\sstep\s*\:\s*(?P<castep_integrator_dt>[-+0-9.eEdD]+)"),
-            SM(r"\s*number of MD steps\s*\:\s*(?P<castep_number_of_steps_requested>[0-9]+)"),
+            SM(r"\s*temperature\s*\:\s*(?P<x_castep_thermostat_target_temperature>[0-9.]+\.)"),
+            SM(r"\s*using\s*\:\s*(?P<x_castep_barostat_type>[A-Za-z]+\-[A-Za-z]+)\s+"),
+            SM(r"\s*with characteristic cell time\s*\:\s*(?P<x_castep_barostat_tau>[-+0-9.eEd]+)"),
+            SM(r"\s*using\s*\:\s*(?P<x_castep_thermostat_type>[A-Za-z]+\-[A-Za-z]+)\s+"),
+            SM(r"\s*with characteristic ionic time\s*\:\s*(?P<x_castep_thermostat_tau>[-+0-9.eEd]+)"),
+            SM(r"\s*time\sstep\s*\:\s*(?P<x_castep_integrator_dt>[-+0-9.eEdD]+)"),
+            SM(r"\s*number of MD steps\s*\:\s*(?P<x_castep_number_of_steps_requested>[0-9]+)"),
             ])
     ########################################
     # submatcher for section system description
@@ -1153,9 +1148,9 @@ def build_CastepMainFileSimpleMatcher():
            SM(name = 'cellInformation',
               startReStr = r"\s*Unit Cell\s*",
               forwardMatch = True,
-              sections = ["castep_section_cell"],
+              sections = ["x_castep_section_cell"],
               subMatchers = [
-                  SM(r"\s*(?P<castep_cell_vector>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                  SM(r"\s*(?P<x_castep_cell_vector>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                  #SM(r"\s*(?P<castep_cell_vector>[\d\.]+\s+[\d\.]+\s+[\d\.]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                     endReStr = "\n",
                     repeats = True),
@@ -1166,13 +1161,13 @@ def build_CastepMainFileSimpleMatcher():
            # atomic positions and cell dimesions
            SM(startReStr = r"\s*Lattice parameters",
               forwardMatch = True,
-              sections = ["castep_section_atom_positions"],
+              sections = ["x_castep_section_atom_positions"],
               subMatchers = [
 
-                 SM(r"\s*a \=\s*(?P<castep_cell_length_a>[\d\.]+)\s*alpha \=\s*(?P<castep_cell_angle_alpha>[\d\.]+)"),
-                 SM(r"\s*b \=\s*(?P<castep_cell_length_b>[\d\.]+)\s*beta  \=\s*(?P<castep_cell_angle_beta>[\d\.]+)"),
-                 SM(r"\s*c \=\s*(?P<castep_cell_length_c>[\d\.]+)\s*gamma \=\s*(?P<castep_cell_angle_gamma>[\d\.]+)"),
-                 SM(r"\s*x\s*(?P<castep_store_atom_labels>[A-Za-z0-9]+\s+[\d\.]+)\s*[0-9]\s*(?P<castep_store_atom_positions>[\d\.]+\s+[\d\.]+\s+[\d\.]+)",
+                 SM(r"\s*a \=\s*(?P<x_castep_cell_length_a>[\d\.]+)\s*alpha \=\s*(?P<x_castep_cell_angle_alpha>[\d\.]+)"),
+                 SM(r"\s*b \=\s*(?P<x_castep_cell_length_b>[\d\.]+)\s*beta  \=\s*(?P<x_castep_cell_angle_beta>[\d\.]+)"),
+                 SM(r"\s*c \=\s*(?P<x_castep_cell_length_c>[\d\.]+)\s*gamma \=\s*(?P<x_castep_cell_angle_gamma>[\d\.]+)"),
+                 SM(r"\s*x\s*(?P<x_castep_store_atom_labels>[A-Za-z0-9]+\s+[\d\.]+)\s*[0-9]\s*(?P<x_castep_store_atom_positions>[\d\.]+\s+[\d\.]+\s+[\d\.]+)",
                     endReStr = "\n",
                     repeats = True)
 
@@ -1183,7 +1178,7 @@ def build_CastepMainFileSimpleMatcher():
               forwardMatch = True,
               #sections = ["castep_section_atom_position"],
               subMatchers = [
-                 SM(r"\s*x\s*[A-Za-z0-9]+\s+[\d\.]+\s*[0-9]\s*(?P<castep_store_atom_ionic_velocities>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)",
+                 SM(r"\s*x\s*[A-Za-z0-9]+\s+[\d\.]+\s*[0-9]\s*(?P<x_castep_store_atom_ionic_velocities>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)",
                     endReStr = "\n",
                     repeats = True)
 
@@ -1208,29 +1203,29 @@ def build_CastepMainFileSimpleMatcher():
 
             # First spin channel
             SM(startReStr = "\s*\+\s*Spin\=1\skpt\=\s*",
-               sections = ["castep_section_k_band"],
+               sections = ["x_castep_section_k_band"],
                forwardMatch = True,
                subMatchers = [
 
                   SM(startReStr = "\s*\+\s*Spin\=1\skpt\=\s*",
-                     sections = ["castep_section_k_points"],
+                     sections = ["x_castep_section_k_points"],
                      forwardMatch = True,
                      repeats = True,
                      subMatchers = [
                         # Matching k points
-                        SM(r"\s*\+\s*Spin\=1\s*kpt\=\s*[0-9]+\s*\((?P<castep_store_k_points>\s+[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)\)\s*",
+                        SM(r"\s*\+\s*Spin\=1\s*kpt\=\s*[0-9]+\s*\((?P<x_castep_store_k_points>\s+[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)\)\s*",
                            repeats = True),
 
                            SM(name = 'Eigen_1',
                               startReStr = r"\s*\+\s*\+\s*",
-                              sections = ['castep_section_eigenvalues'],
+                              sections = ['x_castep_section_eigenvalues'],
                               repeats = True,
                               subMatchers = [
                                  # Matching eigenvalues
-                                 SM(r"\s*\+\s*[0-9]+\s*(?P<castep_store_eigenvalues>\s+[-+0-9.eEd]+)",
+                                 SM(r"\s*\+\s*[0-9]+\s*(?P<x_castep_store_eigenvalues>\s+[-+0-9.eEd]+)",
                                     repeats = True)
 
-                                             ]), # CLOSING castep_section_eigenvalues
+                                             ]), # CLOSING x_castep_section_eigenvalues
 
 
                                     ]), # CLOSING castep_section_k_points
@@ -1240,26 +1235,26 @@ def build_CastepMainFileSimpleMatcher():
 
             # Second spin channel
             SM(startReStr = "\s*\+\s*Spin\=2\skpt\=\s*",
-               sections = ["castep_section_k_band"],
+               sections = ["x_castep_section_k_band"],
                forwardMatch = True,
                subMatchers = [
 
                   SM(startReStr = "\s*\+\s*Spin\=2\skpt\=\s*",
-                     sections = ["castep_section_k_points_1"],
+                     sections = ["x_castep_section_k_points_1"],
                      forwardMatch = True,
                      repeats = True,
                      subMatchers = [
                         # Matching k points
-                        SM(r"\s*\+\s*Spin\=2\s*kpt\=\s*[0-9]+\s*\((?P<castep_store_k_points_1>\s+[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)\)\s*",
+                        SM(r"\s*\+\s*Spin\=2\s*kpt\=\s*[0-9]+\s*\((?P<x_castep_store_k_points_1>\s+[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)\)\s*",
                            repeats = True),
 
                            SM(name = 'Eigen_2',
                               startReStr = r"\s*\+\s*\+\s*",
-                              sections = ['castep_section_eigenvalues_1'],
+                              sections = ['x_castep_section_eigenvalues_1'],
                               repeats = True,
                               subMatchers = [
                                  # Matching eigenvalues
-                                 SM(r"\s*\+\s*[0-9]+\s*(?P<castep_store_eigenvalues_1>\s+[-+0-9.eEd]+)",
+                                 SM(r"\s*\+\s*[0-9]+\s*(?P<x_castep_store_eigenvalues_1>\s+[-+0-9.eEd]+)",
                                     repeats = True)
 
                                              ]), # CLOSING castep_section_eigenvalues_1
@@ -1295,21 +1290,21 @@ def build_CastepMainFileSimpleMatcher():
                     
                     SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
                     SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
-                    SM(r"\sTotal energy corrected for finite basis set\s\=\s*(?P<CASTEP_total_energy_corrected_for_finite_basis_store>[-+0-9.eEdD]+)\s+"),
-                    SM(r"Dispersion corrected final energy\*\s=\s*(?P<castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),#total energy including dispersion correction
+                    SM(r"\sTotal energy corrected for finite basis set\s\=\s*(?P<x_castep_total_energy_corrected_for_finite_basis_store>[-+0-9.eEdD]+)\s+"),
+                    SM(r"Dispersion corrected final energy\*\s=\s*(?P<x_castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),#total energy including dispersion correction
                     SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"), # matching final converged total free energy
                     SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<energy_total_T0__eV>[-+0-9.eEdD]*)"), # 0K corrected final SCF energy
                  
                     SM(startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
                          subMatchers = [
-                                    SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                                    SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                                         repeats = True)
                          ]), 
 
                     SM(#startReStr = r"\sBFGS\:\sFinal\sbulk\smodulus\sunchanged\sfrom\sinitial\svalue\s*",
                         startReStr = r"\s\*\*\*\*\**\sSymmetrised Forces\s\*\*\*\*\**\s*",
                         subMatchers = [
-                           SM(r"\s\*\s[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                           SM(r"\s\*\s[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                               repeats = True)
                                       ]),
                      
@@ -1317,9 +1312,9 @@ def build_CastepMainFileSimpleMatcher():
                         #startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\** Stress Tensor \*\*\*\*\*\*\*\*\*\*\**\s*",
                         startReStr = r"\s\*\*\*\*\** Stress Tensor \*\*\*\*\**\s*",
                         #GGGrepeats = True,
-                        sections = ['castep_section_stress_tensor'],
+                        sections = ['x_castep_section_stress_tensor'],
                         subMatchers = [
-                           SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                           SM(r"\s*\*\s*[a-z]\s*(?P<x_castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                               repeats = True),  
                                       ]), # CLOSING section_stress_tensor
                    
@@ -1327,14 +1322,14 @@ def build_CastepMainFileSimpleMatcher():
                     SM(name = 'stresstensor',
                         #startReStr = r"\s\*\*\*\*\*\*\*\*\*\ Symmetrised Stress Tensor \*\*\*\*\*\*\*\*\*\*\*\s*",
                         startReStr = r"\s\*\*\*\*\** Symmetrised Stress Tensor \*\*\*\*\**\s*",
-                        sections = ['castep_section_stress_tensor'],
+                        sections = ['x_castep_section_stress_tensor'],
                         subMatchers = [
-                           SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                           SM(r"\s*\*\s*[a-z]\s*(?P<x_castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                               repeats = True),  
                                       ]), # CLOSING section_stress_tensor
                     SM(startReStr = r"\s*x\s*MD\sData\:\s*x",
                          subMatchers = [
-                            SM(r"\s*x\s*time\s*\:\s*(?P<castep_frame_time_0>[+0-9.eEdD]+)\s*ps\s*x\s*"),
+                            SM(r"\s*x\s*time\s*\:\s*(?P<x_castep_frame_time_0>[+0-9.eEdD]+)\s*ps\s*x\s*"),
                     ]),
 
                  ])     
@@ -1342,7 +1337,7 @@ def build_CastepMainFileSimpleMatcher():
     MDSubMatcher = SM(name = 'MD',
                 startReStr = r"\sStarting MD iteration\s*[0-9.]+\s\.\.\.\s*",             
                 #endReStr = r"BFGS\: finished iteration     0 with enthalpy\= \-2\.14201700E\+002 eV",
-                sections = ["castep_section_SCF_iteration_frame"],
+                sections = ["x_castep_section_SCF_iteration_frame"],
                 # sections = ["section_single_configuration_calculation"],
                 endReStr = r"\s\.\.\.\sfinished MD iteration\s*[0-9.]+\s*",
                 repeats =True,
@@ -1350,12 +1345,12 @@ def build_CastepMainFileSimpleMatcher():
                     # SM(r"\s*[0-9]+\s*(?P<castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                     #     endReStr = "\n",
                     #     repeats = True),
-                    SM(r"\s*[0-9]+\s*(?P<castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                    SM(r"\s*[0-9]+\s*(?P<x_castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                         endReStr = "\n",
                         repeats = True),                
                     SM(startReStr = r"\s*x\s*MD\sData\:\s*x",
                          subMatchers = [
-                            SM(r"\s*x\s*time\s*\:\s*(?P<castep_frame_time>[+0-9.eEdD]+)\s*ps\s*x\s*"),
+                            SM(r"\s*x\s*time\s*\:\s*(?P<x_castep_frame_time>[+0-9.eEdD]+)\s*ps\s*x\s*"),
                     ]),
                     ])
     ########################################
@@ -1372,9 +1367,9 @@ def build_CastepMainFileSimpleMatcher():
                         SM(name = 'cellInformation',
                             startReStr = r"\s*Unit Cell\s*",
                             forwardMatch = True,
-                            sections = ["castep_section_cell_optim"],
+                            sections = ["x_castep_section_cell_optim"],
                             subMatchers = [
-                                SM(r"\s*(?P<castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                                     endReStr = "\n",
                                     repeats = True),
 
@@ -1384,16 +1379,16 @@ def build_CastepMainFileSimpleMatcher():
            # atomic positions and cell dimesions
                         SM(startReStr = r"\s*Lattice parameters",
                             forwardMatch = True,
-                            sections = ["castep_section_atom_positions_optim"],
+                            sections = ["x_castep_section_atom_positions_optim"],
                             subMatchers = [
 
-                                SM(r"\s*a \=\s*(?P<castep_cell_length_a_optim>[\d\.]+)\s*alpha \=\s*(?P<castep_cell_angle_alpha_optim>[\d\.]+)"),
-                                SM(r"\s*b \=\s*(?P<castep_cell_length_b_optim>[\d\.]+)\s*beta  \=\s*(?P<castep_cell_angle_beta_optim>[\d\.]+)"),
-                                SM(r"\s*c \=\s*(?P<castep_cell_length_c_optim>[\d\.]+)\s*gamma \=\s*(?P<castep_cell_angle_gamma_optim>[\d\.]+)"),
+                                SM(r"\s*a \=\s*(?P<x_castep_cell_length_a_optim>[\d\.]+)\s*alpha \=\s*(?P<x_castep_cell_angle_alpha_optim>[\d\.]+)"),
+                                SM(r"\s*b \=\s*(?P<x_castep_cell_length_b_optim>[\d\.]+)\s*beta  \=\s*(?P<x_castep_cell_angle_beta_optim>[\d\.]+)"),
+                                SM(r"\s*c \=\s*(?P<x_castep_cell_length_c_optim>[\d\.]+)\s*gamma \=\s*(?P<x_castep_cell_angle_gamma_optim>[\d\.]+)"),
 
                             ]), # CLOSING castep_section_atom_positions
 
-                        SM(r"\s*x\s*(?P<castep_store_optimised_atom_labels>[A-Za-z]+\s*[0-9]+)\s*(?P<castep_store_optimised_atom_positions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)",
+                        SM(r"\s*x\s*(?P<x_castep_store_optimised_atom_labels>[A-Za-z]+\s*[0-9]+)\s*(?P<x_castep_store_optimised_atom_positions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)",
                             endReStr = "\n",
                             repeats = True),
 
@@ -1419,9 +1414,9 @@ def build_CastepMainFileSimpleMatcher():
                         startReStr = r"\s\*\*\*\*\** Stress Tensor \*\*\*\*\**\s*",
                         forwardMatch = True,
                         #repeats = True,
-                        sections = ['castep_section_stress_tensor'],
+                        sections = ['x_castep_section_stress_tensor'],
                         subMatchers = [
-                            SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                            SM(r"\s*\*\s*[a-z]\s*(?P<x_castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                                repeats = True),  
                                        ]), # CLOSING section_stress_tensor
 
@@ -1430,7 +1425,7 @@ def build_CastepMainFileSimpleMatcher():
 
                  ])
     geomOptimSubMatcher =  SM (name = 'geometry_optimisation',
-            startReStr = r"\sStarting BFGS iteration\s*(?P<CASTEP_geom_iteration_index>[0-9]+)\s\.\.\.\s*",
+            startReStr = r"\sStarting BFGS iteration\s*(?P<x_castep_geom_iteration_index>[0-9]+)\s\.\.\.\s*",
             sections = ['section_single_configuration_calculation','section_system'],
             endReStr = r"\s*Atomic\sPopulations\s\(Mulliken\)\s*",
             #endReStr = r"\s\[A-Za-z]+\:\sGeometry\soptimization\scompleted\ssuccessfully.\s*",
@@ -1440,9 +1435,9 @@ def build_CastepMainFileSimpleMatcher():
                         SM(name = 'cellInformation',
                             startReStr = r"\s*Unit Cell\s*",
                             forwardMatch = True,
-                            sections = ["castep_section_cell_optim"],
+                            sections = ["x_castep_section_cell_optim"],
                             subMatchers = [
-                                SM(r"\s*(?P<castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                                     endReStr = "\n",
                                     repeats = True),
 
@@ -1452,16 +1447,16 @@ def build_CastepMainFileSimpleMatcher():
            # atomic positions and cell dimesions
                         SM(startReStr = r"\s*Lattice parameters",
                             forwardMatch = True,
-                            sections = ["castep_section_atom_positions_optim"],
+                            sections = ["x_castep_section_atom_positions_optim"],
                             subMatchers = [
 
-                                SM(r"\s*a \=\s*(?P<castep_cell_length_a_optim>[\d\.]+)\s*alpha \=\s*(?P<castep_cell_angle_alpha_optim>[\d\.]+)"),
-                                SM(r"\s*b \=\s*(?P<castep_cell_length_b_optim>[\d\.]+)\s*beta  \=\s*(?P<castep_cell_angle_beta_optim>[\d\.]+)"),
-                                SM(r"\s*c \=\s*(?P<castep_cell_length_c_optim>[\d\.]+)\s*gamma \=\s*(?P<castep_cell_angle_gamma_optim>[\d\.]+)"),
+                                SM(r"\s*a \=\s*(?P<x_castep_cell_length_a_optim>[\d\.]+)\s*alpha \=\s*(?P<x_castep_cell_angle_alpha_optim>[\d\.]+)"),
+                                SM(r"\s*b \=\s*(?P<x_castep_cell_length_b_optim>[\d\.]+)\s*beta  \=\s*(?P<x_castep_cell_angle_beta_optim>[\d\.]+)"),
+                                SM(r"\s*c \=\s*(?P<x_castep_cell_length_c_optim>[\d\.]+)\s*gamma \=\s*(?P<x_castep_cell_angle_gamma_optim>[\d\.]+)"),
 
                             ]), # CLOSING castep_section_atom_positions
 
-                        SM(r"\s*x\s*(?P<castep_store_optimised_atom_labels>[A-Za-z]+\s*[0-9]+)\s*(?P<castep_store_optimised_atom_positions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)",
+                        SM(r"\s*x\s*(?P<x_castep_store_optimised_atom_labels>[A-Za-z]+\s*[0-9]+)\s*(?P<x_castep_store_optimised_atom_positions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)",
                             endReStr = "\n",
                             repeats = True),
 
@@ -1485,7 +1480,7 @@ def build_CastepMainFileSimpleMatcher():
                         SM(name = 'Forces',
                             startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
                             subMatchers = [
-                                SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                                SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                                     repeats = True)
                                       ]),
 
@@ -1495,15 +1490,15 @@ def build_CastepMainFileSimpleMatcher():
                             startReStr = r"\s\*\*\*\*\** Stress Tensor \*\*\*\*\**\s*",
                             
                             #forwardMatch = True,
-                            sections = ['castep_section_stress_tensor'],
+                            sections = ['x_castep_section_stress_tensor'],
                             subMatchers = [
-                                SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                                SM(r"\s*\*\s*[a-z]\s*(?P<x_castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                                     repeats = True),  
                                        ]), # CLOSING section_stress_tensor
                         
                         
                         geomOptimSubMatcher_improving_cycle,
-                        SM(r"\s[A-Za-z]+\:\sGeometry\soptimization\scompleted\s(?P<CASTEP_geom_converged>[a-z]+)\.\s*"),
+                        SM(r"\s[A-Za-z]+\:\sGeometry\soptimization\scompleted\s(?P<x_castep_geom_converged>[a-z]+)\.\s*"),
                 
 
                  ])
@@ -1518,9 +1513,9 @@ def build_CastepMainFileSimpleMatcher():
                         SM(name = 'cellInformation',
                                     startReStr = r"\s*Unit Cell\s*",
                                     forwardMatch = True,
-                                    sections = ["castep_section_cell_optim"],
+                                    sections = ["x_castep_section_cell_optim"],
                                     subMatchers = [
-                                SM(r"\s*(?P<castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                          #SM(r"\s*(?P<castep_cell_vector>[\d\.]+\s+[\d\.]+\s+[\d\.]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                                         endReStr = "\n",
                                     repeats = True),
@@ -1531,35 +1526,35 @@ def build_CastepMainFileSimpleMatcher():
                    # atomic positions and cell dimesions
                         SM(startReStr = r"\s*Lattice parameters",
                             forwardMatch = True,
-                            sections = ["castep_section_atom_positions_optim"],
+                            sections = ["x_castep_section_atom_positions_optim"],
                             subMatchers = [
 
-                                SM(r"\s*a \=\s*(?P<castep_cell_length_a_optim>[\d\.]+)\s*alpha \=\s*(?P<castep_cell_angle_alpha_optim>[\d\.]+)"),
-                                SM(r"\s*b \=\s*(?P<castep_cell_length_b_optim>[\d\.]+)\s*beta  \=\s*(?P<castep_cell_angle_beta_optim>[\d\.]+)"),
-                                SM(r"\s*c \=\s*(?P<castep_cell_length_c_optim>[\d\.]+)\s*gamma \=\s*(?P<castep_cell_angle_gamma_optim>[\d\.]+)"),
+                                SM(r"\s*a \=\s*(?P<x_castep_cell_length_a_optim>[\d\.]+)\s*alpha \=\s*(?P<x_castep_cell_angle_alpha_optim>[\d\.]+)"),
+                                SM(r"\s*b \=\s*(?P<x_castep_cell_length_b_optim>[\d\.]+)\s*beta  \=\s*(?P<x_castep_cell_angle_beta_optim>[\d\.]+)"),
+                                SM(r"\s*c \=\s*(?P<x_castep_cell_length_c_optim>[\d\.]+)\s*gamma \=\s*(?P<x_castep_cell_angle_gamma_optim>[\d\.]+)"),
 
                                      ]), # CLOSING castep_section_atom_positions
 
-                                SM(r"\s*x\s*(?P<castep_store_optimised_atom_labels>[A-Za-z]+\s*[0-9]+)\s*(?P<castep_store_optimised_atom_positions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)",
+                                SM(r"\s*x\s*(?P<x_castep_store_optimised_atom_labels>[A-Za-z]+\s*[0-9]+)\s*(?P<x_castep_store_optimised_atom_positions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)",
                                     endReStr = "\n",
                                     repeats = True),
                             
 
                         
-                        SM(r"\s[A-Za-z]+\:\sFinal\sEnthalpy\s*\=\s(?P<CASTEP_enthalpy>[-+0-9.eEdD]+)"),        
+                        SM(r"\s[A-Za-z]+\:\sFinal\sEnthalpy\s*\=\s(?P<x_castep_enthalpy>[-+0-9.eEdD]+)"),        
                         
                         SM(#startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
                                 startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
                                 
                                 subMatchers = [
-                                   SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                                   SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                                       repeats = True)
                                               ]),
                         SM(#startReStr = r"\sBFGS\:\sFinal\sbulk\smodulus\sunchanged\sfrom\sinitial\svalue\s*",
                                 startReStr = r"\s\*\*\*\*\**\sSymmetrised\sForces\s\*\*\*\*\**\s*",
                                 repeats = True,
                                 subMatchers = [
-                                   SM(r"\s\*\s[A-Za-z]+\s*[0-9]\s*(?P<castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                                   SM(r"\s\*\s[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                                       repeats = True)
                                               ]), 
 
@@ -1567,9 +1562,9 @@ def build_CastepMainFileSimpleMatcher():
                         SM(name = 'stresstensor',
                                 #startReStr = r"\s\*\*\*\*\*\*\*\*\*\ Symmetrised Stress Tensor \*\*\*\*\*\*\*\*\*\*\*\s*",
                                 startReStr = r"\s\*\*\*\*\** Symmetrised Stress Tensor \*\*\*\*\**\s*",
-                                sections = ['castep_section_stress_tensor'],
+                                sections = ['x_castep_section_stress_tensor'],
                                 subMatchers = [
-                                   SM(r"\s*\*\s*[a-z]\s*(?P<castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                                   SM(r"\s*\*\s*[a-z]\s*(?P<x_castep_store_stress_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                                       repeats = True),  
                                               ]), # CLOSING section_stress_tensor
 
@@ -1581,11 +1576,11 @@ def build_CastepMainFileSimpleMatcher():
 
     Mulliken_SubMatcher = SM (name = 'Mulliken population analysis',
             startReStr = r"\s*Atomic Populations\s\(Mulliken\)\s*",
-            sections = ['castep_section_population_analysis'],
+            sections = ['x_castep_section_population_analysis'],
             #endReStr = r"\s*Bond\s*Population\s*Length\s\(A\)\s*",
             repeats = True,
             subMatchers = [ 
-                SM(r"\s*[a-zA-Z]+\s*[0-9.]+\s*(?P<castep_orbital_contributions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)\s*[-+0-9.eEdD]+\s*(?P<castep_mulliken_charge_store>[-+0-9.eEdD]+)\s*",       
+                SM(r"\s*[a-zA-Z]+\s*[0-9.]+\s*(?P<x_castep_orbital_contributions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)\s*[-+0-9.eEdD]+\s*(?P<x_castep_mulliken_charge_store>[-+0-9.eEdD]+)\s*",       
                     endReStr = r"\s*Bond\s*Population\s*Length\s\(A\)\s*",
                     repeats = True),
                  ]) 
@@ -1611,11 +1606,11 @@ def build_CastepMainFileSimpleMatcher():
                   subMatchers = [
 
                      SM(r"\s\|\sWelcome to Academic Release\s(?P<program_name>[a-zA-Z]+)* version *(?P<program_version>[0-9a-zA-Z_.]*)"),
-                     SM(r"\sCompiled for *(?P<program_compilation_host>[-a-zA-Z0-9._]*)\son\s(?P<castep_program_compilation_date>[a-zA-Z,\s0-9]*)\s *(?P<castep_program_compilation_time>[0-9:]*)"),
-                     SM(r"\sCompiler\: *(?P<castep_compiler>[a-zA-Z\s0-9.]*)"),
-                     SM(r"\sMATHLIBS\: *(?P<castep_maths_library>[a-zA-Z0-9.() ]*)\s*"),
-                     SM(r"\sFFT Lib \: *(?P<castep_fft_library>[a-zA-Z0-9.() ]*)\s*"),
-                     SM(r"\sFundamental constants values\: *(?P<castep_constants_reference>[a-zA-Z0-9.() ]*)\s*"),
+                     SM(r"\sCompiled for *(?P<program_compilation_host>[-a-zA-Z0-9._]*)\son\s(?P<x_castep_program_compilation_date>[a-zA-Z,\s0-9]*)\s *(?P<x_castep_program_compilation_time>[0-9:]*)"),
+                     SM(r"\sCompiler\: *(?P<x_castep_compiler>[a-zA-Z\s0-9.]*)"),
+                     SM(r"\sMATHLIBS\: *(?P<x_castep_maths_library>[a-zA-Z0-9.() ]*)\s*"),
+                     SM(r"\sFFT Lib \: *(?P<x_castep_fft_library>[a-zA-Z0-9.() ]*)\s*"),
+                     SM(r"\sFundamental constants values\: *(?P<x_castep_constants_reference>[a-zA-Z0-9.() ]*)\s*"),
 
                                   ]), # CLOSING SM ProgramHeader
                                 
@@ -1645,39 +1640,39 @@ def build_CastepMainFileSimpleMatcher():
                   sections = ['section_topology'],
                   subMatchers = [
                  
-                      SM(r"\s*(?P<castep_store_atom_name>[a-zA-Z]+)\s*(?P<castep_store_atom_mass>[\d\.]+)\s*",
+                      SM(r"\s*(?P<x_castep_store_atom_name>[a-zA-Z]+)\s*(?P<x_castep_store_atom_mass>[\d\.]+)\s*",
                         #endReStr = "\n",   
                         repeats = True),
                      ]), # CLOSING section_atom_topology
                
 
-                SM(r"\s*Point group of crystal\s\=\s*[0-9.]+\:\s(?P<castep_crystal_point_group>[a-zA-Z0-9.]+)"),
-                SM(r"\s*Space group of crystal\s\=\s*[0-9.]+\:\s(?P<castep_space_group>[a-zA-Z0-9.]+)"),
+                SM(r"\s*Point group of crystal\s\=\s*[0-9.]+\:\s(?P<x_castep_crystal_point_group>[a-zA-Z0-9.]+)"),
+                SM(r"\s*Space group of crystal\s\=\s*[0-9.]+\:\s(?P<x_castep_space_group>[a-zA-Z0-9.]+)"),
 
           ############ CASTEP-specific van der Waals method parameters #############################     
                 
                 SM(name = "van der Waals castep TS",
                    startReStr = r"\s*Dispersion\-correction scheme\s\:\s+",
                    forwardMatch = True,
-                   sections = ["castep_section_van_der_Waals_parameters"],
+                   sections = ["x_castep_section_van_der_Waals_parameters"],
                    subMatchers = [
                         ######## Method TS #######
-                        SM(r"\s*Parameter sR\s*\: *(?P<Parameter_sR> [0-9.]+)"),
-                        SM(r"\s*Parameter d\s*\: *(?P<Parameter_d> [0-9.]+)"),
+                        SM(r"\s*Parameter sR\s*\: *(?P<x_castep_Parameter_sR> [0-9.]+)"),
+                        SM(r"\s*Parameter d\s*\: *(?P<x_castep_Parameter_d> [0-9.]+)"),
                         ######## Method OBS #######
-                        SM(r"\s*Parameter lambda\s*\: *(?P<Parameter_LAMBDA> [0-9.]+)"),
-                        SM(r"\s*Parameter n\s*\: *(?P<Parameter_n> [0-9.]+)"),
+                        SM(r"\s*Parameter lambda\s*\: *(?P<x_castep_Parameter_LAMBDA> [0-9.]+)"),
+                        SM(r"\s*Parameter n\s*\: *(?P<x_castep_Parameter_n> [0-9.]+)"),
                
                         ######## Method G06 #######
-                        SM(r"\s*Parameter s6\s*\: *(?P<Parameter_s6> [0-9.]+)"),
-                        SM(r"\s*Parameter d\s*\: *(?P<Parameter_d> [0-9.]+)")
+                        SM(r"\s*Parameter s6\s*\: *(?P<x_castep_Parameter_s6> [0-9.]+)"),
+                        SM(r"\s*Parameter d\s*\: *(?P<x_castep_Parameter_d> [0-9.]+)")
                               ]), # CLOSING van der waals castep parameters
               
                 #geomOptimSubMatcher_init,
              
                 
                                      
-                SM(r"Calculating total energy with cut\-off of  (?P<castep_basis_set_planewave_cutoff_iteration_0>[0-9.]+)",
+                SM(r"Calculating total energy with cut\-off of  (?P<x_castep_basis_set_planewave_cutoff_iteration_0>[0-9.]+)",
                                repeats = True,),
                 
                 singlepointSubMatcher,
@@ -1685,20 +1680,20 @@ def build_CastepMainFileSimpleMatcher():
                 MDSubMatcher,
 
                 SM(name = "Vibrational_frequencies",
-                    sections = ["castep_section_vibrational_frequencies"],
+                    sections = ["x_castep_section_vibrational_frequencies"],
                     startReStr = r"\s\+\s*q\-pt\=\s*[0-9.]+",
                     #startReStr = r"\s\+\s*Vibrational Frequencies\s*\+\s*",
                     repeats = True,
                     subMatchers = [
-                        SM(r"\s\+\s*(?P<castep_n_iterations_phonons>[0-9.]+)\s*(?P<castep_vibrationl_frequencies_store>[-\d\.]+)\s*(?P<castep_ir_store>[a-z])\s*(?P<castep_ir_intensity_store>[-\d\.]+)\s*[A-Z]\s*(?P<castep_raman_activity_store>[-\d\.]+)\s*[A-Z]\s*\+\s*",       
+                        SM(r"\s\+\s*(?P<x_castep_n_iterations_phonons>[0-9.]+)\s*(?P<x_castep_vibrationl_frequencies_store>[-\d\.]+)\s*(?P<x_castep_ir_store>[a-z])\s*(?P<x_castep_ir_intensity_store>[-\d\.]+)\s*[A-Z]\s*(?P<x_castep_raman_activity_store>[-\d\.]+)\s*[A-Z]\s*\+\s*",       
                             repeats = True,
                             endReStr = r"\s\+\s\.*\s\+\s*",
                              ),
-                        SM(r"\s\+\s*(?P<castep_n_iterations_phonons>[0-9.]+)\s*(?P<castep_vibrationl_frequencies_store>[-\d\.]+)\s*(?P<castep_ir_store>[a-z])\s*(?P<castep_ir_intensity_store>[-\d\.]+)\s*[A-Z]\s*[A-Z]\s*\+\s*",       
+                        SM(r"\s\+\s*(?P<x_castep_n_iterations_phonons>[0-9.]+)\s*(?P<x_castep_vibrationl_frequencies_store>[-\d\.]+)\s*(?P<x_castep_ir_store>[a-z])\s*(?P<x_castep_ir_intensity_store>[-\d\.]+)\s*[A-Z]\s*[A-Z]\s*\+\s*",       
                             repeats = True,
                             endReStr = r"\s\+\s\.*\s\+\s*",
                              ),
-                        SM(r"\s\+\s*(?P<castep_n_iterations_phonons>[0-9.]+)\s*(?P<castep_vibrationl_frequencies_store>[-\d\.]+)\s*(?P<castep_ir_store>[a-z])\s*\+\s*",          
+                        SM(r"\s\+\s*(?P<x_castep_n_iterations_phonons>[0-9.]+)\s*(?P<x_castep_vibrationl_frequencies_store>[-\d\.]+)\s*(?P<x_castep_ir_store>[a-z])\s*\+\s*",          
                             repeats = True,
                             endReStr = r"\s\+\s\.*\s\+\s*",
                             ),
@@ -1711,9 +1706,9 @@ def build_CastepMainFileSimpleMatcher():
                         startReStr = r"\s\+\sMode number\:\s*[0-9.]+\sRaman\stensor\s*Depolarisation Ratio\s*\+\s*",
                         endReStr = r"\s\+\s*\+\s*",
                         repeats = True,
-                        sections = ['section_castep_raman_tensor'],
+                        sections = ['x_castep_section_raman_tensor'],
                         subMatchers = [
-                           SM(r"\s\+\s*(?P<castep_store_raman_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                           SM(r"\s\+\s*(?P<x_castep_store_raman_tensor>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                               repeats = True),  
                                       ]), # CLOSIN
 
@@ -1739,11 +1734,11 @@ def build_CastepMainFileSimpleMatcher():
                 
                 SM(name = 'calc_time',
                     startReStr = r" A BibTeX formatted list of references used in this run has been written to",
-                    sections = ['castep_section_time'],
+                    sections = ['x_castep_section_time'],
                     subMatchers = [
-                        SM(r"Initialisation time =\s*(?P<castep_initialisation_time>[0-9.]*)"), # matching final converged total energy
-                        SM(r"Calculation time    =\s*(?P<castep_calculation_time>[0-9.]*)"),
-                        SM(r"Finalisation time   =\s*(?P<castep_finalisation_time>[0-9.]*)"),
+                        SM(r"Initialisation time =\s*(?P<x_castep_initialisation_time>[0-9.]*)"), # matching final converged total energy
+                        SM(r"Calculation time    =\s*(?P<x_castep_calculation_time>[0-9.]*)"),
+                        SM(r"Finalisation time   =\s*(?P<x_castep_finalisation_time>[0-9.]*)"),
                                       ]), # CLOSING section_castep_time
                                         
                   
@@ -1765,31 +1760,31 @@ def get_cachingLevelForMetaName(metaInfoEnv):
         Dictionary with metaname as key and caching level as value.
     """
     # manually adjust caching of metadata
-    cachingLevelForMetaName = { 'castep_ir_intensity_store' : CachingLevel.Cache,
-                                'castep_ir_store' : CachingLevel.Cache,
-                                'castep_vibrationl_frequencies_store' : CachingLevel.Cache,
-                                'castep_n_iterations_phonons' : CachingLevel.Cache,
-                                'castep_mulliken_charge_store' : CachingLevel.Cache,
-                                'castep_orbital_contributions' : CachingLevel.Cache,
-                                'castep_section_cell_optim': CachingLevel.Cache,
-                                'castep_section_atom_positions_optim' : CachingLevel.Cache,
-                                'castep_section_eigenvalues':CachingLevel.Cache,
-                                'castep_section_k_points':CachingLevel.Cache,
-                                'castep_section_k_band':CachingLevel.Cache,
+    cachingLevelForMetaName = { 'x_castep_ir_intensity_store' : CachingLevel.Cache,
+                                'x_castep_ir_store' : CachingLevel.Cache,
+                                'x_castep_vibrationl_frequencies_store' : CachingLevel.Cache,
+                                'x_castep_n_iterations_phonons' : CachingLevel.Cache,
+                                'x_castep_mulliken_charge_store' : CachingLevel.Cache,
+                                'x_castep_orbital_contributions' : CachingLevel.Cache,
+                                'x_castep_section_cell_optim': CachingLevel.Cache,
+                                'x_castep_section_atom_positions_optim' : CachingLevel.Cache,
+                                'x_castep_section_eigenvalues':CachingLevel.Cache,
+                                'x_castep_section_k_points':CachingLevel.Cache,
+                                'x_castep_section_k_band':CachingLevel.Cache,
                                 # 'band_energies' : CachingLevel.Cache,
                                 # 'band_k_points' : CachingLevel.Cache,
-                                'castep_basis_set_planewave_cutoff' : CachingLevel.Cache,
+                                'x_castep_basis_set_planewave_cutoff' : CachingLevel.Cache,
                                 # 'eigenvalues_values': CachingLevel.Cache,
                                 # 'eigenvalues_kpoints':CachingLevel.Cache,
-                                'CASTEP_total_energy_corrected_for_finite_basis_store': CachingLevel.Cache,
-                                'castep_frame_time':CachingLevel.Cache,
-                                'castep_section_SCF_iteration_frame':CachingLevel.Cache,
-                                'castep_SCF_frame_energy':CachingLevel.Cache}
+                                'x_castep_total_energy_corrected_for_finite_basis_store': CachingLevel.Cache,
+                                'x_castep_frame_time':CachingLevel.Cache,
+                                'x_castep_section_SCF_iteration_frame':CachingLevel.Cache,
+                                'x_castep_SCF_frame_energy':CachingLevel.Cache}
 
     # Set caching for temparary storage variables
     for name in metaInfoEnv.infoKinds:
-        if (   name.startswith('castep_store_')
-            or name.startswith('castep_cell_')):
+        if (   name.startswith('x_castep_store_')
+            or name.startswith('x_castep_cell_')):
             cachingLevelForMetaName[name] = CachingLevel.Cache
     return cachingLevelForMetaName
 

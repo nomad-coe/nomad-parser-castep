@@ -52,7 +52,7 @@ class CastepBandParserContext(object):
         self.k_nr                       = 0
         self.e_nr                       = 0
         self.eigenvalues_kpoints        = []
-        self.eigenvalues_values    = []
+        self.eigenvalues_values         = []
 
         self.e_spin_1                   = []
         self.e_spin_2                   = []
@@ -61,18 +61,18 @@ class CastepBandParserContext(object):
 
 
 # Reading the number of spins
-    def onClose_castep_section_spin_number(self, backend, gIndex, section):
+    def onClose_x_castep_section_spin_number(self, backend, gIndex, section):
 
-        self.n_spin = section['castep_spin_number']
+        self.n_spin = section['x_castep_spin_number']
         
 
 # Storing the k point coordinates
-    def onClose_castep_section_scf_k_points(self, backend, gIndex, section):
+    def onClose_x_castep_section_scf_k_points(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
 
 # Processing k points (given in fractional coordinates)
-        #get cached values of castep_store_k_points
-        k_st = section['castep_store_scf_k_points']
+        #get cached values of x_castep_store_k_points
+        k_st = section['x_castep_store_scf_k_points']
         self.k_count = len(k_st)
         self.k_nr   += 1
         for i in range(0, self.k_count):
@@ -83,11 +83,11 @@ class CastepBandParserContext(object):
 
 
 # Storing the eigenvalues
-    def onClose_castep_section_scf_eigenvalues(self, backend, gIndex, section):
+    def onClose_x_castep_section_scf_eigenvalues(self, backend, gIndex, section):
         """trigger called when _section_eigenvalues"""
         Ha_to_J = 4.35974e-18
         #get cached values of castep_store_k_points
-        e_st = section['castep_store_scf_eigenvalues']
+        e_st = section['x_castep_store_scf_eigenvalues']
 
         e_st_0 = e_st
         e_st_0 = [x * Ha_to_J for x in e_st_0]
@@ -144,31 +144,31 @@ def build_CastepBandFileSimpleMatcher():
             subMatchers = [
 
                SM(startReStr = r"Number\sof\sk\-points\s*[0-9]+\s*",
-                  sections = ['castep_section_spin_number'],
+                  sections = ['x_castep_section_spin_number'],
                   forwardMatch = True,
                   subMatchers = [
 
-                     SM(r"Number\sof\sspin\scomponents\s*(?P<castep_spin_number>[1-2]+)")
+                     SM(r"Number\sof\sspin\scomponents\s*(?P<x_castep_spin_number>[1-2]+)")
 
                                  ]),
 
                SM(startReStr = r"K\-point\s*[0-9]+\s*",
-                  sections = ["castep_section_scf_k_points"],
+                  sections = ["x_castep_section_scf_k_points"],
                   forwardMatch = True,
                   repeats = True,
                   subMatchers = [
 
-                     SM(r"K\-point\s*[0-9]+\s*(?P<castep_store_scf_k_points> [-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                     SM(r"K\-point\s*[0-9]+\s*(?P<x_castep_store_scf_k_points> [-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                         repeats = True),
 
                      SM(name = 'Eigen',
                         startReStr = r"Spin component\s*1\s*",
                         #endReStr = r"Spin component\s*2\s*",
-                        sections = ['castep_section_scf_eigenvalues'],
+                        sections = ['x_castep_section_scf_eigenvalues'],
                         repeats = True,
                         subMatchers = [
 
-                           SM(r"\s*(?P<castep_store_scf_eigenvalues> [-\d\.]+)",
+                           SM(r"\s*(?P<x_castep_store_scf_eigenvalues> [-\d\.]+)",
                               repeats = True)
 
                                        ]), # CLOSING castep_section_scf_eigenvalues
@@ -199,7 +199,7 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
                               }
     # Set all band metadata to Cache as they need post-processsing.
     for name in metaInfoEnv.infoKinds:
-        if name.startswith('castep_'):
+        if name.startswith('x_castep_'):
             cachingLevelForMetaName[name] = CachingLevel.Cache
     return cachingLevelForMetaName
 

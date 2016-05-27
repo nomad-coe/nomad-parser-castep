@@ -62,16 +62,16 @@ class CastepMDParserContext(object):
         # backend.closeSection('section_single_configuration_calculation',gIndex+i) 
     
     def onClose_section_md(self, backend, gIndex, section):
-        temp = section ['castep_md_temperature']
-        vet_veloc = section ['castep_md_cell_vectors_vel']
-        velocities = section ['castep_md_veloc']
-        vet = section ['castep_md_cell_vectors']
-        forces = section ['castep_md_forces']
-        atoms_lab = section ['castep_md_lab']
-        position = section ['castep_md_positions']
-        press = section ['castep_md_pressure']
-        energies = section['castep_md_energies']
-        stress_tens = section ['castep_md_stress_tensor']
+        temp = section ['x_castep_md_temperature']
+        vet_veloc = section ['x_castep_md_cell_vectors_vel']
+        velocities = section ['x_castep_md_veloc']
+        vet = section ['x_castep_md_cell_vectors']
+        forces = section ['x_castep_md_forces']
+        atoms_lab = section ['x_castep_md_lab']
+        position = section ['x_castep_md_positions']
+        press = section ['x_castep_md_pressure']
+        energies = section['x_castep_md_energies']
+        stress_tens = section ['x_castep_md_stress_tensor']
         # frame_time =section['castep_md_time']
 
         
@@ -174,20 +174,20 @@ def build_CastepMDFileSimpleMatcher():
         weak = True,
         subMatchers = [
             SM (name = 'Root2',
-            startReStr =r"\s*(?P<castep_md_energies>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sE\s*",
+            startReStr =r"\s*(?P<x_castep_md_energies>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sE\s*",
             endReStr ="/n",
             sections = ['section_md'],
             repeats = True,
             # weak = True,
             subMatchers = [
-                SM (r"\s*(?P<castep_md_temperature>[-+0-9.eEdD]+)\s*\<\-\-\sT\s*"),
-                SM (r"\s*(?P<castep_md_pressure>[-+0-9.eEdD]+)\s*\<\-\-\sP\s*"),
-                SM (r"\s*(?P<castep_md_cell_vectors>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),
-                SM (r"\s*(?P<castep_md_cell_vectors_vel>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh[a-z]\s*",repeats = True),
-                SM (r"\s*(?P<castep_md_stress_tensor>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sS\s",repeats = True),
-                SM(r"\s(?P<castep_md_lab>[A-Za-z]+\s*[0-9.]+)\s*(?P<castep_md_positions>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<castep_md_veloc>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sV\s*",repeats = True),
-                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<castep_md_forces>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
+                SM (r"\s*(?P<x_castep_md_temperature>[-+0-9.eEdD]+)\s*\<\-\-\sT\s*"),
+                SM (r"\s*(?P<x_castep_md_pressure>[-+0-9.eEdD]+)\s*\<\-\-\sP\s*"),
+                SM (r"\s*(?P<x_castep_md_cell_vectors>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),
+                SM (r"\s*(?P<x_castep_md_cell_vectors_vel>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh[a-z]\s*",repeats = True),
+                SM (r"\s*(?P<x_castep_md_stress_tensor>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sS\s",repeats = True),
+                SM(r"\s(?P<x_castep_md_lab>[A-Za-z]+\s*[0-9.]+)\s*(?P<x_castep_md_positions>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
+                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_md_veloc>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sV\s*",repeats = True),
+                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_md_forces>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
                 # SM (r"\s*(?P<castep_md_time>[+0-9.eEdD]+)\s*"),                  # ),
             
 
@@ -211,16 +211,16 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
         Dictionary with metaname as key and caching level as value.
     """
     # manually adjust caching of metadata
-    cachingLevelForMetaName = { 'castep_md_energies':CachingLevel.Cache,
-                                'castep_md_forces':CachingLevel.Cache,
-                                'castep_md_veloc':CachingLevel.Cache,       
-                                'castep_md_lab':CachingLevel.Cache,
-                                'castep_md_positions':CachingLevel.Cache,
-                                'castep_md_temperature':CachingLevel.Cache,
-                                'castep_md_pressure':CachingLevel.Cache,
-                                'castep_md_cell_vectors_vel':CachingLevel.Cache,
-                                'castep_md_cell_vectors':CachingLevel.Cache,
-                                'castep_md_stress_tensor':CachingLevel.Cache,
+    cachingLevelForMetaName = { 'x_castep_md_energies':CachingLevel.Cache,
+                                'x_castep_md_forces':CachingLevel.Cache,
+                                'x_castep_md_veloc':CachingLevel.Cache,       
+                                'x_castep_md_lab':CachingLevel.Cache,
+                                'x_castep_md_positions':CachingLevel.Cache,
+                                'x_castep_md_temperature':CachingLevel.Cache,
+                                'x_castep_md_pressure':CachingLevel.Cache,
+                                'x_castep_md_cell_vectors_vel':CachingLevel.Cache,
+                                'x_castep_md_cell_vectors':CachingLevel.Cache,
+                                'x_castep_md_stress_tensor':CachingLevel.Cache,
                                 
                               
                                 'section_run': CachingLvl,

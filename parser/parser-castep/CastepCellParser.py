@@ -54,7 +54,7 @@ class CastepCellParserContext(object):
 
         Store the parsed values and write them if writeMetaData is True.
         """
-        k_p = section['castep_store_k_path']
+        k_p = section['x_castep_store_k_path']
 
         k_count = len(k_p)
         self.k_crd = []
@@ -71,7 +71,7 @@ class CastepCellParserContext(object):
             self.k_sgt_start_end.append(k_sgt)
 
 
-        backend.addArrayValues('castep_k_path', np.asarray(self.k_crd))
+        backend.addArrayValues('x_castep_k_path', np.asarray(self.k_crd))
         # backend.addArrayValues('band_segm_start_end', np.asarray(self.k_sgt_start_end))
         # backend.addValue('number_of_k_point_segments', len(self.k_sgt_start_end))
 
@@ -103,7 +103,7 @@ def build_CastepCellFileSimpleMatcher():
                   forwardMatch = True,
                   subMatchers = [
 
-                     SM (r"(?P<castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
+                     SM (r"(?P<x_castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
                                  ]),
 
             SM(startReStr = r"\s*\%BLOCK BS\_KPOINT\_PATH\s*",
@@ -111,7 +111,7 @@ def build_CastepCellFileSimpleMatcher():
                   forwardMatch = True,
                   subMatchers = [
 
-                      SM (r"(?P<castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
+                      SM (r"(?P<x_castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
 
                                  ]),
 
@@ -148,7 +148,7 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
                               }
     # Set all band metadata to Cache as they need post-processsing.
     for name in metaInfoEnv.infoKinds:
-        if name.startswith('castep_'):
+        if name.startswith('x_castep_'):
             cachingLevelForMetaName[name] = CachingLevel.Cache
     return cachingLevelForMetaName
 
