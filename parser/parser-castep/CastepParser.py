@@ -624,8 +624,10 @@ class CastepParserContext(object):
         vel = section['x_castep_store_atom_ionic_velocities']
         if vel:
             for i in range(0, self.at_nr):
-                # vel[i] = [float(j) for j in vel[i]]
+                vel[i] = vel[i].split()
+                vel[i] = [float(j) for j in vel[i]]
                 self.castep_atom_velocities.append(vel[i])
+                
             backend.addArrayValues('x_castep_atom_ionic_velocities', np.asarray(self.castep_atom_velocities))
 
 # Backend add the simulation cell
