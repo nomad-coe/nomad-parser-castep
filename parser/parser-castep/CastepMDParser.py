@@ -61,7 +61,7 @@ class CastepMDParserContext(object):
         # backend.addArrayValues('atom_forces', np.asarray(self.md_forces))
         # backend.closeSection('section_single_configuration_calculation',gIndex+i) 
     
-    def onClose_section_md(self, backend, gIndex, section):
+    def onClose_x_castep_section_md(self, backend, gIndex, section):
         temp = section ['x_castep_md_temperature']
         vet_veloc = section ['x_castep_md_cell_vectors_vel']
         velocities = section ['x_castep_md_veloc']
@@ -176,7 +176,7 @@ def build_CastepMDFileSimpleMatcher():
             SM (name = 'Root2',
             startReStr =r"\s*(?P<x_castep_md_energies>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sE\s*",
             endReStr ="/n",
-            sections = ['section_md'],
+            sections = ['x_castep_section_md'],
             repeats = True,
             # weak = True,
             subMatchers = [
@@ -224,7 +224,7 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
                                 
                               
                                 'section_run': CachingLvl,
-                                'section_md': CachingLvl,
+                                'x_castep_section_md': CachingLvl,
                                # 'section_single_configuration_calculation': CachingLvl,
                               }
     # Set all band metadata to Cache as they need post-processsing.

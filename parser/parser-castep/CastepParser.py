@@ -427,18 +427,7 @@ class CastepParserContext(object):
                 backend.addValue('number_of_eigenvalues_kpoints', self.k_nr_scf)
                 backend.addValue('number_of_eigenvalues', self.e_nr_scf)
 
-                backend.closeSection('section_eigenvalues', gIndex)
-
-            #     backend.closeSection('section_eigenvalues_group', gIndexGroup)
-
-            # else:
-            #     backend.closeSection('section_eigenvalues_group', gIndexGroup)
-        
-        # if len(self.e_spin_2) != 0:
-        #     self.n_spin_channels = 2
-            
-        #     self.n_spin_channels = 1    
-        # backend.addValue('castep_number_of_spin_channels', self.n_spin_channels)       
+                backend.closeSection('section_eigenvalues', gIndex)    
         
         
         #backend.openSection('section_stress_tensor')
@@ -1013,8 +1002,10 @@ class CastepParserContext(object):
                 backend.addArrayValues('frame_sequence_potential_energy', np.asarray(self.frame_total))
                 backend.addArrayValues('frame_sequence_time', np.asarray(time_list))
                 backend.closeSection('section_frame_sequence',gIndex)
+            
             else:
                 pass
+        
         else:
             pass            
 
