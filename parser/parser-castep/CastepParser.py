@@ -464,8 +464,20 @@ class CastepParserContext(object):
             finite_basis_corr_energy[0] = float(finite_basis_corr_energy[0]) * J_float
             backend.addValue('x_castep_total_energy_corrected_for_finite_basis', finite_basis_corr_energy[0])
         
-        backend.addValue('number_of_scf_iterations', len(self.energy_total_scf_iteration_list))
-    
+        extFile = ".md"       # Find the file with extension .cell
+        dirName = os.path.dirname(os.path.abspath(self.fName))
+        cFile = str()
+        for file in os.listdir(dirName):
+            if file.endswith(extFile):
+                cFile = file
+        fName = os.path.normpath(os.path.join(dirName, cFile))
+
+         # parsing *.cell file to get the k path segments
+        if file.endswith(extFile):   
+            pass
+        else:    
+            backend.addValue('number_of_scf_iterations', len(self.energy_total_scf_iteration_list))
+     
     def onClose_x_castep_section_SCF_iteration_frame(self, backend, gIndex, section):
         self.frame_energies = section['x_castep_SCF_frame_energy']
                        
@@ -919,8 +931,8 @@ class CastepParserContext(object):
             backend.addArrayValues('x_castep_atom_forces', np.asarray(self.atom_forces_band))        
 
         time_list = self.time_0
-        if section['CASTEP_geom_converged'] is not None:
-            if section['CASTEP_geom_converged'][-1] == 'successfully':
+        if section['x_castep_geom_converged'] is not None:
+            if section['x_castep_geom_converged'][-1] == 'successfully':
                 self.geoConvergence = True
             else:
                 self.geoConvergence = False
