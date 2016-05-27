@@ -220,7 +220,7 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
                                 'x_castep_md_pressure':CachingLevel.Cache,
                                 'x_castep_md_cell_vectors_vel':CachingLevel.Cache,
                                 'x_castep_md_cell_vectors':CachingLevel.Cache,
-                                'x_castep_md_stress_tensor':CachingLevel.Cache,
+                                # 'x_castep_md_stress_tensor':CachingLevel.Cache,
                                 
                               
                                 'section_run': CachingLvl,
