@@ -431,8 +431,8 @@ class CastepParserContext(object):
         
         
         #backend.openSection('section_stress_tensor')
-        if self.stress_tensor_value:
-            backend.addArrayValues('stress_tensor',np.asarray(self.stress_tensor_value))
+        # if self.stress_tensor_value:
+            # backend.addArrayValues('stress_tensor',np.asarray(self.stress_tensor_value))
         #backend.closeSection('section_stress_tensor', gIndex)
         #backend.addValue('time_calculation', self.time_calc)
 
@@ -466,7 +466,7 @@ class CastepParserContext(object):
             pass
         else:    
             backend.addValue('number_of_scf_iterations', len(self.energy_total_scf_iteration_list))
-     
+            backend.addArrayValues('stress_tensor',np.asarray(self.stress_tensor_value))
     def onClose_x_castep_section_SCF_iteration_frame(self, backend, gIndex, section):
         self.frame_energies = section['x_castep_SCF_frame_energy']
                        

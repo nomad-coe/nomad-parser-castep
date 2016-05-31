@@ -71,7 +71,7 @@ class CastepMDParserContext(object):
         position = section ['x_castep_md_positions']
         press = section ['x_castep_md_pressure']
         energies = section['x_castep_md_energies']
-        stress_tens = section ['x_castep_md_stress_tensor']
+        stress_tensor = section ['x_castep_md_stress_tensor']
         # frame_time =section['castep_md_time']
 
         
@@ -113,12 +113,12 @@ class CastepMDParserContext(object):
             
         
         
-        if stress_tens is not None:
+        if stress_tensor is not None:
             self.stress_tensor_value =[]
-            for i in range(len(stress_tens)):
-                stress_tens[i] = stress_tens[i].split()
-                stress_tens[i] = [float(j) for j in stress_tens[i]]
-                stress_tens_int = stress_tens[i]
+            for i in range(len(stress_tensor)):
+                stress_tensor[i] = stress_tensor[i].split()
+                stress_tensor[i] = [float(j) for j in stress_tensor[i]]
+                stress_tens_int = stress_tensor[i]
                 # stress_tens_int = [x / 10e9 for x in stress_tens_int] #converting GPa in Pa.
                 self.stress_tensor_value.append(stress_tens_int)
                
