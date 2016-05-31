@@ -1477,7 +1477,7 @@ def build_CastepMainFileSimpleMatcher():
                             endReStr = "\n",
                             repeats = True),           
                             
-                        SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                        # SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
                         SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
                         #SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free>[-+0-9.eEdD]*)"),
                 
