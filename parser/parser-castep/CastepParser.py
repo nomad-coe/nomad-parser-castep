@@ -1409,7 +1409,7 @@ def build_CastepMainFileSimpleMatcher():
                             endReStr = "\n",
                             repeats = True),           
                             
-                        # SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                        SM(r"Final energy = *(?P<x_castep_improved_energy_total>[-+0-9.eEdD]*)"), # matching final converged total energy
                         SM(r"Final energy\,\s*E\s*= *(?P<x_castep_improved_energy_total>[-+0-9.eEdD]*)"), # matching final converged total energy
                  #SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<castep_energy_free>[-+0-9.eEdD]*)"),
                 
@@ -1430,7 +1430,7 @@ def build_CastepMainFileSimpleMatcher():
 
                  ])
     geomOptimSubMatcher =  SM (name = 'geometry_optimisation',
-            startReStr = r"\sStarting BFGS iteration\s*(?P<x_castep_geom_iteration_index>[0-9]+)\s\.\.\.\s*",
+            startReStr = r"\sStarting BFGS iteration\s*(?P<x_castep_geom_iteration_index>[0-9.]+)\s\.\.\.\s*",
             sections = ['section_single_configuration_calculation','section_system'],
             endReStr = r"\s*Atomic\sPopulations\s\(Mulliken\)\s*",
             #endReStr = r"\s\[A-Za-z]+\:\sGeometry\soptimization\scompleted\ssuccessfully.\s*",
