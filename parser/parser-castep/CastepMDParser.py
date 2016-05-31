@@ -72,6 +72,7 @@ class CastepMDParserContext(object):
         press = section ['x_castep_md_pressure']
         energies = section['x_castep_md_energies']
         stress_tensor = section ['x_castep_md_stress_tensor']
+        
         # frame_time =section['castep_md_time']
 
         
@@ -121,7 +122,7 @@ class CastepMDParserContext(object):
                 stress_tens_int = stress_tensor[i]
                 # stress_tens_int = [x / 10e9 for x in stress_tens_int] #converting GPa in Pa.
                 self.stress_tensor_value.append(stress_tens_int)
-               
+           
             self.frame_stress_tensor.append(self.stress_tensor_value)
             
         if position:
