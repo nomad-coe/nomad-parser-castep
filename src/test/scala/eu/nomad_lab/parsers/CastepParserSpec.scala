@@ -54,3 +54,13 @@ object CastepParserSpec4 extends Specification {
     }
   }
 }
+object CastepParserSpec5 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/MD/Si8-md-NPT.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/MD/Si8-md-NPT.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
