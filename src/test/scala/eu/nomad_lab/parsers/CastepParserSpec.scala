@@ -44,3 +44,13 @@ object CastepParserSpec3 extends Specification {
     }
   }
 }
+object CastepParserSpec3 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/si2-bfgs.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/si2-bfgs.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
