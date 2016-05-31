@@ -119,10 +119,11 @@ class CastepMDParserContext(object):
                 stress_tens[i] = stress_tens[i].split()
                 stress_tens[i] = [float(j) for j in stress_tens[i]]
                 stress_tens_int = stress_tens[i]
-                stress_tens_int = [x / 10e9 for x in stress_tens_int] #converting GPa in Pa.
+                # stress_tens_int = [x / 10e9 for x in stress_tens_int] #converting GPa in Pa.
                 self.stress_tensor_value.append(stress_tens_int)
+               
             self.frame_stress_tensor.append(self.stress_tensor_value)
-     
+            
         if position:
             self.at_nr = len(position)
             self.atom_position=[]
