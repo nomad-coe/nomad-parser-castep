@@ -225,7 +225,7 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
                                 
                               
                                 'section_run': CachingLvl,
-                                'x_castep_section_md': CachingLvl,
+                                # 'x_castep_section_md': CachingLvl,
                                # 'section_single_configuration_calculation': CachingLvl,
                               }
     # Set all band metadata to Cache as they need post-processsing.
