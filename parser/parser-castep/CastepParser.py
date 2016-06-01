@@ -98,6 +98,7 @@ class CastepParserContext(object):
         self.frame_stress_tensor =[]
         self.frame_position =[]
         self.frame_cell=[]
+        self.energy_frame_gain = []
         self.frame_time=[]
         self.energy_frame =[]
         self.total_energy_frame = []
@@ -105,6 +106,9 @@ class CastepParserContext(object):
         self.scfgIndex=[]
         self.n_spin_channels = []
         self.n_spin_channels_bands = []
+        self.energy_frame_free = []
+        self.energy_frame_T0 = []
+
 
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
@@ -467,26 +471,57 @@ class CastepParserContext(object):
         else:    
             backend.addValue('number_of_scf_iterations', len(self.energy_total_scf_iteration_list))
             backend.addArrayValues('stress_tensor',np.asarray(self.stress_tensor_value))
+    
     def onClose_x_castep_section_SCF_iteration_frame(self, backend, gIndex, section):
+        self.frame_free_energy = section['x_castep_frame_energy_free']
         self.frame_energies = section['x_castep_SCF_frame_energy']
-                       
+        self.frame_energies_gain = section['x_castep_SCF_frame_energy_gain']               
+        self.frame_T0 = section ['x_castep_frame_energy_total_T0']
+       
         frame_time = section['x_castep_frame_time']
-
+        
+        
         if self.frame_energies:
                 
                 # self.energy_frame =[]
             for i in range(len(self.frame_energies)):
                 J_converter = float(1.602176565e-19)
+                
                 self.frame_energies[i]=self.frame_energies[i].split()
+                
                 self.frame_energies[i]=[float(j) for j in self.frame_energies[i]]
+                
+                self.frame_energies_gain[i]=self.frame_energies_gain[i].split()
+                self.frame_energies_gain[i]=[float(j) for j in self.frame_energies_gain[i]]
+                
+               
+                
                 energies = self.frame_energies[i] ###Conversion to Jule
                 energies = [x * J_converter for x in energies]
+                
+                energies_gain = self.frame_energies_gain[i] ###Conversion to Jule
+                energies_gain = [x * J_converter for x in energies]
+                
+               
+                
                 self.energy_frame.append(energies)   
+                # print self.energy_frame,'martina'
+                self.energy_frame_gain.append(energies_gain) 
+               
+            
+            free_energies = self.frame_free_energy
+            free_energies = [x * J_converter for x in free_energies]
+            self.energy_frame_free.append(free_energies)
+            
+            t0_energies = self.frame_T0
+            t0_energies = [x * J_converter for x in t0_energies]
+            self.energy_frame_T0.append(t0_energies)
+            
 
             if frame_time:
                 for i in range(len(frame_time)):                   
                     self.time_0.extend(frame_time)                
-                    
+                   
         #get cached values of castep_store_atom_forces
 # Recover SCF k points and eigenvalue from *.band file (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
     def onClose_x_castep_section_collect_scf_eigenvalues(self, backend, gIndex, section):
@@ -968,7 +1003,7 @@ class CastepParserContext(object):
                 
                 gIndexGroupscf = backend.openSection('section_scf_iteration')
                 for i in range(len(self.frame_atom_forces)):
-                   
+                    print i,'martina'
                     backend.openSection('section_system')
                     backend.addArrayValues('atom_velocities', np.asarray(self.frame_atom_veloc[i]))
                     backend.addArrayValues('atom_labels', np.asarray(self.atom_labels))
@@ -980,8 +1015,9 @@ class CastepParserContext(object):
                     backend.openSection('section_single_configuration_calculation')
                     backend.addArrayValues('atom_forces', np.asarray(self.frame_atom_forces[i]))
                     backend.addArrayValues('stress_tensor',np.asarray(self.frame_stress_tensor[i]))
-                    
-                    
+                    if i > 0:
+                        backend.addValue('energy_free', self.energy_frame_free[i-1]) 
+                        backend.addValue('energy_total_T0',self.energy_frame_T0[i-1])
                     
                     if i > 0:    
                         for j in range(len(self.frame_energies)):
@@ -989,8 +1025,11 @@ class CastepParserContext(object):
                             
                             backend.openSection('section_scf_iteration')
                             backend.addValue('energy_total_scf_iteration', self.energy_frame[s])
+                            backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
                             backend.closeSection('section_scf_iteration',s+gIndexGroupscf)
-                                     
+                    
+
+                                      
                     backend.addValue('number_of_scf_iterations', len(self.frame_energies))
                     backend.closeSection('section_single_configuration_calculation',i+1) 
 
@@ -1285,11 +1324,11 @@ def build_CastepMainFileSimpleMatcher():
                     #geomOptimSubMatcher_init, 
                     
                     SM(sections = ['section_scf_iteration'],
-                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                              endReStr = "\n",
                              repeats = True),
                     SM(sections = ['section_scf_iteration'],
-                        startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                        startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                         endReStr = "\n",
                         repeats = True),
                     
@@ -1350,13 +1389,17 @@ def build_CastepMainFileSimpleMatcher():
                     # SM(r"\s*[0-9]+\s*(?P<castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                     #     endReStr = "\n",
                     #     repeats = True),
-                    SM(r"\s*[0-9]+\s*(?P<x_castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                    SM(r"\s*[0-9]+\s*(?P<x_castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<x_castep_SCF_frame_energy_gain>[-+0-9.eEdD]*)\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                         endReStr = "\n",
                         repeats = True),                
+                    SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<x_castep_frame_energy_free>[-+0-9.eEdD]*)"), # matching final converged total free energy
+                    SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<x_castep_frame_energy_total_T0>[-+0-9.eEdD]*)"), # 0K corrected final SCF energy
                     SM(startReStr = r"\s*x\s*MD\sData\:\s*x",
                          subMatchers = [
                             SM(r"\s*x\s*time\s*\:\s*(?P<x_castep_frame_time>[+0-9.eEdD]+)\s*ps\s*x\s*"),
-                    ]),
+                         ]),
+                   
+
                     ])
     ########################################
     # Sub matcher for geometry optimisation 
@@ -1467,15 +1510,14 @@ def build_CastepMainFileSimpleMatcher():
 
                         
                         SM(sections = ['section_scf_iteration'],
-                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                              endReStr = "\n",
                              repeats = True),
-
-                                   # ]), # CLOSING section_scf_iteration                                      
+                        
                         SM(sections = ['section_scf_iteration'],
-                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                             endReStr = "\n",
-                            repeats = True),           
+                            repeats = True),       
                             
                         # SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
                         SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
@@ -1784,6 +1826,9 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 'x_castep_total_energy_corrected_for_finite_basis_store': CachingLevel.Cache,
                                 'x_castep_frame_time':CachingLevel.Cache,
                                 'x_castep_section_SCF_iteration_frame':CachingLevel.Cache,
+                                'x_castep_SCF_frame_energy_gain':CachingLevel.Cache,
+                                'x_castep_frame_energy_free':CachingLevel.Cache,
+                                'x_castep_frame_energy_total_T0':CachingLevel.Cache,
                                 'x_castep_SCF_frame_energy':CachingLevel.Cache}
 
     # Set caching for temparary storage variables
