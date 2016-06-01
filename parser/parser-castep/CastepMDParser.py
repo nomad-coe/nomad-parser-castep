@@ -112,18 +112,26 @@ class CastepMDParserContext(object):
                 self.vet_vel.append(v_vet)
             self.vector_velocities.append(self.vet_vel)
             
-        
-        
         if stress_tensor is not None:
             self.stress_tensor_value =[]
-            for i in range(len(stress_tensor)):
-                stress_tensor[i] = stress_tensor[i].split()
-                stress_tensor[i] = [float(j) for j in stress_tensor[i]]
-                stress_tens_int = stress_tensor[i]
-                # stress_tens_int = [x / 10e9 for x in stress_tens_int] #converting GPa in Pa.
-                self.stress_tensor_value.append(stress_tens_int)
-           
+            for s in stress_tensor:                
+                s = s.split()
+                s = [float(k) for k in s]
+                stress_tens_int = s
+                self.stress_tensor_value.append(stress_tens_int)                
             self.frame_stress_tensor.append(self.stress_tensor_value)
+
+
+            # for i in range(len(stress_tensor)):
+            #     print stress_tensor[i],'ciao'
+            #     stress_tensor[i] = stress_tensor[i].split()
+            #     print stress_tensor[i],'ciao2'
+            #     stress_tensor[i] = [float(j) for j in stress_tensor[i]]
+            #     stress_tens_int = stress_tensor[i]
+            #     # stress_tens_int = [x / 10e9 for x in stress_tens_int] #converting GPa in Pa.
+            #     self.stress_tensor_value.append(stress_tens_int)
+            #     print self.stress_tensor_value,'ciao3'
+            # self.frame_stress_tensor.append(self.stress_tensor_value)
             
         if position:
             self.at_nr = len(position)
@@ -222,11 +230,11 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
                                 'x_castep_md_pressure':CachingLevel.Cache,
                                 'x_castep_md_cell_vectors_vel':CachingLevel.Cache,
                                 'x_castep_md_cell_vectors':CachingLevel.Cache,
-                                # 'x_castep_md_stress_tensor':CachingLevel.Cache,
+                                'x_castep_md_stress_tensor':CachingLevel.Cache,
                                 
                               
                                 'section_run': CachingLvl,
-                                # 'x_castep_section_md': CachingLvl,
+                                'x_castep_section_md': CachingLvl,
                                # 'section_single_configuration_calculation': CachingLvl,
                               }
     # Set all band metadata to Cache as they need post-processsing.
