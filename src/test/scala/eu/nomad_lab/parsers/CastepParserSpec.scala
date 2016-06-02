@@ -66,7 +66,7 @@ object CastepParserSpec5 extends Specification {
 }
 
 }
-object CastepParserSpec5 extends Specification {
+object CastepParserSpec6 extends Specification {
   "CastepParserTest" >> {
     "test with json-events" >> {
       ParserRun.parse(CastepParser, "parsers/castep/test/examples/NH3-TS-PhonGamma-400.castep", "json-events") must_== ParseResult.ParseSuccess
