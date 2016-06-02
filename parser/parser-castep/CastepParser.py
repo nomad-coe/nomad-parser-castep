@@ -709,6 +709,7 @@ class CastepParserContext(object):
                     irr_rep[i] = irr_rep[i].split()
                     irr_rep_list = irr_rep[i]
                     self.irr_repres.append(irr_rep_list)
+                    
                     ir_intensities[i] = ir_intensities[i].split()
                     ir_intensities[i] = [float(j) for j in ir_intensities[i]]
                     ir_intens_list = ir_intensities[i]
@@ -724,6 +725,7 @@ class CastepParserContext(object):
                 backend.addArrayValues('x_castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):])) 
                 backend.addArrayValues('x_castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
                 backend.addArrayValues('x_castep_raman_activity', np.asarray(self.raman_act[-len(self.nr_iter):]))
+        
         elif frequ and ir_intensities:
                 for i in range(0,len(frequ)):
                     frequ[i] = frequ[i].split()
@@ -736,10 +738,12 @@ class CastepParserContext(object):
                     ir_intensities[i] = ir_intensities[i].split()
                     ir_intensities[i] = [float(j) for j in ir_intensities[i]]
                     ir_intens_list = ir_intensities[i]
-                    self.ir_intens.append(ir_intens_list)
+                    self.ir_intens.extend(ir_intens_list)
+                # print self.ir_intens,'ciao'   
                 backend.addArrayValues('x_castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
                 backend.addArrayValues('x_castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):]))    
                 backend.addArrayValues('x_castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
+        
         elif frequ:
                 for i in range(0,len(frequ)):
                     frequ[i] = frequ[i].split()
@@ -749,6 +753,7 @@ class CastepParserContext(object):
                     irr_rep[i] = irr_rep[i].split()
                     irr_rep_list = irr_rep[i]
                     self.irr_repres.append(irr_rep_list) 
+                
                 backend.addArrayValues('x_castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):])) 
                 backend.addArrayValues('x_castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
             
@@ -1545,7 +1550,6 @@ def build_CastepMainFileSimpleMatcher():
                 
 
                  ])
-    
     
     geomOptim_finalSubMatcher = SM (name = 'geometry_optimisation_final_configuration',
             startReStr = r"\s[A-Za-z]+\:\sFinal Configuration\:",
