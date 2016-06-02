@@ -494,14 +494,14 @@ class CastepParserContext(object):
                 # self.frame_energies_gain[i]=self.frame_energies_gain[i].split()
                 # self.frame_energies_gain[i]=[float(j) for j in self.frame_energies_gain[i]]
                               
-                # energies = self.frame_energies[i] ###Conversion to Jule
-                # energies = [x * J_converter for x in energies]
+                energies = self.frame_energies[i] ###Conversion to Jule
+                energies = [x * J_converter for x in energies]
                 
 
                 # energies_gain = self.frame_energies_gain[i] ###Conversion to Jule
                 # energies_gain = [x * J_converter for x in energies_gain]
                              
-                self.energy_frame.extend(self.frame_energies[i])   
+                self.energy_frame.extend(energies)   
                 
                 # self.energy_frame_gain.append(energies_gain) 
                
