@@ -508,11 +508,11 @@ class CastepParserContext(object):
             
             free_energies = self.frame_free_energy
             free_energies = [x * J_converter for x in free_energies]
-            self.energy_frame_free.append(free_energies)
-            
+            self.energy_frame_free.extend(free_energies)
+           
             t0_energies = self.frame_T0
             t0_energies = [x * J_converter for x in t0_energies]
-            self.energy_frame_T0.append(t0_energies)
+            self.energy_frame_T0.extend(t0_energies)
             
 
             if frame_time:
