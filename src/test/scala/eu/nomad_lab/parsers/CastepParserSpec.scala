@@ -64,8 +64,6 @@ object CastepParserSpec5 extends Specification {
     }
   }
 }
-
-}
 object CastepParserSpec6 extends Specification {
   "CastepParserTest" >> {
     "test with json-events" >> {
