@@ -491,19 +491,19 @@ class CastepParserContext(object):
                 self.frame_energies[i]=self.frame_energies[i].split()
                 self.frame_energies[i]=[float(j) for j in self.frame_energies[i]]
                 
-                # self.frame_energies_gain[i]=self.frame_energies_gain[i].split()
-                # self.frame_energies_gain[i]=[float(j) for j in self.frame_energies_gain[i]]
+                self.frame_energies_gain[i]=self.frame_energies_gain[i].split()
+                self.frame_energies_gain[i]=[float(j) for j in self.frame_energies_gain[i]]
                               
                 energies = self.frame_energies[i] ###Conversion to Jule
                 energies = [x * J_converter for x in energies]
                 
 
-                # energies_gain = self.frame_energies_gain[i] ###Conversion to Jule
-                # energies_gain = [x * J_converter for x in energies_gain]
+                energies_gain = self.frame_energies_gain[i] ###Conversion to Jule
+                energies_gain = [x * J_converter for x in energies_gain]
                              
                 self.energy_frame.extend(energies)   
                 
-                # self.energy_frame_gain.append(energies_gain) 
+                self.energy_frame_gain.extend(energies_gain) 
                
             
             free_energies = self.frame_free_energy
@@ -1024,7 +1024,7 @@ class CastepParserContext(object):
                             
                             backend.openSection('section_scf_iteration')
                             backend.addValue('energy_total_scf_iteration', self.energy_frame[s])
-                            # backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
+                            backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
                             backend.closeSection('section_scf_iteration',s+gIndexGroupscf)
                                                          
                     backend.closeSection('section_single_configuration_calculation',i+1) 
