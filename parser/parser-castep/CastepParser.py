@@ -706,6 +706,7 @@ class CastepParserContext(object):
                     frequ[i] = [float(j) for j in frequ[i]]
                     frequ_list = frequ[i]
                     self.frequencies.append(frequ_list)    
+                    
                     irr_rep[i] = irr_rep[i].split()
                     irr_rep_list = irr_rep[i]
                     self.irr_repres.append(irr_rep_list)
@@ -717,14 +718,15 @@ class CastepParserContext(object):
                     
                     # raman_activity[i] = raman_activity[i].split()
                    
-                    # raman_activity[i] = [float(j) for j in raman_activity[i]]
-                    raman_list = raman_activity[i]
-                    self.raman_act.append(raman_list)  
-                    # print self.raman_act,'ciao'
+                    # # raman_activity[i] = [float(j) for j in raman_activity[i]]
+                    # raman_list = raman_activity[i]
+                    # self.raman_act.append(raman_list)  
+                    print raman_activity,'ciao'
+                
                 backend.addArrayValues('x_castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
                 backend.addArrayValues('x_castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):])) 
                 backend.addArrayValues('x_castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
-                backend.addArrayValues('x_castep_raman_activity', np.asarray(self.raman_act[-len(self.nr_iter):]))
+                backend.addArrayValues('x_castep_raman_activity', np.asarray(raman_activity[-len(self.nr_iter):]))
         
         elif frequ and ir_intensities:
                 for i in range(0,len(frequ)):
