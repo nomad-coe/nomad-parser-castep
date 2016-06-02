@@ -501,7 +501,7 @@ class CastepParserContext(object):
                 # energies_gain = [x * J_converter for x in energies_gain]
                              
                 self.energy_frame.extend(self.frame_energies[i])   
-                # print self.energy_frame,'ciao'
+                print self.energy_frame,'ciao'
                 # self.energy_frame_gain.append(energies_gain) 
                
             
@@ -1017,16 +1017,15 @@ class CastepParserContext(object):
                     #     backend.addValue('energy_free', self.energy_frame_free[i-1]) 
                     #     backend.addValue('energy_total_T0',self.energy_frame_T0[i-1])
                     
-                    if i > 0:    
-                        for j in range(len(self.frame_energies)):
-                            s = j + i*len(self.frame_energies) - len(self.frame_energies)
+                    # if i > 0:    
+                    #     for j in range(len(self.frame_energies)):
+                    #         s = j + i*len(self.frame_energies) - len(self.frame_energies)
                             
-                            backend.openSection('section_scf_iteration')
-                            backend.addValue('energy_total_scf_iteration', self.energy_frame[s])
-                            # backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
-                            backend.closeSection('section_scf_iteration',s+gIndexGroupscf)
+                    #         backend.openSection('section_scf_iteration')
+                    #         backend.addValue('energy_total_scf_iteration', self.energy_frame[s])
+                    #         # backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
+                    #         backend.closeSection('section_scf_iteration',s+gIndexGroupscf)
                                                          
-                    
                     backend.closeSection('section_single_configuration_calculation',i+1) 
 
                 backend.openSection('section_frame_sequence')
