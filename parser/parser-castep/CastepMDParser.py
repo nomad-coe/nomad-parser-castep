@@ -55,11 +55,6 @@ class CastepMDParserContext(object):
             parser: The compiled parser. Is an object of the class SimpleParser in nomadcore.simple_parser.py.
         """
         self.parser = parser
-    # def onClose_section_run(self, backend, gIndex, section):    
-        # for i in range (len(temp)):
-        # backend.openSection('section_single_configuration_calculation')
-        # backend.addArrayValues('atom_forces', np.asarray(self.md_forces))
-        # backend.closeSection('section_single_configuration_calculation',gIndex+i) 
     
     def onClose_x_castep_section_md(self, backend, gIndex, section):
         temp = section ['x_castep_md_temperature']
@@ -73,9 +68,7 @@ class CastepMDParserContext(object):
         energies = section['x_castep_md_energies']
         stress_tensor = section ['x_castep_md_stress_tensor']
         
-        # frame_time =section['castep_md_time']
-
-        
+     
         for i in range(len(temp)):
             self.frame_temperature.append(temp[i])
   
@@ -121,25 +114,14 @@ class CastepMDParserContext(object):
                 self.stress_tensor_value.append(stress_tens_int)                
             self.frame_stress_tensor.append(self.stress_tensor_value)
 
-
-            # for i in range(len(stress_tensor)):
-            #     print stress_tensor[i],'ciao'
-            #     stress_tensor[i] = stress_tensor[i].split()
-            #     print stress_tensor[i],'ciao2'
-            #     stress_tensor[i] = [float(j) for j in stress_tensor[i]]
-            #     stress_tens_int = stress_tensor[i]
-            #     # stress_tens_int = [x / 10e9 for x in stress_tens_int] #converting GPa in Pa.
-            #     self.stress_tensor_value.append(stress_tens_int)
-            #     print self.stress_tensor_value,'ciao3'
-            # self.frame_stress_tensor.append(self.stress_tensor_value)
-            
         if position:
             self.at_nr = len(position)
             self.atom_position=[]
             for i in range(0, self.at_nr):
                 position[i] = position[i].split()
                 position[i] = [float(j) for j in position[i]]
-                self.atom_position.append(position[i])
+                pos_list = position[i]
+                self.atom_position.append(pos_list)
             self.total_positions.append(self.atom_position)
         
 
@@ -188,7 +170,6 @@ def build_CastepMDFileSimpleMatcher():
             endReStr ="/n",
             sections = ['x_castep_section_md'],
             repeats = True,
-            # weak = True,
             subMatchers = [
                 SM (r"\s*(?P<x_castep_md_temperature>[-+0-9.eEdD]+)\s*\<\-\-\sT\s*"),
                 SM (r"\s*(?P<x_castep_md_pressure>[-+0-9.eEdD]+)\s*\<\-\-\sP\s*"),
@@ -198,8 +179,6 @@ def build_CastepMDFileSimpleMatcher():
                 SM(r"\s(?P<x_castep_md_lab>[A-Za-z]+\s*[0-9.]+)\s*(?P<x_castep_md_positions>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_md_veloc>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sV\s*",repeats = True),
                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_md_forces>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-                # SM (r"\s*(?P<castep_md_time>[+0-9.eEdD]+)\s*"),                  # ),
-            
 
             ]),
         ])

@@ -996,14 +996,14 @@ class CastepParserContext(object):
             self.frame_position =MDSuperContext.total_positions
             self.frame_cell=MDSuperContext.frame_cell
             self.frame_vet_velocities =MDSuperContext.vector_velocities
-            
+           
 
             
             if self.frame_temp:
                 
                 gIndexGroupscf = backend.openSection('section_scf_iteration')
                 for i in range(len(self.frame_atom_forces)):
-                    print i,'martina'
+                    
                     backend.openSection('section_system')
                     backend.addArrayValues('atom_velocities', np.asarray(self.frame_atom_veloc[i]))
                     backend.addArrayValues('atom_labels', np.asarray(self.atom_labels))
@@ -1015,9 +1015,11 @@ class CastepParserContext(object):
                     backend.openSection('section_single_configuration_calculation')
                     backend.addArrayValues('atom_forces', np.asarray(self.frame_atom_forces[i]))
                     backend.addArrayValues('stress_tensor',np.asarray(self.frame_stress_tensor[i]))
-                    if i > 0:
-                        backend.addValue('energy_free', self.energy_frame_free[i-1]) 
-                        backend.addValue('energy_total_T0',self.energy_frame_T0[i-1])
+                    
+                    # if i > 0:
+                     
+                    #     backend.addValue('energy_free', self.energy_frame_free[i-1]) 
+                    #     backend.addValue('energy_total_T0',self.energy_frame_T0[i-1])
                     
                     if i > 0:    
                         for j in range(len(self.frame_energies)):
