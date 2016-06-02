@@ -506,13 +506,13 @@ class CastepParserContext(object):
                 # self.energy_frame_gain.append(energies_gain) 
                
             
-            # free_energies = self.frame_free_energy
-            # free_energies = [x * J_converter for x in free_energies]
-            # self.energy_frame_free.append(free_energies)
+            free_energies = self.frame_free_energy
+            free_energies = [x * J_converter for x in free_energies]
+            self.energy_frame_free.append(free_energies)
             
-            # t0_energies = self.frame_T0
-            # t0_energies = [x * J_converter for x in t0_energies]
-            # self.energy_frame_T0.append(t0_energies)
+            t0_energies = self.frame_T0
+            t0_energies = [x * J_converter for x in t0_energies]
+            self.energy_frame_T0.append(t0_energies)
             
 
             if frame_time:
@@ -1013,19 +1013,19 @@ class CastepParserContext(object):
                     backend.addArrayValues('atom_forces', np.asarray(self.frame_atom_forces[i]))
                     backend.addArrayValues('stress_tensor',np.asarray(self.frame_stress_tensor[i]))
                     backend.addValue('number_of_scf_iterations', len(self.frame_energies))
-                    # if i > 0:
+                    if i > 0:
                      
-                    #     backend.addValue('energy_free', self.energy_frame_free[i-1]) 
-                    #     backend.addValue('energy_total_T0',self.energy_frame_T0[i-1])
+                        backend.addValue('energy_free', self.energy_frame_free[i-1]) 
+                        backend.addValue('energy_total_T0',self.energy_frame_T0[i-1])
                     
-                    # if i > 0:    
-                    #     for j in range(len(self.frame_energies)):
-                    #         s = j + i*len(self.frame_energies) - len(self.frame_energies)
+                    if i > 0:    
+                        for j in range(len(self.frame_energies)):
+                            s = j + i*len(self.frame_energies) - len(self.frame_energies)
                             
-                    #         backend.openSection('section_scf_iteration')
-                    #         backend.addValue('energy_total_scf_iteration', self.energy_frame[s])
-                    #         # backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
-                    #         backend.closeSection('section_scf_iteration',s+gIndexGroupscf)
+                            backend.openSection('section_scf_iteration')
+                            backend.addValue('energy_total_scf_iteration', self.energy_frame[s])
+                            # backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
+                            backend.closeSection('section_scf_iteration',s+gIndexGroupscf)
                                                          
                     backend.closeSection('section_single_configuration_calculation',i+1) 
 
