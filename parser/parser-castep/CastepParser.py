@@ -490,28 +490,28 @@ class CastepParserContext(object):
                 self.frame_energies[i]=[float(j) for j in self.frame_energies[i]]
                 print self.frame_energies[i],'ciao'
 
-                self.frame_energies_gain[i]=self.frame_energies_gain[i].split()
-                self.frame_energies_gain[i]=[float(j) for j in self.frame_energies_gain[i]]
+                # self.frame_energies_gain[i]=self.frame_energies_gain[i].split()
+                # self.frame_energies_gain[i]=[float(j) for j in self.frame_energies_gain[i]]
                               
                 # energies = self.frame_energies[i] ###Conversion to Jule
                 # energies = [x * J_converter for x in energies]
                 
 
-                energies_gain = self.frame_energies_gain[i] ###Conversion to Jule
-                energies_gain = [x * J_converter for x in energies_gain]
+                # energies_gain = self.frame_energies_gain[i] ###Conversion to Jule
+                # energies_gain = [x * J_converter for x in energies_gain]
                              
                 self.energy_frame.append(self.frame_energies[i])   
-                
-                self.energy_frame_gain.append(energies_gain) 
+                # print self.energy_frame,'ciao'
+                # self.energy_frame_gain.append(energies_gain) 
                
             
-            free_energies = self.frame_free_energy
-            free_energies = [x * J_converter for x in free_energies]
-            self.energy_frame_free.append(free_energies)
+            # free_energies = self.frame_free_energy
+            # free_energies = [x * J_converter for x in free_energies]
+            # self.energy_frame_free.append(free_energies)
             
-            t0_energies = self.frame_T0
-            t0_energies = [x * J_converter for x in t0_energies]
-            self.energy_frame_T0.append(t0_energies)
+            # t0_energies = self.frame_T0
+            # t0_energies = [x * J_converter for x in t0_energies]
+            # self.energy_frame_T0.append(t0_energies)
             
 
             if frame_time:
@@ -1023,11 +1023,9 @@ class CastepParserContext(object):
                             
                             backend.openSection('section_scf_iteration')
                             backend.addValue('energy_total_scf_iteration', self.energy_frame[s])
-                            backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
+                            # backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
                             backend.closeSection('section_scf_iteration',s+gIndexGroupscf)
-                    
-
-                                      
+                                                         
                     backend.addValue('number_of_scf_iterations', len(self.frame_energies))
                     backend.closeSection('section_single_configuration_calculation',i+1) 
 
