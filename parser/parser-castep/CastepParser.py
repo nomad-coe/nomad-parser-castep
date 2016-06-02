@@ -500,7 +500,7 @@ class CastepParserContext(object):
                 # energies_gain = self.frame_energies_gain[i] ###Conversion to Jule
                 # energies_gain = [x * J_converter for x in energies_gain]
                              
-                self.energy_frame.append(self.frame_energies[i])   
+                self.energy_frame.extend(self.frame_energies[i])   
                 # print self.energy_frame,'ciao'
                 # self.energy_frame_gain.append(energies_gain) 
                
@@ -1011,7 +1011,7 @@ class CastepParserContext(object):
                     backend.openSection('section_single_configuration_calculation')
                     backend.addArrayValues('atom_forces', np.asarray(self.frame_atom_forces[i]))
                     backend.addArrayValues('stress_tensor',np.asarray(self.frame_stress_tensor[i]))
-                    
+                    backend.addValue('number_of_scf_iterations', len(self.frame_energies))
                     # if i > 0:
                      
                     #     backend.addValue('energy_free', self.energy_frame_free[i-1]) 
@@ -1026,7 +1026,7 @@ class CastepParserContext(object):
                             # backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
                             backend.closeSection('section_scf_iteration',s+gIndexGroupscf)
                                                          
-                    backend.addValue('number_of_scf_iterations', len(self.frame_energies))
+                    
                     backend.closeSection('section_single_configuration_calculation',i+1) 
 
                 backend.openSection('section_frame_sequence')
