@@ -697,7 +697,7 @@ class CastepParserContext(object):
         self.nr_iter =section['x_castep_n_iterations_phonons']
 
         raman_activity = section['x_castep_raman_activity_store']
-        print raman_activity,'ciao'
+        
         #raman_act = section['castep_raman_active_store']
         
         if frequ and ir_intensities and raman_activity:
@@ -713,10 +713,14 @@ class CastepParserContext(object):
                     ir_intensities[i] = ir_intensities[i].split()
                     ir_intensities[i] = [float(j) for j in ir_intensities[i]]
                     ir_intens_list = ir_intensities[i]
-                    self.ir_intens.append(ir_intens_list) 
+                    self.ir_intens.extend(ir_intens_list) 
+                    
+                    # raman_activity[i] = raman_activity[i].split()
+                   
+                    # raman_activity[i] = [float(j) for j in raman_activity[i]]
                     raman_list = raman_activity[i]
                     self.raman_act.append(raman_list)  
-                    
+                    # print self.raman_act,'ciao'
                 backend.addArrayValues('x_castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
                 backend.addArrayValues('x_castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):])) 
                 backend.addArrayValues('x_castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
@@ -735,7 +739,7 @@ class CastepParserContext(object):
                     ir_intensities[i] = [float(j) for j in ir_intensities[i]]
                     ir_intens_list = ir_intensities[i]
                     self.ir_intens.extend(ir_intens_list)
-                 
+                # print self.ir_intens,'ciao'   
                 backend.addArrayValues('x_castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
                 backend.addArrayValues('x_castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):]))    
                 backend.addArrayValues('x_castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
