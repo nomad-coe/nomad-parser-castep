@@ -473,6 +473,7 @@ class CastepParserContext(object):
             backend.addArrayValues('stress_tensor',np.asarray(self.stress_tensor_value))
     
     def onClose_x_castep_section_SCF_iteration_frame(self, backend, gIndex, section):
+        
         self.frame_free_energy = section['x_castep_frame_energy_free']
         self.frame_energies = section['x_castep_SCF_frame_energy']
         self.frame_energies_gain = section['x_castep_SCF_frame_energy_gain']               
@@ -484,12 +485,12 @@ class CastepParserContext(object):
         if self.frame_energies:
  
             for i in range(len(self.frame_energies)):
+                
                 J_converter = float(1.602176565e-19)
 
                 self.frame_energies[i]=self.frame_energies[i].split()
                 self.frame_energies[i]=[float(j) for j in self.frame_energies[i]]
-                print self.frame_energies[i],'ciao'
-
+                
                 # self.frame_energies_gain[i]=self.frame_energies_gain[i].split()
                 # self.frame_energies_gain[i]=[float(j) for j in self.frame_energies_gain[i]]
                               
@@ -501,7 +502,7 @@ class CastepParserContext(object):
                 # energies_gain = [x * J_converter for x in energies_gain]
                              
                 self.energy_frame.extend(self.frame_energies[i])   
-                print self.energy_frame,'ciao'
+                
                 # self.energy_frame_gain.append(energies_gain) 
                
             
