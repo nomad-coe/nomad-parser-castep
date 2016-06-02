@@ -1545,7 +1545,8 @@ def build_CastepMainFileSimpleMatcher():
                 
 
                  ])
-
+    
+    
     geomOptim_finalSubMatcher = SM (name = 'geometry_optimisation_final_configuration',
             startReStr = r"\s[A-Za-z]+\:\sFinal Configuration\:",
             sections = ['section_single_configuration_calculation','section_system'],
