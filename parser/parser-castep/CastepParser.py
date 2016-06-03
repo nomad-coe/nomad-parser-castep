@@ -74,8 +74,8 @@ class CastepParserContext(object):
         self.disp_energy                       = [] 
         self.geoConvergence = None
         self.total_energy_corrected_for_finite_basis = []
-        self.contr_s =[]
-        self.contr_p =[]
+        self.contr_s = []
+        self.contr_p = []
         self.contr_d = []
         self.contr_f = []
         self.total_contribution = []
@@ -705,11 +705,11 @@ class CastepParserContext(object):
                     frequ[i] = frequ[i].split()
                     frequ[i] = [float(j) for j in frequ[i]]
                     frequ_list = frequ[i]
-                    self.frequencies.append(frequ_list)    
+                    self.frequencies.extend(frequ_list)    
                     
                     irr_rep[i] = irr_rep[i].split()
                     irr_rep_list = irr_rep[i]
-                    self.irr_repres.append(irr_rep_list)
+                    self.irr_repres.extend(irr_rep_list)
                     
                     ir_intensities[i] = ir_intensities[i].split()
                     ir_intensities[i] = [float(j) for j in ir_intensities[i]]
@@ -719,7 +719,7 @@ class CastepParserContext(object):
                     raman_activity[i] = raman_activity[i].split()
                     raman_activity[i] = [float(j) for j in raman_activity[i]]
                     raman_list = raman_activity[i]
-                    self.raman_act.append(raman_list)  
+                    self.raman_act.extend(raman_list)  
                     # print raman_activity,'ciao2'
                 
                 backend.addArrayValues('x_castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
@@ -732,10 +732,10 @@ class CastepParserContext(object):
                     frequ[i] = frequ[i].split()
                     frequ[i] = [float(j) for j in frequ[i]]
                     frequ_list = frequ[i]
-                    self.frequencies.append(frequ_list)    
+                    self.frequencies.extend(frequ_list)    
                     irr_rep[i] = irr_rep[i].split()
                     irr_rep_list = irr_rep[i]
-                    self.irr_repres.append(irr_rep_list)
+                    self.irr_repres.extend(irr_rep_list)
                     
                     ir_intensities[i] = ir_intensities[i].split()
                     ir_intensities[i] = [float(j) for j in ir_intensities[i]]
@@ -751,10 +751,10 @@ class CastepParserContext(object):
                     frequ[i] = frequ[i].split()
                     frequ[i] = [float(j) for j in frequ[i]]
                     frequ_list = frequ[i]
-                    self.frequencies.append(frequ_list)    
+                    self.frequencies.extend(frequ_list)    
                     irr_rep[i] = irr_rep[i].split()
                     irr_rep_list = irr_rep[i]
-                    self.irr_repres.append(irr_rep_list) 
+                    self.irr_repres.extend(irr_rep_list) 
                 
                 backend.addArrayValues('x_castep_vibrationl_frequencies', np.asarray(self.frequencies[-len(self.nr_iter):])) 
                 backend.addArrayValues('x_castep_ir', np.asarray(self.irr_repres[-len(self.nr_iter):]))
