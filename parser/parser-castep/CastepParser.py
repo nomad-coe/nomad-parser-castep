@@ -790,7 +790,7 @@ class CastepParserContext(object):
                 tot_charge[i] = tot_charge[i].split()
                 tot_charge[i] = [float(j) for j in tot_charge[i]]
                 total_charge_list = tot_charge[i]
-                self.total_charge.append(total_charge_list)
+                self.total_charge.extend(total_charge_list)
             backend.addArrayValues('x_castep_mulliken_charge', np.asarray(self.total_charge))
 
 ######################################################################################
