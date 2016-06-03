@@ -719,7 +719,7 @@ class CastepParserContext(object):
                     raman_activity[i] = raman_activity[i].split()
                     raman_activity[i] = [float(j) for j in raman_activity[i]]
                     raman_list = raman_activity[i]
-                    self.raman_act.extend(raman_activity)  
+                    self.raman_act.extend(raman_list)  
                 
                 
                 backend.addArrayValues('x_castep_ir_intensity', np.asarray(self.ir_intens[-len(self.nr_iter):]))
@@ -1829,6 +1829,7 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 'x_castep_total_energy_corrected_for_finite_basis_store': CachingLevel.Cache,
                                 'x_castep_frame_time':CachingLevel.Cache,
                                 'x_castep_section_SCF_iteration_frame':CachingLevel.Cache,
+                                'x_castep_raman_activity_store': CachingLevel.Cache,
                                 'x_castep_SCF_frame_energy_gain':CachingLevel.Cache,
                                 'x_castep_frame_energy_free':CachingLevel.Cache,
                                 'x_castep_frame_energy_total_T0':CachingLevel.Cache,
