@@ -716,9 +716,9 @@ class CastepParserContext(object):
                     ir_intens_list = ir_intensities[i]
                     self.ir_intens.extend(ir_intens_list) 
                     
-                    # raman_activity[i] = raman_activity[i].split()
-                    # raman_activity[i] = [float(j) for j in raman_activity[i]]
-                    # raman_list = raman_activity[i]
+                    raman_activity[i] = raman_activity[i].split()
+                    raman_activity[i] = [float(j) for j in raman_activity[i]]
+                    raman_list = raman_activity[i]
                     self.raman_act.extend(raman_activity)  
                 
                 
