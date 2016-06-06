@@ -110,6 +110,8 @@ class CastepParserContext(object):
         self.energy_frame_T0 = []
         self.scf_conv_thresh = []
         self.n_iteration = []
+        self.wall_time_end =[]
+
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
         self.pippo = None
@@ -300,15 +302,7 @@ class CastepParserContext(object):
             backend.addValue('number_of_spin_channels', self.n_spin_channels[0])
          
 
-    # def onClose_x_castep_section_scf_parameters(self, backend, gIndex, section):    
-    #     self.scf_conv_thresh = section['x_castep_energy_threshold_store']
-    #     self.n_iteration = section['x_castep_max_iter_store']
-        
-    #     backend.openSection('section_method') 
-    #     backend.addValue('scf_threshold_energy_change', self.scf_conv_thresh)
-    #     backend.addValue('scf_max_iteration', self.n_iteration)    
-    #     backend.closeSection('section_method',1) 
-        
+    
     
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
@@ -490,7 +484,8 @@ class CastepParserContext(object):
         self.frame_energies = section['x_castep_SCF_frame_energy']
         self.frame_energies_gain = section['x_castep_SCF_frame_energy_gain']               
         self.frame_T0 = section ['x_castep_frame_energy_total_T0']
-       
+        self.wall_time_store = section ['x_castep_frame_time_scf_iteration_wall_end']
+
         frame_time = section['x_castep_frame_time']
         
         
@@ -505,10 +500,13 @@ class CastepParserContext(object):
                 
                 self.frame_energies_gain[i]=self.frame_energies_gain[i].split()
                 self.frame_energies_gain[i]=[float(j) for j in self.frame_energies_gain[i]]
-                              
+                
+                self.wall_time_store[i] = self.wall_time_store[i].split()              
+                self.wall_time_store[i]=[float(j) for j in self.wall_time_store[i]]
+                wall_times = self.wall_time_store[i]
+
                 energies = self.frame_energies[i] ###Conversion to Jule
                 energies = [x * J_converter for x in energies]
-                
 
                 energies_gain = self.frame_energies_gain[i] ###Conversion to Jule
                 energies_gain = [x * J_converter for x in energies_gain]
@@ -516,7 +514,8 @@ class CastepParserContext(object):
                 self.energy_frame.extend(energies)   
                 
                 self.energy_frame_gain.extend(energies_gain) 
-               
+                
+                self.wall_time_end.extend(wall_times)
             
             free_energies = self.frame_free_energy
             free_energies = [x * J_converter for x in free_energies]
@@ -1044,6 +1043,7 @@ class CastepParserContext(object):
                             backend.openSection('section_scf_iteration')
                             backend.addValue('energy_total_scf_iteration', self.energy_frame[s])
                             backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
+                            backend.addValue('time_scf_iteration_wall_end',  self.wall_time_end[s])
                             backend.closeSection('section_scf_iteration',s+gIndexGroupscf)
                                                          
                     backend.closeSection('section_single_configuration_calculation',i+1) 
@@ -1230,6 +1230,7 @@ def build_CastepMainFileSimpleMatcher():
             SM(r"\s*time\sstep\s*\:\s*(?P<x_castep_integrator_dt>[-+0-9.eEdD]+)"),
             SM(r"\s*number of MD steps\s*\:\s*(?P<x_castep_number_of_steps_requested>[0-9]+)"),
             ])
+    
     ########################################
     # submatcher for section system description
     systemDescriptionSubMatcher = SM(name = "systemDescription",
@@ -1374,11 +1375,11 @@ def build_CastepMainFileSimpleMatcher():
                     #geomOptimSubMatcher_init, 
                     
                     SM(sections = ['section_scf_iteration'],
-                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*(?P<time_scf_iteration_wall_end>[0-9.]*)\s*\<\-\-\sSCF\s*",
                              endReStr = "\n",
                              repeats = True),
                     SM(sections = ['section_scf_iteration'],
-                        startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                        startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*(?P<time_scf_iteration_wall_end>[0-9.]*)\s*\<\-\-\sSCF\s*",
                         endReStr = "\n",
                         repeats = True),
                     
@@ -1439,7 +1440,7 @@ def build_CastepMainFileSimpleMatcher():
                     # SM(r"\s*[0-9]+\s*(?P<castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                     #     endReStr = "\n",
                     #     repeats = True),
-                    SM(r"\s*[0-9]+\s*(?P<x_castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<x_castep_SCF_frame_energy_gain>[-+0-9.eEdD]*)\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                    SM(r"\s*[0-9]+\s*(?P<x_castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<x_castep_SCF_frame_energy_gain>[-+0-9.eEdD]*)\s*(?P<x_castep_frame_time_scf_iteration_wall_end>[0-9.]*)\s*\<\-\-\sSCF\s*",
                         endReStr = "\n",
                         repeats = True),                
                     SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<x_castep_frame_energy_free>[-+0-9.eEdD]*)"), # matching final converged total free energy
@@ -1492,13 +1493,13 @@ def build_CastepMainFileSimpleMatcher():
 
                         
                         SM(sections = ['section_scf_iteration'],
-                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<time_scf_iteration_wall_end>[0-9.]*)\s*\<\-\-\sSCF\s*",
                              endReStr = "\n",
                              repeats = True),
 
                                    # ]), # CLOSING section_scf_iteration                                      
                         SM(sections = ['section_scf_iteration'],
-                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*(?P<time_scf_iteration_wall_end>[0-9.]*)\s*\<\-\-\sSCF\s*",
                             endReStr = "\n",
                             repeats = True),           
                             
@@ -1560,12 +1561,12 @@ def build_CastepMainFileSimpleMatcher():
 
                         
                         SM(sections = ['section_scf_iteration'],
-                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*(?P<time_scf_iteration_wall_end>[0-9.]*)\s*\<\-\-\sSCF\s*",
                              endReStr = "\n",
                              repeats = True),
                         
                         SM(sections = ['section_scf_iteration'],
-                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*[0-9.]*\s*\<\-\-\sSCF\s*",
+                            startReStr = r"\s*[0-9]+\s*(?P<energy_total_scf_iteration__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<energy_change_scf_iteration__eV>[-+0-9.eEdD]*)\s*(?P<time_scf_iteration_wall_end>[0-9.]*)\s*\<\-\-\sSCF\s*",
                             endReStr = "\n",
                             repeats = True),       
                             
@@ -1886,6 +1887,7 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 'x_castep_SCF_frame_energy_gain':CachingLevel.Cache,
                                 'x_castep_frame_energy_free':CachingLevel.Cache,
                                 'x_castep_frame_energy_total_T0':CachingLevel.Cache,
+                                'x_castep_frame_time_scf_iteration_wall_end':CachingLevel.Cache,
                                 'x_castep_SCF_frame_energy':CachingLevel.Cache}
 
     # Set caching for temparary storage variables
