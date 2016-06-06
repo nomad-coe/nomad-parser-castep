@@ -108,8 +108,8 @@ class CastepParserContext(object):
         self.n_spin_channels_bands = []
         self.energy_frame_free = []
         self.energy_frame_T0 = []
-
-
+        self.scf_conv_thresh = []
+        self.n_iteration = []
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
         self.pippo = None
@@ -244,6 +244,7 @@ class CastepParserContext(object):
         self.optim_method = section["x_castep_geometry_optim_method"]
 
     def onClose_section_method(self, backend, gIndex, section):
+        
         self.van_der_waals_name = section["van_der_Waals_method"]
         
         if self.van_der_waals_name is not None:
@@ -297,6 +298,17 @@ class CastepParserContext(object):
         
         if self.n_spin_channels:
             backend.addValue('number_of_spin_channels', self.n_spin_channels[0])
+         
+
+    # def onClose_x_castep_section_scf_parameters(self, backend, gIndex, section):    
+    #     self.scf_conv_thresh = section['x_castep_energy_threshold_store']
+    #     self.n_iteration = section['x_castep_max_iter_store']
+        
+    #     backend.openSection('section_method') 
+    #     backend.addValue('scf_threshold_energy_change', self.scf_conv_thresh)
+    #     backend.addValue('scf_max_iteration', self.n_iteration)    
+    #     backend.closeSection('section_method',1) 
+        
     
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
@@ -1142,8 +1154,9 @@ def build_CastepMainFileSimpleMatcher():
         sections = ["section_basis_set_cell_dependent"],
         subMatchers = [
 
-            SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<x_castep_basis_set_planewave_cutoff>[0-9.]+)")
-            
+            SM(r"\splane wave basis set cut\-off\s*\:\s*(?P<x_castep_basis_set_planewave_cutoff>[0-9.]+)"),
+            SM(r"\ssize of standard grid\s*\:\s*(?P<x_castep_size_std_grid>[+0-9.eEd]+)"),
+            SM(r"\ssize of   fine   gmax\s*\:\s*(?P<x_castep_size_fine_grid>[+0-9.eEd]+)"),
                       ]) # CLOSING SM planeWaveBasisSet
 
 
@@ -1156,11 +1169,17 @@ def build_CastepMainFileSimpleMatcher():
                           ])
 
     GeomOptimParameterSubMatcher = SM(name = 'optimistation_parameters',
-        sections = ["x_castep_section_geom_optimisation_method"],
+        sections = ["section_sampling_method"],
+        # sections = ["x_castep_section_geom_optimisation_method"],
         startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\ Geometry Optimization Parameters \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
         subMatchers = [
             
-            SM(r"\soptimization method\s*\:\s*(?P<x_castep_geometry_optim_method>[a-zA-Z]+)"),
+            SM(r"\soptimization method\s*\:\s*(?P<geometry_optimization_method>[a-zA-Z]+)"),
+            SM(r"\stotal energy convergence tolerance\s*\:\s*(?P<geometry_optimization_energy_change>[-+0-9.eEd]+)"),
+            SM(r"\smax. number of steps\s*\:\s*(?P<x_castep_max_number_of_steps>[0-9.]+)"),
+            SM(r"\s*max ionic \|force\| tolerance\s*\:\s*(?P<geometry_optimization_threshold_force>[-+0-9.eEd]+)"),
+            SM(r"\smax ionic \|displacement\| tolerance\s*\:\s*(?P<geometry_optimization_geometry_change>[-+0-9.eEd]+)"),
+            SM(r"\s*max \|stress component\| tolerance\s*\:\s*(?P<x_castep_geometry_stress_com_tolerance>[-+0-9.eEd]+)"),
                                             ]) # CLOSING converged optmisation
     
     ElectronicParameterSubMatcher = SM(name = 'Elec_parameters' ,            
@@ -1168,8 +1187,36 @@ def build_CastepMainFileSimpleMatcher():
         startReStr = r"\s\*\*\** Electronic Parameters \*\*\**\s*",
         subMatchers = [
             SM(r"\s*number of  electrons\s*\:\s*(?P<x_castep_number_of_electrons>[0-9.]+)"),
+            SM(r"\s*net charge of system\s*\:\s*(?P<x_castep_net_charge>[+0-9.eEd]+)"),
+            SM(r"\s*number of bands\s*\:\s*(?P<x_castep_number_of_bands>[0-9.]+)"),
             ])
     
+    ElectronicMinimisParameterSubMatcher = SM(name = 'Elec_min_parameters' ,            
+        sections = ["x_castep_section_scf_parameters"],
+        startReStr = r"\s\*\*\** Electronic Minimization Parameters \*\*\**\s*",
+        subMatchers = [
+            SM(r"\s*total energy \/ atom convergence tol.\s*\:\s*(?P<x_castep_energy_threshold_store>[-+0-9.eEd]+)"),
+            SM(r"\s*max. number of SCF cycles\s*\:\s*(?P<x_castep_max_iter_store>[0-9.]+)"),
+            SM(r"\s*smearing scheme\s*\:\s*(?P<x_castep_smearing_kind>[A-Za-z]+)"),
+            SM(r"\s*smearing width\s*\:\s*(?P<x_castep_smearing_width>[0-9.]+)"),
+            ])
+    
+    DensityMixingParameterSubMatcher = SM(name = 'Density_mixing' ,            
+        sections = ["x_castep_section_density_mixing_parameters"],
+        startReStr = r"\s\*\*\** Density Mixing Parameters \*\*\**\s*",
+        subMatchers = [
+            SM(r"\s*density-mixing scheme\s*\:\s*(?P<x_castep_density_mixing_scheme>[A-Za-z]+)"),
+            SM(r"\s*max\. length of mixing history\s*\:\s*(?P<x_castep_density_mixing_length>[0-9.]+)"),
+            SM(r"\s*charge density mixing amplitude\s*\:\s*(?P<x_castep_charge_density_mixing_amplitude>[0-9.]+)"),
+            
+            ])
+    PopulationAnalysisParameterSubMatcher = SM(name = 'Pop_analysis' ,            
+        sections = ["x_castep_section_population_analysis_parameters"],
+        startReStr = r"\s\*\*\** Population Analysis Parameters \*\*\**\s*",
+        subMatchers = [
+            SM(r"\s*Population analysis with cutoff\s*\:\s*(?P<x_castep_population_analysis_cutoff>[-+0-9.eEd]+)"),
+           
+            ])
     MDParameterSubMatcher = SM(name = 'MD_parameters' ,            
         sections = ["section_sampling_method"],
         startReStr = r"\s\*\*\** Molecular Dynamics Parameters \*\*\**\s*",
@@ -1675,6 +1722,12 @@ def build_CastepMainFileSimpleMatcher():
                 
                 ElectronicParameterSubMatcher,
                 
+                ElectronicMinimisParameterSubMatcher,
+
+                DensityMixingParameterSubMatcher,
+
+                PopulationAnalysisParameterSubMatcher,
+
                 MDParameterSubMatcher,
                 
                 GeomOptimParameterSubMatcher,
