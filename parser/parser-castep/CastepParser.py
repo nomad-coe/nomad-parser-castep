@@ -1165,7 +1165,10 @@ def build_CastepMainFileSimpleMatcher():
         startReStr = r"\s\*\*\** Phonon Parameters \*\*\**\s*",
         subMatchers = [
             SM(r"\sphonon calculation method\s*\:\s*(?P<x_castep_phonon_method>[a-zA-Z]+\s[a-zA-Z]+)"),
+            SM(r"\sphonon convergence tolerance\s*\:\s*(?P<x_castep_phonon_tolerance>[-+0-9.eEd]+)"),
+            SM(r"\smax\. number of phonon cycles\s*\:\s*(?P<x_castep_phonon_cycles>[0-9.]+)"),
             SM(r"\sDFPT solver method\s*\:\s*(?P<x_castep_DFPT_solver_method>[a-zA-Z0-9.() ]+)"),
+            SM(r"\sband convergence tolerance\s*\:\s*(?P<x_castep_band_tolerance>[-+0-9.eEd]+)"),
                           ])
 
     GeomOptimParameterSubMatcher = SM(name = 'optimistation_parameters',
