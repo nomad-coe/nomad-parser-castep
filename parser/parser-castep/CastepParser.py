@@ -1226,12 +1226,16 @@ def build_CastepMainFileSimpleMatcher():
         subMatchers = [
             SM(r"\s*ensemble\s*\:\s*(?P<ensemble_type>[A-Za-z]+)"),
             SM(r"\s*temperature\s*\:\s*(?P<x_castep_thermostat_target_temperature>[0-9.]+\.)"),
+            SM(r"\s*pressure\s*\:\s*(?P<x_castep_frame_pressure>[A-Za-z0-9]+\.)"),
             SM(r"\s*using\s*\:\s*(?P<x_castep_barostat_type>[A-Za-z]+\-[A-Za-z]+)\s+"),
             SM(r"\s*with characteristic cell time\s*\:\s*(?P<x_castep_barostat_tau>[-+0-9.eEd]+)"),
             SM(r"\s*using\s*\:\s*(?P<x_castep_thermostat_type>[A-Za-z]+\-[A-Za-z]+)\s+"),
             SM(r"\s*with characteristic ionic time\s*\:\s*(?P<x_castep_thermostat_tau>[-+0-9.eEd]+)"),
             SM(r"\s*time\sstep\s*\:\s*(?P<x_castep_integrator_dt>[-+0-9.eEdD]+)"),
             SM(r"\s*number of MD steps\s*\:\s*(?P<x_castep_number_of_steps_requested>[0-9]+)"),
+            SM(r"\s*MD SCF energy \/ atom convergence tol\.\s*\:\s*(?P<x_castep_frame_energy_tolerance>[-+0-9.eEd]+)"),
+            SM(r"\s*MD SCF eigenenergies tolerance\s*\:\s*(?P<x_castep_frame_eigen_tolerance>[-+0-9.eEd]+)"),
+            
             ])
     
     ########################################

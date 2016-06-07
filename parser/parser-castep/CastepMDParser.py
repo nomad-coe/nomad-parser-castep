@@ -114,6 +114,7 @@ class CastepMDParserContext(object):
                 s = s.split()
                 s = [float(k) for k in s]
                 stress_tens_int = s
+                stress_tens_int = [x / 10e9 for x in stress_tens_int]
                 self.stress_tensor_value.append(stress_tens_int)                
             self.frame_stress_tensor.append(self.stress_tensor_value)
 
