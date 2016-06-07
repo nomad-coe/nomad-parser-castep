@@ -89,7 +89,7 @@ class CastepParserContext(object):
         self.time_0 = []
         self.frame_temp = []
         self.frame_press =[]
-        self.frame_total =[]
+        self.frame_potential =[]
         self.frame_total_energy = []
         self.frame_hamiltonian = []
         self.frame_kinetic = []
@@ -1004,7 +1004,7 @@ class CastepParserContext(object):
             self.frame_temp = MDSuperContext.frame_temperature  # recover k path segments coordinartes from *.cell file
             self.frame_press= MDSuperContext.frame_pressure
             self.frame_kinetic = MDSuperContext.kinetic
-            self.frame_total = MDSuperContext.total_energy
+            self.frame_potential = MDSuperContext.hamiltonian
             self.frame_atom_forces = MDSuperContext.total_forces
             self.frame_atom_veloc = MDSuperContext.total_velocities
             self.frame_stress_tensor = MDSuperContext.frame_stress_tensor
@@ -1049,11 +1049,11 @@ class CastepParserContext(object):
                     backend.closeSection('section_single_configuration_calculation',i+1) 
 
                 backend.openSection('section_frame_sequence')
-                backend.addValue('number_of_frames_in_sequence',(len(self.frame_total)))
+                backend.addValue('number_of_frames_in_sequence',(len(self.frame_potential)))
                 backend.addArrayValues('frame_sequence_temperature', np.asarray(self.frame_temp))
                 backend.addArrayValues('frame_sequence_pressure', np.asarray(self.frame_press))
                 backend.addArrayValues('frame_sequence_kinetic_energy', np.asarray(self.frame_kinetic))
-                backend.addArrayValues('frame_sequence_potential_energy', np.asarray(self.frame_total))
+                backend.addArrayValues('frame_sequence_potential_energy', np.asarray(self.frame_potential))
                 backend.addArrayValues('frame_sequence_time', np.asarray(time_list))
                 backend.closeSection('section_frame_sequence',gIndex)
             

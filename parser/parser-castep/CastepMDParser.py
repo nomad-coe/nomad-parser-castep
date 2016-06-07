@@ -68,21 +68,24 @@ class CastepMDParserContext(object):
         energies = section['x_castep_md_energies']
         stress_tensor = section ['x_castep_md_stress_tensor']
         
-     
+        Hr_J_converter = float(4.35974e-18)
+        HrK_to_K_coverter= float(3.1668114e-6)
+        
         for i in range(len(temp)):
+            temp[i] = temp[i]/HrK_to_K_coverter
             self.frame_temperature.append(temp[i])
-  
+            
         
         for i in range(len(press)):
+            press[i] = press[i] / 10e9
             self.frame_pressure.append(press[i])
         
         for i in range(len(temp)):
             energies[i] = energies[i].split()
             energies[i] = [float(j) for j in energies[i]]
             energy_list = energies[i]
-
+            energy_list = [x * Hr_J_converter for x in energy_list]
             self.total_energy.append(energy_list[0])
-            
             self.hamiltonian.append(energy_list[1])
             self.kinetic.append(energy_list[2]) 
    
