@@ -9,6 +9,7 @@ from CastepCommon import get_metaInfo
 import CastepCellParser
 import CastepBandParser
 import CastepMDParser
+import CastepTSParser
 import logging, os, re, sys
 
 
@@ -112,6 +113,21 @@ class CastepParserContext(object):
         self.n_iteration = []
         self.wall_time_end =[]
         self.initial_scf_iter_time = []
+        self.ts_total_energy = []
+        self.ts_cell_vector = []
+        self.ts_forces = []
+        self.ts_positions = []
+        self.ts_path =[]
+        self.ts_total_energy_f = []
+        self.ts_cell_vector_f = []
+        self.ts_forces_f = []
+        self.ts_positions_f = []
+        self.ts_path_f =[]
+        self.ts_total_energy_p = []
+        self.ts_cell_vector_p = []
+        self.ts_forces_p = []
+        self.ts_positions_p = []
+        self.ts_path_p =[]
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
         self.pippo = None
@@ -987,6 +1003,8 @@ class CastepParserContext(object):
             backend.openSection('section_frame_sequence')
             backend.addValue('geometry_optimization_converged', self.geoConvergence)        
             backend.closeSection('section_frame_sequence',gIndex)
+        
+
         MDSuperContext = CastepMDParser.CastepMDParserContext(False)
         MDParser = AncillaryParser(
             fileDescription = CastepMDParser.build_CastepMDFileSimpleMatcher(),
@@ -1069,6 +1087,61 @@ class CastepParserContext(object):
         else:
             pass            
 
+        
+        TSSuperContext = CastepTSParser.CastepTSParserContext(False)
+        TSParser = AncillaryParser(
+            fileDescription = CastepTSParser.build_CastepTSFileSimpleMatcher(),
+            parser = self.parser,
+            cachingLevelForMetaName = CastepTSParser.get_cachingLevelForMetaName(self.metaInfoEnv, CachingLevel.Ignore),
+            superContext = TSSuperContext)
+
+        extFile = ".ts"       # Find the file with extension .cell
+        dirName = os.path.dirname(os.path.abspath(self.fName))
+        cFile = str()
+        for file in os.listdir(dirName):
+            if file.endswith(extFile):
+                cFile = file
+            fName = os.path.normpath(os.path.join(dirName, cFile))
+            if file.endswith(".ts"):
+                with open(fName) as fIn:
+                    TSParser.parseFile(fIn)          
+
+                    self.ts_total_energy = TSSuperContext.total_energy    
+                    self.ts_cell_vector = TSSuperContext.frame_cell
+                    self.ts_forces = TSSuperContext.total_forces
+                    self.ts_position = TSSuperContext.total_positions
+                    self.ts_path = TSSuperContext.path
+                    self.ts_total_energy_f = TSSuperContext.total_energy_final
+                    self.ts_forces_f = TSSuperContext.md_forces_final
+                    self.ts_cell_vector_f = TSSuperContext.cell_final
+                    self.ts_positions_f = TSSuperContext.atomf_position
+                    self.ts_path_f =TSSuperContext.path_final
+                    self.ts_total_energy_p = TSSuperContext.total_energy_pro
+                    self.ts_forces_p = TSSuperContext.md_forces_pro
+                    self.ts_cell_vector_p = TSSuperContext.cell_pro
+                    self.ts_positions_p = TSSuperContext.atomp_position
+                    self.ts_path_p =TSSuperContext.path_pro
+                    for i in range(len(self.ts_total_energy)):
+                        backend.openSection('x_castep_section_ts')
+                        backend.addValue('x_castep_ts_energy_total', self.ts_total_energy[i])
+                        backend.addArrayValues('x_castep_ts_cell_vectors', np.asarray(self.ts_cell_vector[i]))
+                        backend.addArrayValues('x_castep_ts_forces', np.asarray(self.ts_forces[i]))
+                        backend.addArrayValues('x_castep_ts_positions', np.asarray(self.ts_position[i]))
+                        backend.addValue('x_castep_ts_path', self.ts_path[i])
+                        backend.openSection('x_castep_section_ts_final')
+                        backend.addValue('x_castep_ts_energy_final', self.ts_total_energy_f)
+                        backend.addArrayValues('x_castep_ts_cell_vectors_final', np.asarray(self.ts_cell_vector_f))
+                        backend.addArrayValues('x_castep_ts_positions_final', np.asarray(self.ts_positions_f))
+                        backend.addArrayValues('x_castep_ts_forces_final', np.asarray(self.ts_forces_f))
+                        backend.addValue('x_castep_ts_path_ts_final', self.ts_path_f)    
+                        backend.openSection('x_castep_section_ts_pro')
+                        backend.addValue('x_castep_ts_energy_product', self.ts_total_energy_p)
+                        backend.addArrayValues('x_castep_ts_cell_vectors_product', np.asarray(self.ts_cell_vector_p))
+                        backend.addArrayValues('x_castep_ts_positions_product', np.asarray(self.ts_positions_p))
+                        backend.addArrayValues('x_castep_ts_forces_product', np.asarray(self.ts_forces_p))
+                        backend.addValue('x_castep_ts_path_product', self.ts_path_p)    
+                        backend.openSection('x_castep_section_ts_pro')
+                        backend.closeSection('x_castep_section_ts',i)        
 ################################################################################################################################################################
 ################################################################################################################################################################
 ################################################################################################################################################################
