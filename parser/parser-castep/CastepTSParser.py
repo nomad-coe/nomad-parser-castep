@@ -72,8 +72,9 @@ class CastepTSParserContext(object):
         energy = section['x_castep_ts_energy']
         path = section ['x_castep_ts_path']        
         
-        self.path.append(path)
-        print self.path
+        for i in range (len(path)):
+            self.path.append(path[i])
+      
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
         
