@@ -86,13 +86,3 @@ object CastepParserSpec7 extends Specification {
   }
 }
 
-object CastepParserSpec8 extends Specification {
-  "CastepParserTest" >> {
-    "test with json-events" >> {
-      ParserRun.parse(CastepParser, "parsers/castep/test/examples/TS-search/h2-lst.castep", "json-events") must_== ParseResult.ParseSuccess
-    }
-    "test with json" >> {
-      ParserRun.parse(CastepParser, "parsers/castep/test/examples/TS-search/h2-lst.castep", "json") must_== ParseResult.ParseSuccess
-    }
-  }
-}

@@ -63,8 +63,8 @@ class CastepTSParserContext(object):
         self.parser = parser
     
     def onClose_x_castep_section_ts(self, backend, gIndex, section):
-        gIndexGroupTS= backend.openSection('x_castep_section_ts')
-        print gIndexGroupTS,'ciao'
+       
+        
         vet = section ['x_castep_ts_cell_vectors_store']
         forces = section ['x_castep_ts_forces_store']
         atoms_lab = section ['x_castep_ts_lab']
@@ -73,7 +73,7 @@ class CastepTSParserContext(object):
         path = section ['x_castep_ts_path']        
         
         self.path.extend(path)
-
+        print self.path
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
         

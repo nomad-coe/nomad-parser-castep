@@ -1126,7 +1126,7 @@ class CastepParserContext(object):
                     for i in range(len(self.ts_total_energy)):
                         backend.openSection('x_castep_section_ts')
                         backend.addValue('x_castep_ts_path', self.ts_path[i]) 
-                       
+                        
                         backend.addValue('x_castep_ts_energy_total', self.ts_total_energy[i])
                         backend.addArrayValues('x_castep_ts_cell_vectors', np.asarray(self.ts_cell_vector[i]))
                         backend.addArrayValues('x_castep_ts_forces', np.asarray(self.ts_forces[i]))
