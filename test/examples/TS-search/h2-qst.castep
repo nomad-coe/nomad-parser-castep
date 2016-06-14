@@ -1,0 +1,911 @@
+ +-------------------------------------------------+
+ |                                                 |
+ |      CCC   AA    SSS  TTTTT  EEEEE  PPPP        |
+ |     C     A  A  S       T    E      P   P       |
+ |     C     AAAA   SS     T    EEE    PPPP        |
+ |     C     A  A     S    T    E      P           |
+ |      CCC  A  A  SSS     T    EEEEE  P           |
+ |                                                 |
+ +-------------------------------------------------+
+ |                                                 |
+ | Welcome to Academic Release CASTEP version 16.1 |          
+ | Ab Initio Total Energy Program                  |
+ |                                                 |
+ | Authors:                                        |
+ | M. Segall, M. Probert, C. Pickard, P. Hasnip,   |
+ | S. Clark, K. Refson, J. R. Yates, M. Payne      |
+ |                                                 |
+ | Contributors:                                   |
+ | P. Lindan, P. Haynes, J. White, V. Milman,      |
+ | N. Govind, M. Gibson, P. Tulip, V. Cocula,      |
+ | B. Montanari, D. Quigley, M. Glover,            |
+ | L. Bernasconi, A. Perlov, M. Plummer,           |
+ | E. McNellis, J. Meyer, J. Gale, D. Jochym       |
+ | J. Aarons, B. Walker, R. Gillen, D. Jones       |
+ | T. Green, I. J. Bush, C. J. Armstrong,          |
+ | E. J. Higgins, E. L. Brown, M. S. McFly         |
+ |                                                 |
+ | Copyright (c) 2000 - 2015                       |
+ |                                                 |
+ |     Distributed under the terms of an           |
+ |     Agreement between the United Kingdom        |
+ |     Car-Parrinello (UKCP) Consortium,           |
+ |     Daresbury Laboratory and Accelrys, Inc.     |
+ |                                                 |
+ | Please cite                                     |
+ |                                                 |
+ |     "First principles methods using CASTEP"     |
+ |                                                 |
+ |         Zeitschrift fuer Kristallographie       |
+ |           220(5-6) pp. 567-570 (2005)           |
+ |                                                 |
+ | S. J. Clark, M. D. Segall, C. J. Pickard,       |
+ | P. J. Hasnip, M. J. Probert, K. Refson,         |
+ | M. C. Payne                                     |
+ |                                                 |
+ |       in all publications arising from          |
+ |              your use of CASTEP                 |
+ |                                                 |
+ +-------------------------------------------------+
+
+
+ Compiled for darwin_x86_64_gfortran4.8 on Fri, 11 Dec 2015 15:41:06 +0000
+ from code version Version unavailable
+ Compiler: GNU Fortran 4.8.1; Optimisation: intermediate
+ MATHLIBS: default (LAPACK version 3.2.1)
+ FFT Lib : default
+ Fundamental constants values: CODATA 2010
+
+ Run started: Thu, 09 Jun 2016 10:53:08 +0100
+
+ Pseudo atomic calculation performed for H 1s1
+
+ Converged in 14 iterations to a total energy of -12.4146 eV
+
+ Calculation not parallelised.
+
+ ************************************ Title ************************************
+ 
+
+ ***************************** General Parameters ******************************
+  
+ output verbosity                               : normal  (1)
+ write checkpoint data to                       : h2-qst.check
+ type of calculation                            : transition state search
+ stress calculation                             : off
+ density difference calculation                 : off
+ electron localisation func (ELF) calculation   : off
+ Hirshfeld analysis                             : off
+ unlimited duration calculation
+ timing information                             : on
+ memory usage estimate                          : on
+ write final potential to formatted file        : off
+ write final density to formatted file          : off
+ write BibTeX reference list                    : on
+ write OTFG pseudopotential files               : on
+ checkpoint writing                             : both castep_bin and check files
+  
+ output         length unit                     : A
+ output           mass unit                     : amu
+ output           time unit                     : ps
+ output         charge unit                     : e
+ output           spin unit                     : hbar/2
+ output         energy unit                     : eV
+ output          force unit                     : eV/A
+ output       velocity unit                     : A/ps
+ output       pressure unit                     : GPa
+ output     inv_length unit                     : 1/A
+ output      frequency unit                     : cm-1
+ output force constant unit                     : eV/A**2
+ output         volume unit                     : A**3
+ output   IR intensity unit                     : (D/A)**2/amu
+ output         dipole unit                     : D
+ output         efield unit                     : eV/A/e
+ output        entropy unit                     : J/mol/K
+  
+ wavefunctions paging                           : none
+ random number generator seed                   :   87654321
+ data distribution                              : optimal for this architecture
+ optimization strategy                          : maximize speed(+++)
+
+ *********************** Exchange-Correlation Parameters ***********************
+  
+ using functional                               : Perdew Burke Ernzerhof
+ relativistic treatment                         : Koelling-Harmon
+ DFT+D: Semi-empirical dispersion correction    : off
+
+ ************************* Pseudopotential Parameters **************************
+  
+ pseudopotential representation                 : reciprocal space
+ <beta|phi> representation                      : reciprocal space
+ spin-orbit coupling                            : off
+
+ **************************** Basis Set Parameters *****************************
+  
+ basis set accuracy                             : FINE
+ plane wave basis set cut-off                   :   230.0000   eV
+ size of standard grid                          :     1.7500
+ size of   fine   gmax                          :    13.5969   1/A
+ finite basis set correction                    : none
+
+ **************************** Electronic Parameters ****************************
+  
+ number of  electrons                           :  2.000    
+ net charge of system                           :  0.000    
+ treating system as non-spin-polarized
+ number of bands                                :          5
+
+ ********************* Electronic Minimization Parameters **********************
+  
+ Method: Treating system as metallic with density mixing treatment of electrons,
+         and number of  SD  steps               :          1
+         and number of  CG  steps               :          4
+  
+ total energy / atom convergence tol.           : 0.1000E-04   eV
+ eigen-energy convergence tolerance             : 0.1000E-05   eV
+ max force / atom convergence tol.              : ignored
+ convergence tolerance window                   :          3   cycles
+ max. number of SCF cycles                      :         30
+ number of fixed-spin iterations                :         10
+ smearing scheme                                : Gaussian
+ smearing width                                 : 0.2000       eV
+ Fermi energy convergence tolerance             : 0.2721E-13   eV
+ periodic dipole correction                     : NONE
+
+ ************************** Density Mixing Parameters **************************
+  
+ density-mixing scheme                          : Broyden
+ max. length of mixing history                  :         32
+ charge density mixing amplitude                : 0.8000    
+ cut-off energy for mixing                      :  500.0       eV
+
+ *********************** Population Analysis Parameters ************************
+  
+ Population analysis with cutoff                :  3.000       A
+
+ ********************* Transition State Search Parameters **********************
+  
+ search method                                  : LSTQST
+ LSTQST protocol                                : QST/OPTIMIZATION 
+ max. number of QST iterations                  :          5
+ max. number of CG  iterations                  :         20
+ max. ionic |force| tolerance                   : 0.5000E-01   eV/A
+ max. ionic |displacement| tolerance            : 0.1000E-02   A
+
+ *******************************************************************************
+  
+
+                           -------------------------------
+                                      Unit Cell
+                           -------------------------------
+        Real Lattice(A)                      Reciprocal Lattice(1/A)
+   4.0000000   0.0000000   0.0000000        1.5707963  -0.0000000  -0.0000000
+   0.0000000   4.0000000   0.0000000        0.0000000   1.5707963  -0.0000000
+   0.0000000   0.0000000   4.0000000        0.0000000   0.0000000   1.5707963
+
+                       Lattice parameters(A)       Cell Angles
+                    a =    4.000000          alpha =   90.000000
+                    b =    4.000000          beta  =   90.000000
+                    c =    4.000000          gamma =   90.000000
+
+                       Current cell volume =   64.000000       A**3
+
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+                         Total number of ions in cell =    2
+                      Total number of species in cell =    1
+                        Max number of any one species =    2
+
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x                          Reactant                        x
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom        Fractional coordinates of atoms  x
+            x            Number           u          v          w      x
+            x----------------------------------------------------------x
+            x  H            1         0.000000   0.000000   0.000000   x 
+            x  H            2        -0.000000  -0.000000   0.195285   x 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x                          Product                         x
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom        Fractional coordinates of atoms  x
+            x            Number           u          v          w      x
+            x----------------------------------------------------------x
+            x  H            1         0.000000   0.000000   0.000000   x 
+            x  H            2        -0.000000  -0.000000   0.804650   x 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+                         No user defined ionic velocities
+
+                           -------------------------------
+                                   Details of Species
+                           -------------------------------
+
+                               Mass of species in AMU
+                                    H    1.0079400
+
+                          Electric Quadrupole Moment (Barn)
+                                    H    0.0028600 Isotope  2
+
+                          Files used for pseudopotentials:
+                                    H H_00.usp
+
+                           -------------------------------
+                              k-Points For BZ Sampling
+                           -------------------------------
+                       MP grid size for SCF calculation is  1  1  1
+                            with an offset of   0.000  0.000  0.000
+                       Number of kpoints used =             1
+
+                           -------------------------------
+                               Symmetry and Constraints
+                           -------------------------------
+
+                      Maximum deviation from symmetry =  0.00000         ANG
+
+         There are no symmetry operations specified or generated for this cell
+         There are no ionic constraints specified or generated for this cell
+                      Point group of crystal =     1: C1, 1, 1
+                      Space group of crystal =   123: P4/mmm, -P 4 2
+
+
+                         Centre of mass is NOT constrained
+
+                         Number of cell constraints= 6
+                         Cell constraints are:  0 0 0 0 0 0
+
+                         External pressure/stress (GPa)
+                          0.00000   0.00000   0.00000
+                                    0.00000   0.00000
+                                              0.00000
+  
++---------------- MEMORY AND SCRATCH DISK ESTIMATES PER PROCESS --------------+
+|                                                     Memory          Disk    |
+| Baseline code, static data and system overhead        0.0 MB         0.0 MB |
+| BLAS internal memory storage                          0.0 MB         0.0 MB |
+| Model and support data                                2.3 MB         0.0 MB |
+| Electronic energy minimisation requirements           2.9 MB         0.0 MB |
+| Force calculation requirements                        0.5 MB         0.0 MB |
+|                                               ----------------------------- |
+| Approx. total storage required per process            5.2 MB         0.0 MB |
+|                                                                             |
+| Requirements will fluctuate during execution and may exceed these estimates |
++-----------------------------------------------------------------------------+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial   6.34286464E+001  0.00000000E+000                         0.16  <-- SCF
+      1  -2.93836765E+001  1.34650383E+000   4.64061614E+001       0.17  <-- SCF
+      2  -3.23919040E+001 -1.18646106E+000   1.50411378E+000       0.17  <-- SCF
+      3  -3.20401639E+001 -1.12642759E+000  -1.75870038E-001       0.19  <-- SCF
+      4  -3.20247280E+001 -1.02436836E+000  -7.71795061E-003       0.20  <-- SCF
+      5  -3.20272422E+001 -9.45149329E-001   1.25710370E-003       0.21  <-- SCF
+      6  -3.20288182E+001 -8.56089221E-001   7.87977793E-004       0.22  <-- SCF
+      7  -3.20290004E+001 -8.40138527E-001   9.11095745E-005       0.24  <-- SCF
+      8  -3.20290587E+001 -8.30411307E-001   2.91553799E-005       0.25  <-- SCF
+      9  -3.20290600E+001 -8.29694106E-001   6.07597610E-007       0.26  <-- SCF
+     10  -3.20290602E+001 -8.29304612E-001   1.13671263E-007       0.27  <-- SCF
+     11  -3.20290602E+001 -8.29265740E-001   4.50308703E-010       0.28  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -32.02906017842     eV
+Final free energy (E-TS)    =  -32.02906017842     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -32.02906017842     eV
+ 
+
+Writing analysis data to h2-qst.castep_bin
+
+Writing model to h2-qst.check
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++ Starting Transition State Search +++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++ Quadratic synchronous transit method +++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Difference vector: Fractional components 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    0.000000000    0.000000000    0.000000000
+   -0.000000000   -0.000000000    0.609365000
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Periodic cell setup complete
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -3.20290687E+001  0.00000000E+000                         0.32  <-- SCF
+      1  -3.20290602E+001 -8.29259021E-001  -4.24371314E-006       0.33  <-- SCF
+      2  -3.20290602E+001 -8.29259021E-001   3.80050685E-012       0.34  <-- SCF
+      3  -3.20290602E+001 -8.29262939E-001   4.85002678E-011       0.35  <-- SCF
+      4  -3.20290602E+001 -8.29265452E-001   1.16492483E-011       0.36  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -32.02906017871     eV
+Final free energy (E-TS)    =  -32.02906017871     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -32.02906017871     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Reactant                      
+ Path coordinate:                         0.00000
+ Energy:                                -32.02906 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                             Coordinates: Fractional components
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +  Element    Atom                                                 +
+            +            Number           x          y          z              +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +H             1          0.000000   0.000000   0.000000           +
+            +H             2         -0.000000  -0.000000   0.195285           +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                           Forces: Cartesian components: eV/A                          
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +  Element    Atom                                                 +
+            +            Number           x          y          z              +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +H             1         -0.000000  -0.000000   0.000450           +
+            +H             2          0.000000   0.000000  -0.000450           +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.75173184E+001  0.00000000E+000                         0.38  <-- SCF
+      1  -3.24215433E+001 -7.82135730E-001   2.45211247E+000       0.39  <-- SCF
+      2  -3.24540462E+001 -7.86581490E-001   1.62514523E-002       0.41  <-- SCF
+      3  -3.20185284E+001 -9.56483210E-001  -2.17758907E-001       0.42  <-- SCF
+      4  -3.20271477E+001 -8.35654880E-001   4.30966973E-003       0.43  <-- SCF
+      5  -3.20287319E+001 -8.35338470E-001   7.92074133E-004       0.44  <-- SCF
+      6  -3.20289632E+001 -8.33983862E-001   1.15669062E-004       0.46  <-- SCF
+      7  -3.20290430E+001 -8.31169360E-001   3.98767887E-005       0.47  <-- SCF
+      8  -3.20290580E+001 -8.29394072E-001   7.48512499E-006       0.48  <-- SCF
+      9  -3.20290587E+001 -8.29081789E-001   3.84831372E-007       0.49  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -32.02905872326     eV
+Final free energy (E-TS)    =  -32.02905872326     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -32.02905872326     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Product                       
+ Path coordinate:                         1.00000
+ Energy:                                -32.02906 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                             Coordinates: Fractional components
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +  Element    Atom                                                 +
+            +            Number           x          y          z              +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +H             1          0.000000   0.000000   0.000000           +
+            +H             2         -0.000000  -0.000000   0.804650           +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                           Forces: Cartesian components: eV/A                          
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +  Element    Atom                                                 +
+            +            Number           x          y          z              +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +H             1          0.000000  -0.000000  -0.007817           +
+            +H             2         -0.000000   0.000000   0.007817           +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.66872308E+001  0.00000000E+000                         0.53  <-- SCF
+      1  -2.96562616E+001 -2.58242199E+000   1.48451541E+000       0.54  <-- SCF
+      2  -3.01458810E+001 -2.61337122E+000   2.44809697E-001       0.55  <-- SCF
+      3  -2.96083751E+001 -3.46435814E+000  -2.68752949E-001       0.57  <-- SCF
+      4  -2.95234829E+001 -3.68493440E+000  -4.24461085E-002       0.58  <-- SCF
+      5  -2.95228366E+001 -3.82521727E+000  -3.23135154E-004       0.59  <-- SCF
+      6  -2.95226327E+001 -3.89705333E+000  -1.01957320E-004       0.60  <-- SCF
+      7  -2.95230558E+001 -3.90740337E+000   2.11540343E-004       0.62  <-- SCF
+      8  -2.95232737E+001 -3.91668902E+000   1.08982110E-004       0.63  <-- SCF
+      9  -2.95232837E+001 -3.91751025E+000   5.00543520E-006       0.65  <-- SCF
+     10  -2.95232859E+001 -3.91773777E+000   1.07720194E-006       0.66  <-- SCF
+     11  -2.95232860E+001 -3.91779285E+000   3.56027584E-008       0.67  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.52328595492     eV
+Final free energy (E-TS)    =  -29.52328595492     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.52328595492     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Intermediate                  
+ Path coordinate:                         0.45930
+ Energy:                                -29.52329 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                             Coordinates: Fractional components
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +  Element    Atom                                                 +
+            +            Number           x          y          z              +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +H             1          0.000000   0.000000   0.000000           +
+            +H             2         -0.000000   0.025000   0.475000           +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                           Forces: Cartesian components: eV/A                          
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +  Element    Atom                                                 +
+            +            Number           x          y          z              +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +H             1          0.000000   0.171539   0.450113           +
+            +H             2         -0.000000  -0.171539  -0.450113           +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.97393461E+001  0.00000000E+000                         0.70  <-- SCF
+      1  -2.95386532E+001 -3.88203476E+000  -1.00346434E-001       0.71  <-- SCF
+      2  -2.95390438E+001 -3.88220078E+000   1.95292155E-004       0.72  <-- SCF
+      3  -2.95460886E+001 -3.88312409E+000   3.52239102E-003       0.73  <-- SCF
+      4  -2.95470822E+001 -3.87814519E+000   4.96804058E-004       0.75  <-- SCF
+      5  -2.95471153E+001 -3.87732133E+000   1.65520383E-005       0.76  <-- SCF
+      6  -2.95471344E+001 -3.87732436E+000   9.54784770E-006       0.78  <-- SCF
+      7  -2.95471454E+001 -3.87723846E+000   5.50943618E-006       0.79  <-- SCF
+      8  -2.95471491E+001 -3.87719040E+000   1.85413118E-006       0.80  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.54714908837     eV
+Final free energy (E-TS)    =  -29.54714908837     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.54714908837     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Commencing maximum search
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95465170E+001  0.00000000E+000                         0.82  <-- SCF
+      1  -2.94989154E+001 -3.93823695E+000  -2.38008182E-002       0.83  <-- SCF
+      2  -2.94989859E+001 -3.93826933E+000   3.52828111E-005       0.84  <-- SCF
+      3  -2.95014618E+001 -3.95083762E+000   1.23793964E-003       0.86  <-- SCF
+      4  -2.95018009E+001 -3.95553700E+000   1.69539758E-004       0.87  <-- SCF
+      5  -2.95018228E+001 -3.95573623E+000   1.09431714E-005       0.88  <-- SCF
+      6  -2.95018300E+001 -3.95582875E+000   3.63895441E-006       0.89  <-- SCF
+      7  -2.95018328E+001 -3.95596873E+000   1.38725171E-006       0.90  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.50183282264     eV
+Final free energy (E-TS)    =  -29.50183282264     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.50183282264     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Path coordinate:                         0.49972
+ Energy:                                -29.50183 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -3.06230409E+001  0.00000000E+000                         0.94  <-- SCF
+      1  -2.98573134E+001 -3.03180606E+000  -3.82863746E-001       0.95  <-- SCF
+      2  -2.99944761E+001 -3.27573187E+000   6.85813169E-002       0.96  <-- SCF
+      3  -3.00132936E+001 -3.16650765E+000   9.40876924E-003       0.97  <-- SCF
+      4  -3.00158257E+001 -3.11952935E+000   1.26607150E-003       0.99  <-- SCF
+      5  -3.00163406E+001 -3.10069313E+000   2.57452851E-004       1.00  <-- SCF
+      6  -3.00165124E+001 -3.09849106E+000   8.58968257E-005       1.01  <-- SCF
+      7  -3.00165845E+001 -3.09610592E+000   3.60407242E-005       1.02  <-- SCF
+      8  -3.00165892E+001 -3.09572112E+000   2.33451252E-006       1.03  <-- SCF
+      9  -3.00165902E+001 -3.09556792E+000   4.83852185E-007       1.05  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -30.01659015854     eV
+Final free energy (E-TS)    =  -30.01659015854     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -30.01659015854     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Path coordinate:                         0.30989
+ Energy:                                -30.01659 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.96117929E+001  0.00000000E+000                         1.09  <-- SCF
+      1  -2.93641626E+001 -3.62876217E+000  -1.23815140E-001       1.10  <-- SCF
+      2  -2.94868677E+001 -3.77483788E+000   6.13525525E-002       1.11  <-- SCF
+      3  -2.94994585E+001 -3.89755649E+000   6.29542051E-003       1.12  <-- SCF
+      4  -2.95016289E+001 -3.93707661E+000   1.08515586E-003       1.14  <-- SCF
+      5  -2.95016545E+001 -3.95056021E+000   1.28031405E-005       1.15  <-- SCF
+      6  -2.95018000E+001 -3.95287706E+000   7.27757353E-005       1.16  <-- SCF
+      7  -2.95018622E+001 -3.95530671E+000   3.10706108E-005       1.17  <-- SCF
+      8  -2.95018661E+001 -3.95579109E+000   1.96020907E-006       1.18  <-- SCF
+      9  -2.95018668E+001 -3.95596945E+000   3.81309054E-007       1.19  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.50186684364     eV
+Final free energy (E-TS)    =  -29.50186684364     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.50186684364     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Path coordinate:                         0.50172
+ Energy:                                -29.50187 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95018399E+001  0.00000000E+000                         1.23  <-- SCF
+      1  -2.95018303E+001 -3.95604444E+000  -4.79160330E-006       1.24  <-- SCF
+      2  -2.95018303E+001 -3.95604445E+000   1.68851293E-008       1.25  <-- SCF
+      3  -2.95018319E+001 -3.95606063E+000   7.87537896E-007       1.26  <-- SCF
+      4  -2.95018322E+001 -3.95605531E+000   1.25074270E-007       1.27  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.50183216784     eV
+Final free energy (E-TS)    =  -29.50183216784     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.50183216784     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Path coordinate:                         0.50013
+ Energy:                                -29.50183 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95018778E+001  0.00000000E+000                         1.29  <-- SCF
+      1  -2.95018384E+001 -3.95605162E+000  -1.97372990E-005       1.30  <-- SCF
+      2  -2.95018384E+001 -3.95605162E+000   3.46819814E-009       1.31  <-- SCF
+      3  -2.95018388E+001 -3.95605215E+000   2.01261589E-007       1.32  <-- SCF
+      4  -2.95018388E+001 -3.95604884E+000   3.53301944E-008       1.33  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.50183883921     eV
+Final free energy (E-TS)    =  -29.50183883921     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.50183883921     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Path coordinate:                         0.49932
+ Energy:                                -29.50184 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95018397E+001  0.00000000E+000                         1.36  <-- SCF
+      1  -2.95018333E+001 -3.95605852E+000  -3.20140659E-006       1.37  <-- SCF
+      2  -2.95018333E+001 -3.95605852E+000   1.93623438E-010       1.38  <-- SCF
+      3  -2.95018334E+001 -3.95605999E+000   5.60492950E-008       1.39  <-- SCF
+      4  -2.95018334E+001 -3.95605994E+000   8.53421939E-009       1.40  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.50183344563     eV
+Final free energy (E-TS)    =  -29.50183344563     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.50183344563     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Path coordinate:                         0.49972
+ Energy:                                -29.50183 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ QST Maximum Found!
+ Energy of reactant:                    -32.02906 eV                            
+ Energy of product:                     -32.02906 eV                            
+ Energy of QST maximum:                 -29.50183 eV                            
+ Location of QST maximum:                 0.49972
+ Barrier from reactant:                   2.52723 eV                            
+ Barrier from product:                    2.52723 eV                            
+ Energy of reaction:                      0.00000 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                             Coordinates: Fractional components
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +  Element    Atom                                                 +
+            +            Number           x          y          z              +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +H             1          0.000000   0.000000   0.000000           +
+            +H             2         -0.000000   0.025167   0.499798           +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                           Forces: Cartesian components: eV/A                          
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +  Element    Atom                                                 +
+            +            Number           x          y          z              +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +H             1         -0.000000   0.170745   0.003542           +
+            +H             2          0.000000  -0.170745  -0.003542           +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Commencing conjugate gradient refinement
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Estimating local change at QST maximum
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95058405E+001  0.00000000E+000                         1.42  <-- SCF
+      1  -2.95029136E+001 -3.95430137E+000  -1.46348579E-003       1.43  <-- SCF
+      2  -2.95029141E+001 -3.95430146E+000   2.50801311E-007       1.44  <-- SCF
+      3  -2.95029765E+001 -3.95409729E+000   3.12373363E-005       1.45  <-- SCF
+      4  -2.95029863E+001 -3.95393476E+000   4.87358146E-006       1.46  <-- SCF
+      5  -2.95029870E+001 -3.95391747E+000   3.64784064E-007       1.47  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.50298700616     eV
+Final free energy (E-TS)    =  -29.50298700616     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.50298700616     eV
+ 
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95117651E+001  0.00000000E+000                         1.49  <-- SCF
+      1  -2.95028533E+001 -3.95350380E+000  -4.45586905E-003       1.50  <-- SCF
+      2  -2.95028559E+001 -3.95350443E+000   1.25698608E-006       1.51  <-- SCF
+      3  -2.95031076E+001 -3.95373688E+000   1.25881176E-004       1.52  <-- SCF
+      4  -2.95031465E+001 -3.95363140E+000   1.94482597E-005       1.54  <-- SCF
+      5  -2.95031491E+001 -3.95361407E+000   1.29154378E-006       1.55  <-- SCF
+      6  -2.95031500E+001 -3.95360538E+000   4.29053846E-007       1.56  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.50314996059     eV
+Final free energy (E-TS)    =  -29.50314996059     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.50314996059     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Local change at QST maximum:            0.00030
+ RMS gradient at QST maximum:            0.17078 eV/A                          
+ Cumulative number of energy/gradient calls:     12
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Conjugate gradient step:                         1
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Commencing line minimization along search path
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Path coordinate:                         0.49972
+ Energy:                                -29.50183 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95040028E+001  0.00000000E+000                         1.58  <-- SCF
+      1  -2.95023291E+001 -3.95445607E+000  -8.36852599E-004       1.59  <-- SCF
+      2  -2.95023494E+001 -3.95445935E+000   1.01472494E-005       1.60  <-- SCF
+      3  -2.95024129E+001 -3.95479660E+000   3.17491862E-005       1.61  <-- SCF
+      4  -2.95024225E+001 -3.95491881E+000   4.82365185E-006       1.62  <-- SCF
+      5  -2.95024233E+001 -3.95493392E+000   3.60512451E-007       1.64  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.50242326142     eV
+Final free energy (E-TS)    =  -29.50242326142     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.50242326142     eV
+ 
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95059355E+001  0.00000000E+000                         1.66  <-- SCF
+      1  -2.95045724E+001 -3.95102917E+000  -6.81551050E-004       1.67  <-- SCF
+      2  -2.95045730E+001 -3.95102979E+000   2.63394919E-007       1.68  <-- SCF
+      3  -2.95045816E+001 -3.95094192E+000   4.32402058E-006       1.69  <-- SCF
+      4  -2.95045834E+001 -3.95087243E+000   8.97829176E-007       1.70  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.50458340487     eV
+Final free energy (E-TS)    =  -29.50458340487     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.50458340487     eV
+ 
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95211797E+001  0.00000000E+000                         1.73  <-- SCF
+      1  -2.95098200E+001 -3.94053608E+000  -5.67984446E-003       1.73  <-- SCF
+      2  -2.95098379E+001 -3.94054916E+000   8.94828863E-006       1.75  <-- SCF
+      3  -2.95099783E+001 -3.94120773E+000   7.02370237E-005       1.76  <-- SCF
+      4  -2.95100069E+001 -3.94126280E+000   1.42840092E-005       1.77  <-- SCF
+      5  -2.95100103E+001 -3.94126590E+000   1.70447710E-006       1.78  <-- SCF
+      6  -2.95100110E+001 -3.94125868E+000   3.17841385E-007       1.79  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.51001095977     eV
+Final free energy (E-TS)    =  -29.51001095977     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.51001095977     eV
+ 
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95192756E+001  0.00000000E+000                         1.82  <-- SCF
+      1  -2.95096567E+001 -3.94045663E+000  -4.80948116E-003       1.82  <-- SCF
+      2  -2.95096793E+001 -3.94046981E+000   1.12989478E-005       1.83  <-- SCF
+      3  -2.95098284E+001 -3.94133559E+000   7.45498098E-005       1.84  <-- SCF
+      4  -2.95098571E+001 -3.94156683E+000   1.43503938E-005       1.86  <-- SCF
+      5  -2.95098605E+001 -3.94152738E+000   1.70904448E-006       1.87  <-- SCF
+      6  -2.95098611E+001 -3.94151272E+000   3.20419920E-007       1.88  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.50986113168     eV
+Final free energy (E-TS)    =  -29.50986113168     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.50986113168     eV
+ 
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95135451E+001  0.00000000E+000                         1.90  <-- SCF
+      1  -2.95106016E+001 -3.93987925E+000  -1.47172200E-003       1.91  <-- SCF
+      2  -2.95106072E+001 -3.93988256E+000   2.81586872E-006       1.92  <-- SCF
+      3  -2.95106479E+001 -3.94013692E+000   2.03395343E-005       1.93  <-- SCF
+      4  -2.95106558E+001 -3.94019281E+000   3.92660677E-006       1.94  <-- SCF
+      5  -2.95106567E+001 -3.94019203E+000   4.66888137E-007       1.95  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.51065670514     eV
+Final free energy (E-TS)    =  -29.51065670514     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.51065670514     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Line search successful
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ RMS gradient:                            0.00353 eV/A                          
+ Energy:                                -29.51066 eV                            
+ Energy change:                           0.00882 eV                            
+ Cumulative number of energy/gradient calls:     17
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -2.95106547E+001  0.00000000E+000                         1.97  <-- SCF
+      1  -2.95106569E+001 -3.94018907E+000   1.10771539E-006       1.98  <-- SCF
+      2  -2.95106569E+001 -3.94018907E+000   1.17924471E-010       1.99  <-- SCF
+      3  -2.95106569E+001 -3.94018936E+000   2.11746236E-009       2.00  <-- SCF
+      4  -2.95106569E+001 -3.94018953E+000   4.25245901E-010       2.01  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -29.51065688515     eV
+Final free energy (E-TS)    =  -29.51065688515     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -29.51065688515     eV
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Transition State Found!
+ Energy of reactant:                    -32.02906 eV                            
+ Energy of product:                     -32.02906 eV                            
+ Energy of transition state:            -29.51066 eV                            
+ Location of transition state:            0.50015
+ Barrier from reactant:                   2.51840 eV                            
+ Barrier from product:                    2.51840 eV                            
+ Energy of reaction:                      0.00000 eV                            
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                             Coordinates: Fractional components
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +  Element    Atom                                                 +
+            +            Number           x          y          z              +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +H             1         -0.000000   0.012584   0.000261           +
+            +H             2          0.000000   0.012583   0.500061           +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                           Forces: Cartesian components: eV/A                          
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +  Element    Atom                                                 +
+            +            Number           x          y          z              +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            +H             1          0.000000  -0.000005   0.003526           +
+            +H             2         -0.000000   0.000005  -0.003526           +
+            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+ *********************************** Forces ***********************************
+ *                                                                            *
+ *                        Cartesian components (eV/A)                         *
+ * -------------------------------------------------------------------------- *
+ *                   x                    y                    z              *
+ *                                                                            *
+ * H         1      0.00000             -0.00001              0.00353         *
+ * H         2     -0.00000              0.00001             -0.00353         *
+ *                                                                            *
+ ******************************************************************************
+
+ Pseudo atomic calculation performed for H 1s1
+
+ Converged in 14 iterations to a total energy of -12.4146 eV
+
+Charge spilling parameter for spin component 1 = 1.40%
+
+     Atomic Populations (Mulliken)
+     -----------------------------
+Species   Ion     s      p      d      f     Total  Charge (e)
+==============================================================
+  H        1     1.00   0.00   0.00   0.00   1.00     0.00
+  H        2     1.00   0.00   0.00   0.00   1.00    -0.00
+==============================================================
+
+            Bond              Population      Length (A)
+============================================================
+          H 1 -- H 2               0.74        1.99920
+============================================================
+
+
+Writing analysis data to h2-qst.castep_bin
+
+Writing model to h2-qst.check
+ 
+ A BibTeX formatted list of references used in this run has been written to 
+ h2-qst.bib
+ 
+Initialisation time =      0.12 s
+Calculation time    =      1.98 s
+Finalisation time   =      0.01 s
+Total time          =      2.11 s
