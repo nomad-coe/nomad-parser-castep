@@ -94,27 +94,27 @@ class CastepTSParserContext(object):
         self.frame_cell.append(self.cell)
              
         
-        # if position:
-        #     self.at_nr = len(position)
-        #     self.atom_position=[]
-        #     for i in range(0, self.at_nr):
-        #         position[i] = position[i].split()
-        #         position[i] = [float(j) for j in position[i]]
-        #         pos_list = position[i]
-        #         self.atom_position.append(pos_list)
-        #     self.total_positions.append(self.atom_position)
+        if position:
+            self.at_nr = len(position)
+            self.atom_position=[]
+            for i in range(0, self.at_nr):
+                position[i] = position[i].split()
+                position[i] = [float(j) for j in position[i]]
+                pos_list = position[i]
+                self.atom_position.append(pos_list)
+            self.total_positions.append(self.atom_position)
       
-        # if forces_ts is not None:
+        if forces_ts is not None:
             
-        #     self.ts_forces = []
-        #     for f in forces_ts:                
-        #         f = f.split()
-        #         f = [float(k) for k in f]
-        #         f_st_intts = f
+            self.ts_forces = []
+            for f in forces_ts:                
+                f = f.split()
+                f = [float(k) for k in f]
+                f_st_intts = f
                 
-        #         self.ts_forces.append(f_st_intts)                 
+                self.ts_forces.append(f_st_intts)                 
             
-        #     self.total_forces.append(self.ts_forces)
+            self.total_forces.append(self.ts_forces)
               
     def onClose_x_castep_section_ts_final_store(self, backend, gIndex, section):
         # path_final_ts = section ['x_castep_ts_path_ts_final']  
@@ -253,8 +253,8 @@ def build_CastepTSFileSimpleMatcher():
             subMatchers = [
                 SM (r"\s*(?P<x_castep_ts_energy>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
                 SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),                    
-                # SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-                # SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
+                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
+                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
                 
             SM (name = 'Root3',
                 startReStr =r"\sTS\s*0\s*(?P<x_castep_ts_path_ts_final>[-+0-9.eEdD]+)\s*",

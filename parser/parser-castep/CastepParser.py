@@ -1322,7 +1322,18 @@ def build_CastepMainFileSimpleMatcher():
             SM(r"\s*MD SCF eigenenergies tolerance\s*\:\s*(?P<x_castep_frame_eigen_tolerance>[-+0-9.eEd]+)"),
 
             ])
-    
+    TSParameterSubMatcher = SM(name = 'TS_parameters' ,            
+        sections = ["x_castep_section_ts_parameters"],
+        startReStr = r"\s\*\*\** Transition State Search Parameters \*\*\**\s*",
+        subMatchers = [
+            SM(r"\s*search method\s*\:\s*(?P<x_castep_ts_method>[A-Za-z]+)"),
+            SM(r"\s*[A-Z]+ protocol\s*\:\s*(?P<x_castep_ts_protocol>[A-Za-z]+)"),
+ 
+            SM(r"\s*max\. number of QST iterations\s*\:\s*(?P<x_castep_ts_number_qst>[-+0-9.eEd]+)"),
+            SM(r"\s*max\. number of CG iterations\s*\:\s*(?P<x_castep_ts_number_cg>[-+0-9.eEd]+)"),
+            SM(r"\s*max\. ionic \|force\| tolerance\s*\:\s*(?P<x_castep_ts_force_tolerance>[-+0-9.eEd]+)"),
+            SM(r"\s*max\. ionic \|displacement\| tolerance\s*\:\s*(?P<x_castep_ts_displacement_tolerance>[-+0-9.eEd]+)"),
+            ])
     ########################################
     # submatcher for section system description
     systemDescriptionSubMatcher = SM(name = "systemDescription",
@@ -1988,6 +1999,7 @@ def build_CastepMainFileSimpleMatcher():
                 
                 phononCalculationSubMatcher,
                 
+                TSParameterSubMatcher,
                 systemDescriptionSubMatcher, # section_system subMatcher
         
                 SM(name = 'Atom_topology',
