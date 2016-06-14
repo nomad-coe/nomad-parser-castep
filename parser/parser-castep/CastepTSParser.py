@@ -122,7 +122,7 @@ class CastepTSParserContext(object):
         forces_final = section ['x_castep_ts_forces_final_store']
         
         position_final = section ['x_castep_ts_positions_final_store']
-        energy_final = section['x_castep_ts_energy_final']
+        energy_final = section['x_castep_ts_energy_final_store']
         
         # for i in range (len(path_final_ts)):
         #     self.path_final = path_final_ts[i]
@@ -172,7 +172,7 @@ class CastepTSParserContext(object):
         forces_pro = section ['x_castep_ts_forces_pro_store']
         
         position_pro = section ['x_castep_ts_positions_pro_store']
-        energy_pro = section['x_castep_ts_energy_product']
+        energy_pro = section['x_castep_ts_energy_product_store']
         
         
         Hr_J_converter = float(4.35974e-18)
@@ -261,7 +261,7 @@ def build_CastepTSFileSimpleMatcher():
                     sections = ['x_castep_section_ts_final'],
                     repeats = True,
                     subMatchers = [
-                            SM (r"\s*(?P<x_castep_ts_energy_final>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
+                            SM (r"\s*(?P<x_castep_ts_energy_final_store>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
                             SM (r"\s*(?P<x_castep_ts_cell_vectors_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
@@ -272,7 +272,7 @@ def build_CastepTSFileSimpleMatcher():
                     sections = ['x_castep_section_ts_product'],
                     repeats = True,
                     subMatchers = [
-                            SM (r"\s*(?P<x_castep_ts_energy_product>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
+                            SM (r"\s*(?P<x_castep_ts_energy_product_store>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
                             SM (r"\s*(?P<x_castep_ts_cell_vectors_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
