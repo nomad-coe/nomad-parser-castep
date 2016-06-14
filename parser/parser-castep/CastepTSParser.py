@@ -72,7 +72,7 @@ class CastepTSParserContext(object):
         energy = section['x_castep_ts_energy']
         path = section ['x_castep_ts_path']        
         
-        self.path.extend(path)
+        self.path.append(path)
         print self.path
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
@@ -82,7 +82,7 @@ class CastepTSParserContext(object):
             i = [float(k) for k in i]
             energy_list = i
             energy_list = [x * Hr_J_converter for x in energy_list]
-            self.total_energy.extend(energy_list)
+            self.total_energy.append(energy_list)
           
    
         if vet:
@@ -92,7 +92,7 @@ class CastepTSParserContext(object):
                 vet[i] = [float(j) for j in vet[i]]                
                 vet_list = vet[i]               
                 self.cell.append(vet_list)             
-        self.frame_cell.extend(self.cell)
+        self.frame_cell.append(self.cell)
              
         
         if position:
@@ -103,7 +103,7 @@ class CastepTSParserContext(object):
                 position[i] = [float(j) for j in position[i]]
                 pos_list = position[i]
                 self.atom_position.append(pos_list)
-            self.total_positions.extend(self.atom_position)
+            self.total_positions.append(self.atom_position)
       
         if forces is not None:
 
@@ -113,7 +113,7 @@ class CastepTSParserContext(object):
                 f = [float(k) for k in f]
                 f_st_int = f
                 self.md_forces.append(f_st_int)                
-            self.total_forces.extend(self.md_forces)
+            self.total_forces.append(self.md_forces)
     
     def onClose_x_castep_section_ts_final(self, backend, gIndex, section):
         path_final = section ['x_castep_ts_path_ts_final']  
