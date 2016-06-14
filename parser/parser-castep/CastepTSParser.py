@@ -66,7 +66,7 @@ class CastepTSParserContext(object):
        
         
         vet = section ['x_castep_ts_cell_vectors_store']
-        forces = section ['x_castep_ts_forces_store']
+        forces_ts = section ['x_castep_ts_forces_store']
         
         position = section ['x_castep_ts_positions_store']
         energy = section['x_castep_ts_energy']
@@ -104,10 +104,10 @@ class CastepTSParserContext(object):
                 self.atom_position.append(pos_list)
             self.total_positions.append(self.atom_position)
       
-        if forces is not None:
+        if forces_ts is not None:
             
             self.ts_forces = []
-            for f in forces:                
+            for f in forces_ts:                
                 f = f.split()
                 f = [float(k) for k in f]
                 f_st_intts = f
@@ -254,7 +254,8 @@ def build_CastepTSFileSimpleMatcher():
                 SM (r"\s*(?P<x_castep_ts_energy>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
                 SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),                    
                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
+                # SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
+                
                 SM (name = 'Root3',
                     startReStr =r"\sTS\s*0\s*(?P<x_castep_ts_path_ts_final>[-+0-9.eEdD]+)\s*",
                     endReStr ="/n",
