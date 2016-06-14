@@ -79,11 +79,11 @@ class CastepTSParserContext(object):
         HrK_to_K_coverter= float(3.1668114e-6)
         
         for i in energy:
-            i = i.split()
-            i = [float(k) for k in i]
-            energy_list = i
-            energy_list = [x * Hr_J_converter for x in energy_list]
-            self.total_energy.append(energy_list)
+            # i = i.split()
+            # i = [float(k) for k in i]
+            
+            energy = [x * Hr_J_converter for x in energy]
+            self.total_energy.extend(energy)
           
    
         if vet:
