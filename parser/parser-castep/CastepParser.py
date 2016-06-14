@@ -1128,7 +1128,7 @@ class CastepParserContext(object):
                         backend.addArrayValues('x_castep_ts_forces', np.asarray(self.ts_forces[i]))
                         backend.addArrayValues('x_castep_ts_positions', np.asarray(self.ts_position[i]))
                         backend.addValue('x_castep_ts_path', self.ts_path[i])                        
-                        backend.closeSection('x_castep_section_ts',i+gIndex)        
+                        backend.closeSection('x_castep_section_ts',i)        
 
                     backend.openSection('x_castep_section_ts_final')
                     backend.addValue('x_castep_ts_energy_final', self.ts_total_energy_f)
