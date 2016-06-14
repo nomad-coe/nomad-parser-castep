@@ -62,12 +62,12 @@ class CastepTSParserContext(object):
         """
         self.parser = parser
     
-    def onClose_x_castep_section_ts(self, backend, gIndex, section):
+    def onClose_x_castep_section_ts_store(self, backend, gIndex, section):
        
         
         vet = section ['x_castep_ts_cell_vectors_store']
         forces = section ['x_castep_ts_forces_store']
-        atoms_lab = section ['x_castep_ts_lab']
+        
         position = section ['x_castep_ts_positions_store']
         energy = section['x_castep_ts_energy']
         # path_step = section ['x_castep_ts_path']        
@@ -79,9 +79,7 @@ class CastepTSParserContext(object):
         HrK_to_K_coverter= float(3.1668114e-6)
         
         for i in energy:
-            # i = i.split()
-            # i = [float(k) for k in i]
-            
+         
             energy = [x * Hr_J_converter for x in energy]
             self.total_energy.extend(energy)
           
@@ -116,7 +114,7 @@ class CastepTSParserContext(object):
                 self.md_forces.append(f_st_int)                
             self.total_forces.append(self.md_forces)
     
-    def onClose_x_castep_section_ts_final(self, backend, gIndex, section):
+    def onClose_x_castep_section_ts_final_store(self, backend, gIndex, section):
         # path_final_ts = section ['x_castep_ts_path_ts_final']  
         vet_final = section ['x_castep_ts_cell_vectors_final_store']
         forces_final = section ['x_castep_ts_forces_final_store']
@@ -166,7 +164,7 @@ class CastepTSParserContext(object):
                 self.md_forces_final.append(f_st_intf)                
             # self.total_forces_final.append(self.md_forces_final)
     
-    def onClose_x_castep_section_ts_product(self, backend, gIndex, section):
+    def onClose_x_castep_section_ts_product_store(self, backend, gIndex, section):
          # path_product = section ['x_castep_ts_path_product']  
         vet_pro = section ['x_castep_ts_cell_vectors_pro_store']
         forces_pro = section ['x_castep_ts_forces_pro_store']
@@ -248,17 +246,17 @@ def build_CastepTSFileSimpleMatcher():
             SM (name = 'Root2',
             startReStr =r"\sLST\s*[0-9.]\s*(?P<x_castep_ts_path>[-+0-9.eEdD]+)\s*",
             endReStr ="/n",
-            sections = ['x_castep_section_ts'],
+            sections = ['x_castep_section_ts_store'],
             repeats = True,
             subMatchers = [
                 SM (r"\s*(?P<x_castep_ts_energy>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
                 SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),                    
-                SM(r"\s(?P<x_castep_ts_lab>[A-Za-z]+\s*[0-9.]+)\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
+                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
                 SM (name = 'Root3',
                     startReStr =r"\sTS\s*0\s*(?P<x_castep_ts_path_ts_final>[-+0-9.eEdD]+)\s*",
                     endReStr ="/n",
-                    sections = ['x_castep_section_ts_final'],
+                    sections = ['x_castep_section_ts_final_store'],
                     repeats = True,
                     subMatchers = [
                             SM (r"\s*(?P<x_castep_ts_energy_final_store>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
@@ -269,7 +267,7 @@ def build_CastepTSFileSimpleMatcher():
                 SM (name = 'Root3',
                     startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
                     endReStr ="/n",
-                    sections = ['x_castep_section_ts_product'],
+                    sections = ['x_castep_section_ts_product_store'],
                     repeats = True,
                     subMatchers = [
                             SM (r"\s*(?P<x_castep_ts_energy_product_store>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
