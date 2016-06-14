@@ -67,7 +67,7 @@ class CastepTSParserContext(object):
         
         vet = section ['x_castep_ts_cell_vectors_store']
         forces_ts = section ['x_castep_ts_forces_store']
-        
+        print forces_ts,'ciao'
         position = section ['x_castep_ts_positions_store']
         energy = section['x_castep_ts_energy']
         # path_step = section ['x_castep_ts_path']        
@@ -267,7 +267,7 @@ def build_CastepTSFileSimpleMatcher():
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
                     ]),            
-            SM (name = 'Root3',
+            SM (name = 'Root4',
                 startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
                 endReStr ="/n",
                 sections = ['x_castep_section_ts_product_store'],
