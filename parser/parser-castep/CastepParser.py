@@ -1035,7 +1035,7 @@ class CastepParserContext(object):
             self.frame_position =MDSuperContext.total_positions
             self.frame_cell=MDSuperContext.frame_cell
             self.frame_vet_velocities =MDSuperContext.vector_velocities
-           
+            
 
             
             if self.frame_temp:
@@ -1110,7 +1110,7 @@ class CastepParserContext(object):
                     self.ts_cell_vector = TSSuperContext.frame_cell
                     self.ts_forces = TSSuperContext.total_forces
                     self.ts_position = TSSuperContext.total_positions
-                    
+                   
                     self.ts_path = TSSuperContext.path
                   
                     self.ts_total_energy_f = TSSuperContext.total_energy_final
@@ -1125,7 +1125,7 @@ class CastepParserContext(object):
                     self.ts_path_p =TSSuperContext.path_pro
                     for i in range(len(self.ts_total_energy)):
                         backend.openSection('x_castep_section_ts')
-                        # backend.addValue('x_castep_ts_path', self.ts_path[i]) 
+                        backend.addValue('x_castep_ts_path', self.ts_path[i]) 
                        
                         backend.addValue('x_castep_ts_energy_total', self.ts_total_energy[i])
                         backend.addArrayValues('x_castep_ts_cell_vectors', np.asarray(self.ts_cell_vector[i]))

@@ -63,7 +63,8 @@ class CastepTSParserContext(object):
         self.parser = parser
     
     def onClose_x_castep_section_ts(self, backend, gIndex, section):
-    
+        gIndexGroupTS= backend.openSection('x_castep_section_ts')
+        print gIndexGroupTS,'ciao'
         vet = section ['x_castep_ts_cell_vectors_store']
         forces = section ['x_castep_ts_forces_store']
         atoms_lab = section ['x_castep_ts_lab']
@@ -264,40 +265,40 @@ def build_CastepTSFileSimpleMatcher():
                 
             ]), 
             
-            SM (name = 'Root4',
-                startReStr =r"\sQST\s*[0-9.]\s*(?P<x_castep_ts_path>[-+0-9.eEdD]+)\s*",
-                endReStr ="/n",
-                sections = ['x_castep_section_ts'],
-                repeats = True,
-                subMatchers = [
-                    SM (r"\s*(?P<x_castep_ts_energy>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-                    SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),                    
-                    SM(r"\s(?P<x_castep_ts_lab>[A-Za-z]+\s*[0-9.]+)\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-                    SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-                    SM (name = 'Root3',
-                    startReStr =r"\sTS\s*0\s*(?P<x_castep_ts_path_ts_final>[-+0-9.eEdD]+)\s*",
-                    endReStr ="/n",
-                    sections = ['x_castep_section_ts_final'],
-                    repeats = True,
-                    subMatchers = [
-                            SM (r"\s*(?P<x_castep_ts_energy_final>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-                            SM (r"\s*(?P<x_castep_ts_cell_vectors_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
-                            SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-                            SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-                    ]),                   
-                    SM (name = 'Root3',
-                    startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
-                    endReStr ="/n",
-                    sections = ['x_castep_section_ts_product'],
-                    repeats = True,
-                    subMatchers = [
-                            SM (r"\s*(?P<x_castep_ts_energy_product>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-                            SM (r"\s*(?P<x_castep_ts_cell_vectors_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
-                            SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-                            SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-                    ]),            
+            # SM (name = 'Root4',
+            #     startReStr =r"\sQST\s*[0-9.]\s*(?P<x_castep_ts_path>[-+0-9.eEdD]+)\s*",
+            #     endReStr ="/n",
+            #     sections = ['x_castep_section_ts'],
+            #     repeats = True,
+            #     subMatchers = [
+            #         SM (r"\s*(?P<x_castep_ts_energy>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
+            #         SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),                    
+            #         SM(r"\s(?P<x_castep_ts_lab>[A-Za-z]+\s*[0-9.]+)\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
+            #         SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
+            #         SM (name = 'Root3',
+            #         startReStr =r"\sTS\s*0\s*(?P<x_castep_ts_path_ts_final>[-+0-9.eEdD]+)\s*",
+            #         endReStr ="/n",
+            #         sections = ['x_castep_section_ts_final'],
+            #         repeats = True,
+            #         subMatchers = [
+            #                 SM (r"\s*(?P<x_castep_ts_energy_final>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
+            #                 SM (r"\s*(?P<x_castep_ts_cell_vectors_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
+            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
+            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
+            #         ]),                   
+            #         SM (name = 'Root3',
+            #         startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
+            #         endReStr ="/n",
+            #         sections = ['x_castep_section_ts_product'],
+            #         repeats = True,
+            #         subMatchers = [
+            #                 SM (r"\s*(?P<x_castep_ts_energy_product>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
+            #                 SM (r"\s*(?P<x_castep_ts_cell_vectors_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
+            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
+            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
+            #         ]),            
                 
-            ]),        
+            # ]),        
         ])
        
                 
@@ -318,8 +319,9 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
         Dictionary with metaname as key and caching level as value.
     """
     # manually adjust caching of metadata
-    cachingLevelForMetaName = {'section_run': CachingLvl,
-                                'x_castep_section_ts': CachingLvl,
+    cachingLevelForMetaName = {
+                                 'section_run': CachingLvl,
+                                 'x_castep_section_ts': CachingLvl,
                           
                               }
     # Set all band metadata to Cache as they need post-processsing.
