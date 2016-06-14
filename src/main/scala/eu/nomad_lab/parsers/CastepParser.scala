@@ -30,6 +30,7 @@ object CastepParser extends SimpleExternalParserGenerator(
     "parser-castep/CastepCellParser.py",
     "parser-castep/CastepCommon.py",
     "parser-castep/CastepMDParser.py",
+    "parser-castep/CastepTSParser.py",
     "parser-castep/setup_paths.py",
     "nomad_meta_info/public.nomadmetainfo.json",
     "nomad_meta_info/common.nomadmetainfo.json",
