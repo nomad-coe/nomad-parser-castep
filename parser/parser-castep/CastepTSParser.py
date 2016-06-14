@@ -48,7 +48,7 @@ class CastepTSParserContext(object):
         self.frame_cell_final=[]
         self.vector_velocities=[]
         self.frame_time =[]
-        self.path = []
+        self.path_ts = []
         self.path_final = []
         self.path_pro = []
         self.total_positions_final=[]
@@ -70,10 +70,10 @@ class CastepTSParserContext(object):
         atoms_lab = section ['x_castep_ts_lab']
         position = section ['x_castep_ts_positions_store']
         energy = section['x_castep_ts_energy']
-        path = section ['x_castep_ts_path']        
+        # path_step = section ['x_castep_ts_path']        
         
-        for i in range (len(path)):
-            self.path.append(path[i])
+        # for i in range (len(path_step)):
+        #     self.path_ts.append(path_step[i])
       
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
@@ -117,14 +117,15 @@ class CastepTSParserContext(object):
             self.total_forces.append(self.md_forces)
     
     def onClose_x_castep_section_ts_final(self, backend, gIndex, section):
-        path_final = section ['x_castep_ts_path_ts_final']  
+        # path_final_ts = section ['x_castep_ts_path_ts_final']  
         vet_final = section ['x_castep_ts_cell_vectors_final_store']
         forces_final = section ['x_castep_ts_forces_final_store']
         
         position_final = section ['x_castep_ts_positions_final_store']
         energy_final = section['x_castep_ts_energy_final']
         
-        self.path_final = path_final
+        # for i in range (len(path_final_ts)):
+        #     self.path_final = path_final_ts[i]
         
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
@@ -166,7 +167,7 @@ class CastepTSParserContext(object):
             # self.total_forces_final.append(self.md_forces_final)
     
     def onClose_x_castep_section_ts_product(self, backend, gIndex, section):
-        path_pro = section ['x_castep_ts_path_product']  
+         # path_product = section ['x_castep_ts_path_product']  
         vet_pro = section ['x_castep_ts_cell_vectors_pro_store']
         forces_pro = section ['x_castep_ts_forces_pro_store']
         
@@ -176,8 +177,9 @@ class CastepTSParserContext(object):
         
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
-                      
-        self.path_pro = path_pro
+        
+        # for i in range (len(path_product)):              
+        #     self.path_pro = path_product[i]
    
         
         for i in energy_pro:
@@ -215,6 +217,18 @@ class CastepTSParserContext(object):
                 f_st_intp = f
                 self.md_forces_pro.append(f_st_intp)               
 
+    def onClose_section_run(self, backend, gIndex, section):            
+        path_product = section ['x_castep_ts_path_product']  
+        path_final_ts = section ['x_castep_ts_path_ts_final']
+        path_step = section ['x_castep_ts_path'] 
+        for i in range (len(path_step)):
+            self.path_ts.append(path_step[i])
+
+        for i in range (len(path_product)):              
+            self.path_pro = path_product[i]    
+
+        for i in range (len(path_final_ts)):
+            self.path_final = path_final_ts[i]    
 
 def build_CastepTSFileSimpleMatcher():
     """Builds the SimpleMatcher to parse the *.md file of CASTEP.

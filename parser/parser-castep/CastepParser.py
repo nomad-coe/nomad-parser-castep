@@ -1111,7 +1111,7 @@ class CastepParserContext(object):
                     self.ts_forces = TSSuperContext.total_forces
                     self.ts_position = TSSuperContext.total_positions
                    
-                    self.ts_path = TSSuperContext.path
+                    self.ts_path = TSSuperContext.path_ts
                   
                     self.ts_total_energy_f = TSSuperContext.total_energy_final
                     self.ts_forces_f = TSSuperContext.md_forces_final
