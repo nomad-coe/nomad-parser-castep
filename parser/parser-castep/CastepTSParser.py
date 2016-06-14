@@ -105,16 +105,17 @@ class CastepTSParserContext(object):
             self.total_positions.append(self.atom_position)
       
         if forces is not None:
-
-            self.md_forces = []
+            
+            self.ts_forces = []
             for f in forces:                
                 f = f.split()
                 f = [float(k) for k in f]
-                f_st_int = f
-                self.md_forces.extend(f_st_int)                
+                f_st_intts = f
                 
-            self.total_forces.append(self.md_forces)
-    
+                self.ts_forces.append(f_st_intts)                 
+            
+            self.total_forces.append(self.ts_forces)
+              
     def onClose_x_castep_section_ts_final_store(self, backend, gIndex, section):
         # path_final_ts = section ['x_castep_ts_path_ts_final']  
         vet_final = section ['x_castep_ts_cell_vectors_final_store']
