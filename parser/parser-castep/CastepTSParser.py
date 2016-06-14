@@ -163,7 +163,7 @@ class CastepTSParserContext(object):
                 self.md_forces_final.append(f_st_intf)                
             # self.total_forces_final.append(self.md_forces_final)
     
-    def onClose_x_castep_section_ts_pro(self, backend, gIndex, section):
+    def onClose_x_castep_section_ts_product(self, backend, gIndex, section):
         path_pro = section ['x_castep_ts_path_product']  
         vet_pro = section ['x_castep_ts_cell_vectors_pro_store']
         forces_pro = section ['x_castep_ts_forces_pro_store']
@@ -253,7 +253,7 @@ def build_CastepTSFileSimpleMatcher():
                 SM (name = 'Root3',
                     startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
                     endReStr ="/n",
-                    sections = ['x_castep_section_ts_pro'],
+                    sections = ['x_castep_section_ts_product'],
                     repeats = True,
                     subMatchers = [
                             SM (r"\s*(?P<x_castep_ts_energy_product>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
@@ -288,7 +288,7 @@ def build_CastepTSFileSimpleMatcher():
                     SM (name = 'Root3',
                     startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
                     endReStr ="/n",
-                    sections = ['x_castep_section_ts_pro'],
+                    sections = ['x_castep_section_ts_product'],
                     repeats = True,
                     subMatchers = [
                             SM (r"\s*(?P<x_castep_ts_energy_product>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
@@ -319,7 +319,8 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
     """
     # manually adjust caching of metadata
     cachingLevelForMetaName = {'section_run': CachingLvl,
-                               'x_castep_section_ts': CachingLvl,
+                                'x_castep_section_ts': CachingLvl,
+                          
                               }
     # Set all band metadata to Cache as they need post-processsing.
     # for name in metaInfoEnv.infoKinds:
