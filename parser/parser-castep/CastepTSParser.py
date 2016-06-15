@@ -115,54 +115,54 @@ class CastepTSParserContext(object):
                 self.ts_forces.append(f_st_intts)                 
             self.total_forces.append(self.ts_forces)
              
-    # def onClose_x_castep_section_ts_final_store(self, backend, gIndex, section):
-    #     # path_final_ts = section ['x_castep_ts_path_ts_final']  
-    #     vet_final = section ['x_castep_ts_cell_vectors_final_store']
-    #     forces_final = section ['x_castep_ts_forces_final_store']
+    def onClose_x_castep_section_ts_final_store(self, backend, gIndex, section):
+        # path_final_ts = section ['x_castep_ts_path_ts_final']  
+        vet_final = section ['x_castep_ts_cell_vectors_final_store']
+        forces_final = section ['x_castep_ts_forces_final_store']
         
-    #     position_final = section ['x_castep_ts_positions_final_store']
-    #     energy_final = section['x_castep_ts_energy_final_store']
+        position_final = section ['x_castep_ts_positions_final_store']
+        energy_final = section['x_castep_ts_energy_final_store']
         
-    #     # for i in range (len(path_final_ts)):
-    #     #     self.path_final = path_final_ts[i]
+        # for i in range (len(path_final_ts)):
+        #     self.path_final = path_final_ts[i]
         
-    #     Hr_J_converter = float(4.35974e-18)
-    #     HrK_to_K_coverter= float(3.1668114e-6)
+        Hr_J_converter = float(4.35974e-18)
+        HrK_to_K_coverter= float(3.1668114e-6)
         
-    #     for i in energy_final:
+        for i in energy_final:
             
-    #         energy_final = [x * Hr_J_converter for x in energy_final]
-    #         self.total_energy_final = energy_final
+            energy_final = [x * Hr_J_converter for x in energy_final]
+            self.total_energy_final = energy_final
         
    
-    #     if vet_final:
-    #         self.cell_final =[]
-    #         for i in range(len(vet_final)):
-    #             vet_final[i] = vet_final[i].split()  
-    #             vet_final[i] = [float(j) for j in vet_final[i]]                
-    #             vetf_list = vet_final[i]               
-    #             self.cell_final.append(vetf_list)             
-    #     # self.frame_cell_final.append(self.cell_final)
+        if vet_final:
+            self.cell_final =[]
+            for i in range(len(vet_final)):
+                vet_final[i] = vet_final[i].split()  
+                vet_final[i] = [float(j) for j in vet_final[i]]                
+                vetf_list = vet_final[i]               
+                self.cell_final.append(vetf_list)             
+        # self.frame_cell_final.append(self.cell_final)
              
         
-    #     if position_final:
-    #         self.at_nr = len(position_final)
-    #         self.atomf_position=[]
-    #         for i in range(0, self.at_nr):
-    #             position_final[i] = position_final[i].split()
-    #             position_final[i] = [float(j) for j in position_final[i]]
-    #             posf_list = position_final[i]
-    #             self.atomf_position.append(posf_list)
-    #         # self.total_positions_final.append(self.atomf_position)
+        if position_final:
+            self.at_nr = len(position_final)
+            self.atomf_position=[]
+            for i in range(0, self.at_nr):
+                position_final[i] = position_final[i].split()
+                position_final[i] = [float(j) for j in position_final[i]]
+                posf_list = position_final[i]
+                self.atomf_position.append(posf_list)
+            # self.total_positions_final.append(self.atomf_position)
       
-    #     if forces_final is not None:
+        if forces_final is not None:
 
-    #         self.md_forces_final = []
-    #         for f in forces_final:                
-    #             f = f.split()
-    #             f = [float(k) for k in f]
-    #             f_st_intf = f
-    #             self.md_forces_final.append(f_st_intf)                
+            self.md_forces_final = []
+            for f in forces_final:                
+                f = f.split()
+                f = [float(k) for k in f]
+                f_st_intf = f
+                self.md_forces_final.append(f_st_intf)                
                 
             # self.total_forces_final.append(self.md_forces_final)
     
@@ -227,8 +227,8 @@ class CastepTSParserContext(object):
         # for i in range (len(path_product)):              
         #     self.path_pro = path_product[i]    
 
-        # for i in range (len(path_final_ts)):
-        #     self.path_final = path_final_ts[i]    
+        for i in range (len(path_final_ts)):
+            self.path_final = path_final_ts[i]    
 
 def build_CastepTSFileSimpleMatcher():
     """Builds the SimpleMatcher to parse the *.md file of CASTEP.
@@ -257,17 +257,17 @@ def build_CastepTSFileSimpleMatcher():
                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
                 
                    ]), 
-            # SM (name = 'Root3',
-            #     startReStr =r"\sTS\s*0\s*(?P<x_castep_ts_path_ts_final>[-+0-9.eEdD]+)\s*",
-            #     endReStr ="/n",
-            #     sections = ['x_castep_section_ts_final_store'],
-            #     repeats = True,
-            #     subMatchers = [
-            #                 SM (r"\s*(?P<x_castep_ts_energy_final_store>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-            #                 SM (r"\s*(?P<x_castep_ts_cell_vectors_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
-            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-            #         ]),            
+            SM (name = 'Root3',
+                startReStr =r"\sTS\s*0\s*(?P<x_castep_ts_path_ts_final>[-+0-9.eEdD]+)\s*",
+                endReStr ="/n",
+                sections = ['x_castep_section_ts_final_store'],
+                repeats = True,
+                subMatchers = [
+                            SM (r"\s*(?P<x_castep_ts_energy_final_store>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
+                            SM (r"\s*(?P<x_castep_ts_cell_vectors_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
+                            SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
+                            SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
+                    ]),            
             # SM (name = 'Root4',
             #     startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
             #     endReStr ="/n",
