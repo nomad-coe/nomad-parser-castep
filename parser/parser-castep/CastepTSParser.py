@@ -133,7 +133,7 @@ class CastepTSParserContext(object):
             
             energy_final = [x * Hr_J_converter for x in energy_final]
             energy_list = energy_final
-            self.total_energy_final.append(energy_list)
+            self.total_energy_final.extend(energy_list)
         
    
         if vet_final:
@@ -164,7 +164,7 @@ class CastepTSParserContext(object):
                 f = [float(k) for k in f]
                 f_st_intf = f
                 self.md_forces_final.append(f_st_intf)                
-                
+               
             # self.total_forces_final.append(self.md_forces_final)
     
     # def onClose_x_castep_section_ts_product_store(self, backend, gIndex, section):

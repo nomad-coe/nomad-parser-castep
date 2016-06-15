@@ -1138,6 +1138,7 @@ class CastepParserContext(object):
                     backend.addArrayValues('x_castep_ts_cell_vectors_final', np.asarray(self.ts_cell_vector_f))
                     backend.addArrayValues('x_castep_ts_positions_final', np.asarray(self.ts_positions_f))
                     backend.addArrayValues('x_castep_ts_forces_final', np.asarray(self.ts_forces_f))
+                    print self.ts_forces_f,'ciao2'
                     backend.addValue('x_castep_ts_path_ts_final', self.ts_path_f)    
                     backend.closeSection('x_castep_section_ts_final',gIndex)    
                     # backend.openSection('x_castep_section_ts_product')
