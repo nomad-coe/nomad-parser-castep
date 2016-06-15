@@ -121,7 +121,7 @@ class CastepTSParserContext(object):
         forces_final = section ['x_castep_ts_forces_final_store']
         
         position_final = section ['x_castep_ts_positions_final_store']
-        self.total_energy_final = section['x_castep_ts_energy_final_store']
+        energy_final = section['x_castep_ts_energy_final_store']
         
         # for i in range (len(path_final_ts)):
         #     self.path_final = path_final_ts[i]
@@ -129,9 +129,9 @@ class CastepTSParserContext(object):
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
         
-        # for i in energy_final:
+        
             
-        self.total_energy_final = [x * Hr_J_converter for x in self.total_energy_final]
+        self.total_energy_final = Hr_J_converter * energy_final[0]
         # self.total_energy_final = energy_final
         
    
@@ -282,7 +282,7 @@ def build_CastepTSFileSimpleMatcher():
                 
             ]) 
             
-            # SM (name = 'Root4',
+            # SM (name = 'Root5',
             #     startReStr =r"\sQST\s*[0-9.]\s*(?P<x_castep_ts_path>[-+0-9.eEdD]+)\s*",
             #     endReStr ="/n",
             #     sections = ['x_castep_section_ts'],
@@ -292,7 +292,7 @@ def build_CastepTSFileSimpleMatcher():
             #         SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),                    
             #         SM(r"\s(?P<x_castep_ts_lab>[A-Za-z]+\s*[0-9.]+)\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
             #         SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-            #         SM (name = 'Root3',
+            #         SM (name = 'Root6',
             #         startReStr =r"\sTS\s*0\s*(?P<x_castep_ts_path_ts_final>[-+0-9.eEdD]+)\s*",
             #         endReStr ="/n",
             #         sections = ['x_castep_section_ts_final'],
@@ -303,7 +303,7 @@ def build_CastepTSFileSimpleMatcher():
             #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
             #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
             #         ]),                   
-            #         SM (name = 'Root3',
+            #         SM (name = 'Root7',
             #         startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
             #         endReStr ="/n",
             #         sections = ['x_castep_section_ts_product'],
