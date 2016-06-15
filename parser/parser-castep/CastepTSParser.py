@@ -219,7 +219,7 @@ class CastepTSParserContext(object):
 
     def onClose_section_run(self, backend, gIndex, section):            
         # path_product = section ['x_castep_ts_path_product']  
-        # path_final_ts = section ['x_castep_ts_path_ts_final']
+        path_final_ts = section ['x_castep_ts_path_ts_final']
         path_step = section ['x_castep_ts_path'] 
         for i in range (len(path_step)):
             self.path_ts.append(path_step[i])
