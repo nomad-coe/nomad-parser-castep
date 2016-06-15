@@ -129,11 +129,10 @@ class CastepTSParserContext(object):
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
         
-        for i in energy_final:
+        # for i in energy_final:
             
-            energy_final = [x * Hr_J_converter for x in energy_final]
-            energy_list = energy_final
-            self.total_energy_final.extend(energy_list)
+        energy_final = [x * Hr_J_converter for x in energy_final]
+        self.total_energy_final = energy_final
         
    
         if vet_final:
