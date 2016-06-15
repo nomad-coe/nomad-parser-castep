@@ -337,10 +337,9 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
     """
     # manually adjust caching of metadata
     cachingLevelForMetaName = {
-                                'section_run': CachingLvl,
-                                'x_castep_section_ts_store': CachingLvl,
-                                'x_castep_section_final_store': CachingLvl,
-                                'x_castep_section_product_store': CachingLvl,
+                                 'section_run': CachingLvl,
+                                 'x_castep_section_ts': CachingLvl,
+                          
                               }
     # Set all band metadata to Cache as they need post-processsing.
     # for name in metaInfoEnv.infoKinds:
