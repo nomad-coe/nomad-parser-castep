@@ -121,7 +121,7 @@ class CastepTSParserContext(object):
         forces_final = section ['x_castep_ts_forces_final_store']
         
         position_final = section ['x_castep_ts_positions_final_store']
-        energy_final = section['x_castep_ts_energy_final_store']
+        self.total_energy_final = section['x_castep_ts_energy_final_store']
         
         # for i in range (len(path_final_ts)):
         #     self.path_final = path_final_ts[i]
@@ -131,8 +131,8 @@ class CastepTSParserContext(object):
         
         # for i in energy_final:
             
-        energy_final = [x * Hr_J_converter for x in energy_final]
-        self.total_energy_final = energy_final
+        self.total_energy_final = [x * Hr_J_converter for x in self.total_energy_final]
+        # self.total_energy_final = energy_final
         
    
         if vet_final:
