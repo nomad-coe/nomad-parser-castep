@@ -193,7 +193,7 @@ class CastepParserContext(object):
             " LDA-C" : "LDA_C_PZ",
             #" 'EXX','EXX-LDA'" : ""
             #" 'SHF','SX'"      :
-            #" Optimised Effective Potential" :
+             " Optimised Effective Potential" : " Optimised Effective Potential"
         }
        
        
@@ -231,7 +231,7 @@ class CastepParserContext(object):
             "b3lyp"       :"HYB_GGA_XC_B3LYP5",
             #" 'EXX','EXX-LDA'" : ""
             #" 'SHF','SX'"      :
-            #" Optimised Effective Potential" :
+            " Optimised Effective Potential" : " Optimised Effective Potential"
         }
         
         self.functionals = []
@@ -844,7 +844,7 @@ class CastepParserContext(object):
             k_st[i] = [float(j) for j in k_st[i]]
             k_st_int = k_st[i]
             self.castep_band_kpoints.append(k_st_int)
-            # print self.castep_band_kpoints,'martina'
+          
         self.n_spin_channels_bands = 1    
         
 # Storing the eigenvalues (SPIN 1)
@@ -1118,11 +1118,11 @@ class CastepParserContext(object):
                     self.ts_cell_vector_f = TSSuperContext.cell_final
                     self.ts_positions_f = TSSuperContext.atomf_position
                     self.ts_path_f =TSSuperContext.path_final
-                    # self.ts_total_energy_p = TSSuperContext.total_energy_pro
-                    # self.ts_forces_p = TSSuperContext.md_forces_pro
-                    # self.ts_cell_vector_p = TSSuperContext.cell_pro
-                    # self.ts_positions_p = TSSuperContext.atomp_position
-                    # self.ts_path_p =TSSuperContext.path_pro
+                    self.ts_total_energy_p = TSSuperContext.total_energy_pro
+                    self.ts_forces_p = TSSuperContext.md_forces_pro
+                    self.ts_cell_vector_p = TSSuperContext.cell_pro
+                    self.ts_positions_p = TSSuperContext.atomp_position
+                    self.ts_path_p =TSSuperContext.path_pro
                     for i in range(len(self.ts_total_energy)):
                         backend.openSection('x_castep_section_ts')
                         backend.addValue('x_castep_ts_path', self.ts_path[i]) 
@@ -1141,13 +1141,13 @@ class CastepParserContext(object):
                   
                     backend.addValue('x_castep_ts_path_ts_final', self.ts_path_f)    
                     backend.closeSection('x_castep_section_ts_final',gIndex)    
-                    # backend.openSection('x_castep_section_ts_product')
-                    # backend.addValue('x_castep_ts_energy_product', self.ts_total_energy_p)
-                    # backend.addArrayValues('x_castep_ts_cell_vectors_product', np.asarray(self.ts_cell_vector_p))
-                    # backend.addArrayValues('x_castep_ts_positions_product', np.asarray(self.ts_positions_p))
-                    # backend.addArrayValues('x_castep_ts_forces_product', np.asarray(self.ts_forces_p))
-                    # backend.addValue('x_castep_ts_path_product', self.ts_path_p)    
-                    # backend.closeSection('x_castep_section_ts_product',gIndex)
+                    backend.openSection('x_castep_section_ts_product')
+                    backend.addValue('x_castep_ts_energy_product', self.ts_total_energy_p)
+                    backend.addArrayValues('x_castep_ts_cell_vectors_product', np.asarray(self.ts_cell_vector_p))
+                    backend.addArrayValues('x_castep_ts_positions_product', np.asarray(self.ts_positions_p))
+                    backend.addArrayValues('x_castep_ts_forces_product', np.asarray(self.ts_forces_p))
+                    backend.addValue('x_castep_ts_path_product', self.ts_path_p)    
+                    backend.closeSection('x_castep_section_ts_product',gIndex)
 
 ################################################################################################################################################################
 ################################################################################################################################################################
@@ -1297,7 +1297,7 @@ def build_CastepMainFileSimpleMatcher():
             SM(r"\s*density-mixing scheme\s*\:\s*(?P<x_castep_density_mixing_scheme>[A-Za-z]+)"),
             SM(r"\s*max\. length of mixing history\s*\:\s*(?P<x_castep_density_mixing_length>[0-9.]+)"),
             SM(r"\s*charge density mixing amplitude\s*\:\s*(?P<x_castep_charge_density_mixing_amplitude>[0-9.]+)"),
-            
+            SM(r"\s*cut\-off energy for mixing\s*\:\s*(?P<x_castep_cut_off_energy_for_mixing>[0-9.]+)"),
             ])
     PopulationAnalysisParameterSubMatcher = SM(name = 'Pop_analysis' ,            
         sections = ["x_castep_section_population_analysis_parameters"],

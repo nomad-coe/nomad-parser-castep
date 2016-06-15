@@ -166,66 +166,64 @@ class CastepTSParserContext(object):
                
             # self.total_forces_final.append(self.md_forces_final)
     
-    # def onClose_x_castep_section_ts_product_store(self, backend, gIndex, section):
-    #      # path_product = section ['x_castep_ts_path_product']  
-    #     vet_pro = section ['x_castep_ts_cell_vectors_pro_store']
-    #     forces_pro = section ['x_castep_ts_forces_pro_store']
+    def onClose_x_castep_section_ts_product_store(self, backend, gIndex, section):
+         # path_product = section ['x_castep_ts_path_product']  
+        vet_pro = section ['x_castep_ts_cell_vectors_pro_store']
+        forces_pro = section ['x_castep_ts_forces_pro_store']
         
-    #     position_pro = section ['x_castep_ts_positions_pro_store']
-    #     energy_pro = section['x_castep_ts_energy_product_store']
+        position_pro = section ['x_castep_ts_positions_pro_store']
+        energy_pro = section['x_castep_ts_energy_product_store']
         
         
-    #     Hr_J_converter = float(4.35974e-18)
-    #     HrK_to_K_coverter= float(3.1668114e-6)
+        Hr_J_converter = float(4.35974e-18)
+        HrK_to_K_coverter= float(3.1668114e-6)
         
-    #     # for i in range (len(path_product)):              
-    #     #     self.path_pro = path_product[i]
+        # for i in range (len(path_product)):              
+        #     self.path_pro = path_product[i]
    
         
-    #     for i in energy_pro:
-            
-    #         energy_pro = [x * Hr_J_converter for x in energy_pro]
-    #         self.total_energy_pro = energy_pro
+      
+        self.total_energy_pro = energy_pro[0] * Hr_J_converter
         
    
-    #     if vet_pro:
-    #         self.cell_pro =[]
-    #         for i in range(len(vet_pro)):
-    #             vet_pro[i] = vet_pro[i].split()  
-    #             vet_pro[i] = [float(j) for j in vet_pro[i]]                
-    #             vetp_list = vet_pro[i]               
-    #             self.cell_pro.append(vetp_list)             
-    #     # self.frame_cell_final.append(self.cell_final)
+        if vet_pro:
+            self.cell_pro =[]
+            for i in range(len(vet_pro)):
+                vet_pro[i] = vet_pro[i].split()  
+                vet_pro[i] = [float(j) for j in vet_pro[i]]                
+                vetp_list = vet_pro[i]               
+                self.cell_pro.append(vetp_list)             
+        # self.frame_cell_final.append(self.cell_final)
              
         
-    #     if position_pro:
-    #         self.at_nr = len(position_pro)
-    #         self.atomp_position=[]
-    #         for i in range(0, self.at_nr):
-    #             position_pro[i] = position_pro[i].split()
-    #             position_pro[i] = [float(j) for j in position_pro[i]]
-    #             posp_list = position_pro[i]
-    #             self.atomp_position.append(posp_list)
-    #         # self.total_positions_final.append(self.atomf_position)
+        if position_pro:
+            self.at_nr = len(position_pro)
+            self.atomp_position=[]
+            for i in range(0, self.at_nr):
+                position_pro[i] = position_pro[i].split()
+                position_pro[i] = [float(j) for j in position_pro[i]]
+                posp_list = position_pro[i]
+                self.atomp_position.append(posp_list)
+            # self.total_positions_final.append(self.atomf_position)
       
-    #     if forces_pro is not None:
+        if forces_pro is not None:
 
-    #         self.md_forces_pro = []
-    #         for f in forces_pro:                
-    #             f = f.split()
-    #             f = [float(k) for k in f]
-    #             f_st_intp = f
-    #             self.md_forces_pro.append(f_st_intp)               
+            self.md_forces_pro = []
+            for f in forces_pro:                
+                f = f.split()
+                f = [float(k) for k in f]
+                f_st_intp = f
+                self.md_forces_pro.append(f_st_intp)               
 
     def onClose_section_run(self, backend, gIndex, section):            
-        # path_product = section ['x_castep_ts_path_product']  
+        path_product = section ['x_castep_ts_path_product']  
         path_final_ts = section ['x_castep_ts_path_ts_final']
         path_step = section ['x_castep_ts_path'] 
         for i in range (len(path_step)):
             self.path_ts.append(path_step[i])
 
-        # for i in range (len(path_product)):              
-        #     self.path_pro = path_product[i]    
+        for i in range (len(path_product)):              
+            self.path_pro = path_product[i]    
 
         for i in range (len(path_final_ts)):
             self.path_final = path_final_ts[i]    
@@ -258,6 +256,18 @@ def build_CastepTSFileSimpleMatcher():
                 
                    ]), 
             SM (name = 'Root3',
+            startReStr =r"\sQST\s*[0-9.]\s*(?P<x_castep_ts_path>[-+0-9.eEdD]+)\s*",
+            endReStr ="/n",
+            sections = ['x_castep_section_ts_store'],
+            repeats = True,
+            subMatchers = [
+                SM (r"\s*(?P<x_castep_ts_energy>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
+                SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),                    
+                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
+                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
+                
+                   ]), 
+            SM (name = 'Root4',
                 startReStr =r"\sTS\s*0\s*(?P<x_castep_ts_path_ts_final>[-+0-9.eEdD]+)\s*",
                 endReStr ="/n",
                 sections = ['x_castep_section_ts_final_store'],
@@ -268,61 +278,23 @@ def build_CastepTSFileSimpleMatcher():
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
                     ]),            
-            # SM (name = 'Root4',
-            #     startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
-            #     endReStr ="/n",
-            #     sections = ['x_castep_section_ts_product_store'],
-            #     repeats = True,
-            #     subMatchers = [
-            #                 SM (r"\s*(?P<x_castep_ts_energy_product_store>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-            #                 SM (r"\s*(?P<x_castep_ts_cell_vectors_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
-            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-            #         ]),          
+            SM (name = 'Root5',
+                startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
+                endReStr ="/n",
+                sections = ['x_castep_section_ts_product_store'],
+                repeats = True,
+                subMatchers = [
+                            SM (r"\s*(?P<x_castep_ts_energy_product_store>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
+                            SM (r"\s*(?P<x_castep_ts_cell_vectors_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
+                            SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
+                            SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
+                    ]),          
                 
             ]) 
             
-            # SM (name = 'Root5',
-            #     startReStr =r"\sQST\s*[0-9.]\s*(?P<x_castep_ts_path>[-+0-9.eEdD]+)\s*",
-            #     endReStr ="/n",
-            #     sections = ['x_castep_section_ts'],
-            #     repeats = True,
-            #     subMatchers = [
-            #         SM (r"\s*(?P<x_castep_ts_energy>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-            #         SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),                    
-            #         SM(r"\s(?P<x_castep_ts_lab>[A-Za-z]+\s*[0-9.]+)\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-            #         SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-            #         SM (name = 'Root6',
-            #         startReStr =r"\sTS\s*0\s*(?P<x_castep_ts_path_ts_final>[-+0-9.eEdD]+)\s*",
-            #         endReStr ="/n",
-            #         sections = ['x_castep_section_ts_final'],
-            #         repeats = True,
-            #         subMatchers = [
-            #                 SM (r"\s*(?P<x_castep_ts_energy_final>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-            #                 SM (r"\s*(?P<x_castep_ts_cell_vectors_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
-            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-            #         ]),                   
-            #         SM (name = 'Root7',
-            #         startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
-            #         endReStr ="/n",
-            #         sections = ['x_castep_section_ts_product'],
-            #         repeats = True,
-            #         subMatchers = [
-            #                 SM (r"\s*(?P<x_castep_ts_energy_product>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-            #                 SM (r"\s*(?P<x_castep_ts_cell_vectors_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
-            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-            #                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-            #         ]),            
-                
-            # ]),        
-        
-       
-                
-        
+            
 
-        
-
+    
 
 def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
     """Sets the caching level for the metadata.
@@ -338,13 +310,14 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
     # manually adjust caching of metadata
     cachingLevelForMetaName = {
                                  'section_run': CachingLvl,
-                                 'x_castep_section_ts': CachingLvl,
-                          
+                                 'x_castep_section_ts_store': CachingLvl,
+                                 'x_castep_section_ts_final_store': CachingLvl,
+                                 'x_castep_section_ts_product_store': CachingLvl,   
                               }
     # Set all band metadata to Cache as they need post-processsing.
-    # for name in metaInfoEnv.infoKinds:
-    #     if name.startswith('castep_'):
-    #         cachingLevelForMetaName[name] = CachingLevel.Cache
+    for name in metaInfoEnv.infoKinds:
+        if name.startswith('x_castep_'):
+            cachingLevelForMetaName[name] = CachingLevel.Cache
     return cachingLevelForMetaName
 
 
