@@ -1335,6 +1335,26 @@ def build_CastepMainFileSimpleMatcher():
             SM(r"\s*max\. ionic \|force\| tolerance\s*\:\s*(?P<x_castep_ts_force_tolerance>[-+0-9.eEd]+)"),
             SM(r"\s*max\. ionic \|displacement\| tolerance\s*\:\s*(?P<x_castep_ts_displacement_tolerance>[-+0-9.eEd]+)"),
             ])
+    OpticsParameterSubMatcher = SM(name = 'optics_parameters' ,            
+        sections = ["x_castep_section_optics_parameters"],
+        startReStr = r"\s\*\*\** Optics Parameters \*\*\**\s*",
+        subMatchers = [
+            SM(r"\s*search method\s*\:\s*(?P<x_castep_optics_n_bands>[0-9.]+)"),
+            SM(r"\s*band convergence tolerance\s*\:\s*(?P<x_castep_optics_tolerance>[-+0-9.eEd]+)"),
+ 
+            
+            ])
+    ElecSpecParameterSubMatcher = SM(name = 'electronic_spectroscopy_parameters' ,            
+        sections = ["x_castep_section_electronic_spectroscpy_parameters"],
+        startReStr = r"\s\*\*\** Electronic Spectroscopy Parameters \*\*\**\s*",
+        subMatchers = [
+            SM(r"\s*electronic spectroscopy with theory level\s*\:\s*(?P<x_castep_theory_level>[A-Z]+)"),
+            SM(r"\s*spectroscopy calculation\s*\:\s*(?P<x_castep_spectroscopy_calculation>[A-Za-z0-9 + A-Za-z0-9 ]+)"),
+            SM(r"\s*max\. number of iterations \s*\:\s*(?P<x_castep_spec_max_iter>[0-9.]+)"),
+            SM(r"\s*max\. steps per iteration\s*\:\s*(?P<x_castep_spec_max_steps>[0-9.]+)"),
+            SM(r"\s*number of bands \/ k-point\s*\:\s*(?P<x_castep_spec_max_bands>[0-9.]+)"),
+            SM(r"\s*band convergence tolerance\s*\:\s*(?P<x_castep_spec_tolerance>[-+0-9.eEd]+)"),
+            ])
     ########################################
     # submatcher for section system description
     systemDescriptionSubMatcher = SM(name = "systemDescription",
@@ -2001,6 +2021,10 @@ def build_CastepMainFileSimpleMatcher():
                 phononCalculationSubMatcher,
                 
                 TSParameterSubMatcher,
+                
+                OpticsParameterSubMatcher,
+
+                ElecSpecParameterSubMatcher,
                 systemDescriptionSubMatcher, # section_system subMatcher
         
                 SM(name = 'Atom_topology',
