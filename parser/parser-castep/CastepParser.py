@@ -1113,16 +1113,16 @@ class CastepParserContext(object):
                    
                     self.ts_path = TSSuperContext.path_ts
                   
-                    # self.ts_total_energy_f = TSSuperContext.total_energy_final
-                    # self.ts_forces_f = TSSuperContext.md_forces_final
-                    # self.ts_cell_vector_f = TSSuperContext.cell_final
-                    # self.ts_positions_f = TSSuperContext.atomf_position
-                    # self.ts_path_f =TSSuperContext.path_final
-                    # self.ts_total_energy_p = TSSuperContext.total_energy_pro
-                    # self.ts_forces_p = TSSuperContext.md_forces_pro
-                    # self.ts_cell_vector_p = TSSuperContext.cell_pro
-                    # self.ts_positions_p = TSSuperContext.atomp_position
-                    # self.ts_path_p =TSSuperContext.path_pro
+                    self.ts_total_energy_f = TSSuperContext.total_energy_final
+                    self.ts_forces_f = TSSuperContext.md_forces_final
+                    self.ts_cell_vector_f = TSSuperContext.cell_final
+                    self.ts_positions_f = TSSuperContext.atomf_position
+                    self.ts_path_f =TSSuperContext.path_final
+                    self.ts_total_energy_p = TSSuperContext.total_energy_pro
+                    self.ts_forces_p = TSSuperContext.md_forces_pro
+                    self.ts_cell_vector_p = TSSuperContext.cell_pro
+                    self.ts_positions_p = TSSuperContext.atomp_position
+                    self.ts_path_p =TSSuperContext.path_pro
                     for i in range(len(self.ts_total_energy)):
                         backend.openSection('x_castep_section_ts')
                         backend.addValue('x_castep_ts_path', self.ts_path[i]) 
@@ -1133,20 +1133,20 @@ class CastepParserContext(object):
                                                
                         backend.closeSection('x_castep_section_ts',i)        
 
-                    # backend.openSection('x_castep_section_ts_final')
-                    # backend.addValue('x_castep_ts_energy_final', self.ts_total_energy_f)
-                    # backend.addArrayValues('x_castep_ts_cell_vectors_final', np.asarray(self.ts_cell_vector_f))
-                    # backend.addArrayValues('x_castep_ts_positions_final', np.asarray(self.ts_positions_f))
-                    # backend.addArrayValues('x_castep_ts_forces_final', np.asarray(self.ts_forces_f))
-                    # backend.addValue('x_castep_ts_path_ts_final', self.ts_path_f)    
-                    # backend.closeSection('x_castep_section_ts_final',gIndex)    
-                    # backend.openSection('x_castep_section_ts_product')
-                    # backend.addValue('x_castep_ts_energy_product', self.ts_total_energy_p)
-                    # backend.addArrayValues('x_castep_ts_cell_vectors_product', np.asarray(self.ts_cell_vector_p))
-                    # backend.addArrayValues('x_castep_ts_positions_product', np.asarray(self.ts_positions_p))
-                    # backend.addArrayValues('x_castep_ts_forces_product', np.asarray(self.ts_forces_p))
-                    # backend.addValue('x_castep_ts_path_product', self.ts_path_p)    
-                    # backend.closeSection('x_castep_section_ts_product',gIndex)
+                    backend.openSection('x_castep_section_ts_final')
+                    backend.addValue('x_castep_ts_energy_final', self.ts_total_energy_f)
+                    backend.addArrayValues('x_castep_ts_cell_vectors_final', np.asarray(self.ts_cell_vector_f))
+                    backend.addArrayValues('x_castep_ts_positions_final', np.asarray(self.ts_positions_f))
+                    backend.addArrayValues('x_castep_ts_forces_final', np.asarray(self.ts_forces_f))
+                    backend.addValue('x_castep_ts_path_ts_final', self.ts_path_f)    
+                    backend.closeSection('x_castep_section_ts_final',gIndex)    
+                    backend.openSection('x_castep_section_ts_product')
+                    backend.addValue('x_castep_ts_energy_product', self.ts_total_energy_p)
+                    backend.addArrayValues('x_castep_ts_cell_vectors_product', np.asarray(self.ts_cell_vector_p))
+                    backend.addArrayValues('x_castep_ts_positions_product', np.asarray(self.ts_positions_p))
+                    backend.addArrayValues('x_castep_ts_forces_product', np.asarray(self.ts_forces_p))
+                    backend.addValue('x_castep_ts_path_product', self.ts_path_p)    
+                    backend.closeSection('x_castep_section_ts_product',gIndex)
 
 ################################################################################################################################################################
 ################################################################################################################################################################
