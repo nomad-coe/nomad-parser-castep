@@ -1357,6 +1357,25 @@ def build_CastepMainFileSimpleMatcher():
             SM(r"\s*number of bands \/ k-point\s*\:\s*(?P<x_castep_spec_max_bands>[0-9.]+)"),
             SM(r"\s*band convergence tolerance\s*\:\s*(?P<x_castep_spec_tolerance>[-+0-9.eEd]+)"),
             ])
+    
+
+    TDDFTParameterSubMatcher = SM(name = 'TDDFT' ,            
+        sections = ["x_castep_section_tddft_parameters"],
+        startReStr = r"\s\*\*\** Time-Dependent DFT Parameters \*\*\**\s*",
+        subMatchers = [
+            SM(r"\s*number of excited states \s*\:\s*(?P<x_castep_tddft_n_excited_states>[0-9.]+)"),
+            SM(r"\s*state selected for calculation of forces\s*\:\s*(?P<x_castep_tddft_n_states_forces>[0-9.]+)"),
+            SM(r"\s*state convergence tolerance\s*\:\s*(?P<x_castep_tddft_state_tolerance>[-+0-9.eEd]+)"),
+            SM(r"\s*convergence tolerance window\s*\:\s*(?P<x_castep_tddft_state_tolerance_window>[0-9.]+)"),
+            SM(r"\s*max. number of iterations\s*\:\s*(?P<x_castep_tddft_max_iter>[0-9.]+)"),
+            SM(r"\s*no. of extra (convergence indifferent) states\s*\:\s*(?P<x_castep_tddft_extra_states>[0-9.]+)"),
+            SM(r"\s*using tddft functional\s*\:\s*(?P<x_castep_tddft_functional>[A-Za-z0-9 + A-Za-z0-9 ]+)"),
+            SM(r"\s*Time-Dependent DFT method\s*\:\s*(?P<x_castep_tddft_method>[A-Za-z]+)"),
+            
+            SM(r"\s*matrix eigenvalue method\s*\:\s*(?P<x_castep_tddft_eigenmethod>[A-Za-z]+)"),
+            SM(r"\s*Time-Dependent DFT approximation\s*\:\s*(?P<x_castep_tddft_approximation>[A-Za-z]+)"),
+            SM(r"\s*Time-Dependent DFT position operator\s*\:\s*(?P<x_castep_tddft_position_op>[A-Za-z]+)"),
+            ])
     ########################################
     # submatcher for section system description
     systemDescriptionSubMatcher = SM(name = "systemDescription",
@@ -2056,6 +2075,9 @@ def build_CastepMainFileSimpleMatcher():
                 OpticsParameterSubMatcher,
 
                 ElecSpecParameterSubMatcher,
+                
+                TDDFTParameterSubMatcher,
+
                 systemDescriptionSubMatcher, # section_system subMatcher
         
                 SM(name = 'Atom_topology',
