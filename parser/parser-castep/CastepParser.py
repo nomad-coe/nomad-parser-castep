@@ -634,12 +634,14 @@ class CastepParserContext(object):
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
      
         pos = section['x_castep_store_atom_positions']
+        
         if pos:
             self.at_nr = len(pos)
             for i in range(0, self.at_nr):
                 pos[i] = pos[i].split()
                 pos[i] = [float(j) for j in pos[i]]
                 self.castep_atom_positions.append(pos[i])
+               
             backend.addArrayValues('x_castep_atom_positions', np.asarray(self.castep_atom_positions))
 
 
@@ -1378,7 +1380,7 @@ def build_CastepMainFileSimpleMatcher():
 
 
            # atomic positions and cell dimesions
-           SM(startReStr = r"\s*Lattice parameters",
+            SM(startReStr = r"\s*Lattice parameters",
               forwardMatch = True,
               sections = ["x_castep_section_atom_positions"],
               subMatchers = [
@@ -1389,7 +1391,7 @@ def build_CastepMainFileSimpleMatcher():
                  SM(r"\s*x\s*(?P<x_castep_store_atom_labels>[A-Za-z0-9]+\s+[\d\.]+)\s*[0-9]\s*(?P<x_castep_store_atom_positions>[\d\.]+\s+[\d\.]+\s+[\d\.]+)",
                     endReStr = "\n",
                     repeats = True)
-
+                
                              ]), # CLOSING castep_section_atom_position
 
             # atomic positions and cell dimesions
@@ -1956,7 +1958,36 @@ def build_CastepMainFileSimpleMatcher():
                           ])
                 
     
-
+    TSSubMatcher =  SM (name = 'TS_search',
+            startReStr = r"\+* Starting Transition State Search \+*",
+            sections = ['section_single_configuration_calculation','section_system'],
+            endReStr = r"\s*Atomic\sPopulations\s\(Mulliken\)\s*",
+            
+            repeats = True,
+            subMatchers = [
+                        SM (name = 'TS_search',
+                        startReStr = r"SCF loop\s*Energy\s*Fermi\s*Energy gain\s*Timer\s*\<\-\-\sSCF\s*",
+                        sections = ['x_castep_section_ts_scf'],
+                        endReStr = r"\sPath coordinate\:",
+            #endReStr = r"\s\[A-Za-z]+\:\sGeometry\soptimization\scompleted\ssuccessfully.\s*",
+                        repeats = True,
+                        subMatchers = [
+                            SM(sections = ['x_castep_section_ts_scf_iteration'],
+                                startReStr = r"\s*[0-9]+\s*(?P<x_castep_scf_ts_iteration_energy__eV>[-+0-9.eEdD]*)\s*(?P<x_castep_scf_ts_iteration_energy_change__eV>[-+0-9.eEdD]*)\s*(?P<x_castep_scf_ts_time>[0-9.]*)\s*\<\-\-\sSCF\s*",
+                                endReStr = "\n",
+                                repeats = True),
+                        
+                            SM(sections = ['x_castep_section_ts_scf_iteration'],
+                                startReStr = r"\s*[0-9]+\s*(?P<x_castep_scf_ts_iteration_energy__eV>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<x_castep_scf_ts_iteration_energy_change__eV>[-+0-9.eEdD]*)\s*(?P<x_castep_scf_ts_time>[0-9.]*)\s*\<\-\-\sSCF\s*",
+                                endReStr = "\n",
+                                repeats = True),     
+                            
+                        SM(r"Final energy = *(?P<x_castep_scf_ts_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
+                        SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<x_castep_scf_ts_total_energy_free__eV>[-+0-9.eEdD]*)"),
+                        SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<x_castep_scf_ts_T0__eV>[-+0-9.eEdD]*)"),
+                
+                 ]),   
+             ])
     Mulliken_SubMatcher = SM (name = 'Mulliken population analysis',
             startReStr = r"\s*Atomic Populations\s\(Mulliken\)\s*",
             sections = ['x_castep_section_population_analysis'],
@@ -2070,7 +2101,7 @@ def build_CastepMainFileSimpleMatcher():
                                repeats = True,),
                 
                 singlepointSubMatcher,
-                
+                TSSubMatcher,
                 MDSubMatcher,
 
                 SM(name = "Vibrational_frequencies",
