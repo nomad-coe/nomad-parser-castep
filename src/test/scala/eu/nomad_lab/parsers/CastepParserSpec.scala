@@ -96,3 +96,13 @@ object CastepParserSpec8 extends Specification {
     }
   }
 }
+object CastepParserSpec9 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/N2-LDA-geom.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/N2-LDA-geom.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
