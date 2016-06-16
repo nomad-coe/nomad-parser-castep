@@ -422,6 +422,7 @@ class CastepParserContext(object):
                 f_st_int = f_st[i]
                  
                 self.atom_forces.append(f_st_int)
+               
                 self.atom_forces = self.atom_forces[-self.at_nr:] 
                 
             backend.addArrayValues('atom_forces', np.asarray(self.atom_forces))
@@ -646,17 +647,18 @@ class CastepParserContext(object):
 
 
 # Backend add the total number of atoms in the simulation cell
-            backend.addValue('number_of_atoms', self.at_nr)
-
+            
 
 # Processing the atom labels
         #get cached values of castep_store_atom_labels
             lab = section['x_castep_store_atom_labels']
+            
             for i in range(0, self.at_nr):
                 lab[i] = re.sub('\s+', ' ', lab[i]).strip()
             self.atom_labels.append(lab)
             backend.addArrayValues('atom_labels', np.asarray(self.atom_labels))
 
+            backend.addValue('number_of_atoms', self.at_nr)
 
 # Converting the fractional atomic positions (x) to cartesian coordinates (X) ( X = M^-1 x )
             for i in range(0, self.at_nr):
@@ -1407,7 +1409,7 @@ def build_CastepMainFileSimpleMatcher():
                  SM(r"\s*a \=\s*(?P<x_castep_cell_length_a>[\d\.]+)\s*alpha \=\s*(?P<x_castep_cell_angle_alpha>[\d\.]+)"),
                  SM(r"\s*b \=\s*(?P<x_castep_cell_length_b>[\d\.]+)\s*beta  \=\s*(?P<x_castep_cell_angle_beta>[\d\.]+)"),
                  SM(r"\s*c \=\s*(?P<x_castep_cell_length_c>[\d\.]+)\s*gamma \=\s*(?P<x_castep_cell_angle_gamma>[\d\.]+)"),
-                 SM(r"\s*x\s*(?P<x_castep_store_atom_labels>[A-Za-z0-9]+\s+[\d\.]+)\s*[0-9]\s*(?P<x_castep_store_atom_positions>[\d\.]+\s+[\d\.]+\s+[\d\.]+)",
+                 SM(r"\s*x\s*(?P<x_castep_store_atom_labels>[A-Za-z0-9]+\s*[0-9.]+)\s*(?P<x_castep_store_atom_positions>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                     endReStr = "\n",
                     repeats = True)
                 
@@ -1728,8 +1730,26 @@ def build_CastepMainFileSimpleMatcher():
                                 SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                                     repeats = True)
                                       ]),
-
                         
+                        
+                        SM(name = 'TDDFT',
+                            startReStr = r"\s*\+\s*Time\-Dependent DFT Calculation\s*\+TDDFT",
+                            sections = ['x_castep_section_tddft'],
+                            repeats = True,
+                            subMatchers = [
+                                SM(r"\s*\+\s*TDDFT iteration\:\s*(?P<x_castep_tddft_iteration>[0-9.]+)\sof\s\(up\sto\)\s*[0-9.]*\,\sTime\:\s*(?P<x_castep_wall_time>[0-9.]*)s\s*\+TDDFT",
+                                    repeats = True),
+                                SM(r"\s*\+\s*(?P<x_castep_state_number>[0-9.]+)\s*(?P<x_castep_state_energy>[-+0-9.eEdD]+)\s*(?P<x_castep_state_energy_error>[-+0-9.eEdD]+)\s*[a-z]+\s*\+TDDFT"),
+                                SM(r"\s*\+\s*TDDFT calculation time\:\s*(?P<x_castep_tddft_calculation_time>[0-9.]*)\s*\+TDDFT"),    
+                                      ]),
+                        
+                        SM(name = 'Forces',
+                            startReStr = r"\s\*\*\*\*\** TDDFT Forces \*\*\*\*\**\s*",
+                            subMatchers = [
+                                SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                                    repeats = True)
+                                      ]),
+
                         SM(name = 'stresstensor',   
                             #startReStr = r"(energy not corrected for finite basis set)\s*",
                             startReStr = r"\s\*\*\*\*\** Stress Tensor \*\*\*\*\**\s*",
@@ -1808,7 +1828,23 @@ def build_CastepMainFileSimpleMatcher():
                                     repeats = True)
                                       ]),
 
+                        SM(name = 'TDDFT',
+                            startReStr = r"\s*\+\s*Time\-Dependent DFT Calculation\s*\+TDDFT",
+                            sections = ['x_castep_section_tddft'],
+                            repeats = True,
+                            subMatchers = [
+                                SM(r"\s*\+\s*TDDFT iteration\:\s*(?P<x_castep_tddft_iteration>[0-9.]+)\sof\s\(up\sto\)\s*[0-9.]*\,\sTime\:\s*(?P<x_castep_wall_time>[0-9.]*)s\s*\+TDDFT",
+                                    repeats = True),
+                                SM(r"\s*\+\s*(?P<x_castep_state_number>[0-9.]+)\s*(?P<x_castep_state_energy>[-+0-9.eEdD]+)\s*(?P<x_castep_state_energy_error>[-+0-9.eEdD]+)\s*[a-z]+\s*\+TDDFT"),
+                                SM(r"\s*\+\s*TDDFT calculation time\:\s*(?P<x_castep_tddft_calculation_time>[0-9.]*)\s*\+TDDFT"),    
+                                      ]),
                         
+                        SM(name = 'Forces',
+                            startReStr = r"\s\*\*\*\*\** TDDFT Forces \*\*\*\*\**\s*",
+                            subMatchers = [
+                                SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                                    repeats = True)
+                                      ]),
                         SM(name = 'stresstensor',   
                             #startReStr = r"(energy not corrected for finite basis set)\s*",
                             startReStr = r"\s\*\*\*\*\** Stress Tensor \*\*\*\*\**\s*",
@@ -1887,6 +1923,23 @@ def build_CastepMainFileSimpleMatcher():
                                     repeats = True)
                                       ]),
 
+                        SM(name = 'TDDFT',
+                            startReStr = r"\s*\+\s*Time\-Dependent DFT Calculation\s*\+TDDFT",
+                            sections = ['x_castep_section_tddft'],
+                            repeats = True,
+                            subMatchers = [
+                                SM(r"\s*\+\s*TDDFT iteration\:\s*(?P<x_castep_tddft_iteration>[0-9.]+)\sof\s\(up\sto\)\s*[0-9.]*\,\sTime\:\s*(?P<x_castep_wall_time>[0-9.]*)s\s*\+TDDFT",
+                                    repeats = True),
+                                SM(r"\s*\+\s*(?P<x_castep_state_number>[0-9.]+)\s*(?P<x_castep_state_energy>[-+0-9.eEdD]+)\s*(?P<x_castep_state_energy_error>[-+0-9.eEdD]+)\s*[a-z]+\s*\+TDDFT"),
+                                SM(r"\s*\+\s*TDDFT calculation time\:\s*(?P<x_castep_tddft_calculation_time>[0-9.]*)\s*\+TDDFT"),    
+                                      ]),
+                        
+                        SM(name = 'Forces',
+                            startReStr = r"\s\*\*\*\*\** TDDFT Forces \*\*\*\*\**\s*",
+                            subMatchers = [
+                                SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                                    repeats = True)
+                                      ]),
                         
                         SM(name = 'stresstensor',   
                             #startReStr = r"(energy not corrected for finite basis set)\s*",
@@ -1945,8 +1998,8 @@ def build_CastepMainFileSimpleMatcher():
                             
 
                         
-                        SM(r"\s[A-Za-z]+\:\sFinal\sEnthalpy\s*\=\s(?P<x_castep_enthalpy>[-+0-9.eEdD]+)"),        
-                        
+                        SM(r"\s[A-Za-z]+\:\sFinal\sEnthalpy\s*\=\s(?P<x_castep_enthalpy__eV>[-+0-9.eEdD]+)"),        
+                        SM(r"\s[A-Za-z]+\:\sFinal\s\<frequency\>\s*\=\s*(?P<x_castep_frequency>[-+0-9.eEdD]+)"),                    
                         SM(#startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
                                 startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
                                 
@@ -1961,7 +2014,20 @@ def build_CastepMainFileSimpleMatcher():
                                    SM(r"\s\*\s[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                                       repeats = True)
                                               ]), 
+                        
+                        SM(name = 'Forces',
+                            startReStr = r"\s\*\*\*\*\** TDDFT Forces \*\*\*\*\**\s*",
+                            subMatchers = [
+                                SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                                    repeats = True)
+                                      ]),
 
+                        SM(name = 'Forces',
+                            startReStr = r"\s\*\*\*\*\** TDDFT Symmetrised Forces \*\*\*\*\**\s*",
+                            subMatchers = [
+                                SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                                    repeats = True)
+                                      ]),
                         
                         SM(name = 'stresstensor',
                                 #startReStr = r"\s\*\*\*\*\*\*\*\*\*\ Symmetrised Stress Tensor \*\*\*\*\*\*\*\*\*\*\*\s*",
