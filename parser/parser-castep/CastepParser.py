@@ -128,6 +128,8 @@ class CastepParserContext(object):
         self.ts_forces_p = []
         self.ts_positions_p = []
         self.ts_path_p =[]
+        self.basis_set_kind=[]
+
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
         self.pippo = None
@@ -327,10 +329,10 @@ class CastepParserContext(object):
         eVtoRy = 0.073498618
         ecut_str_name = int(round(eVtoRy*self.ecut))
 
-        basis_set_kind = 'plane_waves'
+        self.basis_set_kind = 'plane_waves'
         basis_set_name = 'PW_'+str(ecut_str_name)
         backend.addValue('basis_set_planewave_cutoff', self.ecut)
-        backend.addValue('basis_set_cell_dependent_kind', basis_set_kind)
+        backend.addValue('basis_set_cell_dependent_kind', self.basis_set_kind)
         backend.addValue('basis_set_cell_dependent_name', basis_set_name)
 
     def onClose_x_castep_section_cell_optim(self, backend, gIndex, section):
@@ -633,7 +635,7 @@ class CastepParserContext(object):
         """trigger called when _section_system is closed"""
 
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
-     
+        backend.addArrayValues('configuration_periodic_dimensions', np.asarray([True, True, True]))
         pos = section['x_castep_store_atom_positions']
         
         if pos:
@@ -982,7 +984,8 @@ class CastepParserContext(object):
             pass    
 
     def onClose_section_run(self, backend, gIndex, section):
-        
+        # self.basis_set_type = 'plane_waves'
+        backend.addValue('program_basis_set_type', self.basis_set_kind)
         f_st_band = section['x_castep_store_atom_forces_band']
         
         if f_st_band:
