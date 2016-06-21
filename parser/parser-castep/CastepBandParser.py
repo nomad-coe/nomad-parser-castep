@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import range
+from builtins import object
 import setup_paths
 import numpy as np
 import nomadcore.ActivateLogging
@@ -93,7 +96,7 @@ class CastepBandParserContext(object):
         e_st_0 = [x * Ha_to_J for x in e_st_0]
 
         def split_list(lista):
-            half = len(lista)/2
+            half = len(lista) // 2
             return lista[:half], lista[half:]
 
         e_st_1, e_st_2 = split_list(e_st)
