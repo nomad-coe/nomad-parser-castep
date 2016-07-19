@@ -316,7 +316,8 @@ class CastepParserContext(object):
             backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
             backend.addValue('relativity_method', self.relativistic)
             if self.dispersion is not None:
-                backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion+'_'+self.relativistic)
+                print('ciao')
+                # backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion+'_'+self.relativistic)
             else:
                 backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.relativistic)
         
@@ -469,9 +470,11 @@ class CastepParserContext(object):
         if self.dispersion is not None:
             van_der_waals_energy = section['x_castep_total_dispersion_corrected_energy']
             total_energy = section['energy_total']
-            for i in range(len(total_energy)):
-                self.disp_energy = abs(van_der_waals_energy[i] - total_energy[i])
-            backend.addValue('energy_van_der_Waals', self.disp_energy)
+          
+            if total_energy and van_der_waals_energy:
+                for i in range(len(total_energy)):
+                    self.disp_energy = abs(van_der_waals_energy[i] - total_energy[i])
+                backend.addValue('energy_van_der_Waals', self.disp_energy)
         
 
         finite_basis_corr_energy = section['x_castep_total_energy_corrected_for_finite_basis_store'] ###Conversion to Jule
@@ -1543,9 +1546,26 @@ def build_CastepMainFileSimpleMatcher():
                     SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
                     SM(r"\sTotal energy corrected for finite basis set\s\=\s*(?P<x_castep_total_energy_corrected_for_finite_basis_store>[-+0-9.eEdD]+)\s+"),
                     SM(r"Dispersion corrected final energy\*\s=\s*(?P<x_castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),#total energy including dispersion correction
+                    
                     SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"), # matching final converged total free energy
                     SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<energy_total_T0__eV>[-+0-9.eEdD]*)"), # 0K corrected final SCF energy
-                 
+                    # 0K corrected final SCF energy
+                    
+                    SM(sections = ['x_castep_section_DFT_SEDC'],
+                        startReStr = r"\%\s*SEDC PBC Interaction Energy\s*",
+                        # endReStr = "\n",
+                        subMatchers = [
+                        SM(r"\%\s*(?P<x_castep_shell>[0-9]+)\s*(?P<x_castep_correction_energy__eV>[-\d\.]+)\s*(?P<x_castep_de_atom__eV>[\d\.]+)\s*(?P<x_castep_dfmax_atom__eV>[\d\.]+)\s*",
+                                        repeats = True),
+                        SM(r"\%\'TS\'\/PBE structure energy corr.\s*\=\s*(?P<x_castep_structure_energy_corr__eV>[-+0-9.eEdD]*)"),
+                        SM(r"\%\'TS\'\/PBE image interaction corr.\s*\=\s*(?P<x_castep_PBC_image_inter_corr__eV>[-+0-9.eEdD]*)"),
+                        SM(r"\%\'TS\'\/PBE total energy correction\s*\=\s*(?P<x_castep_total_energy_correction__eV>[-+0-9.eEdD]*)"),    
+                        SM(r"\%\'TS\'\/PBE correction \|F\|max\s*\=\s*(?P<x_castep_total_fmax_correction>[-+0-9.eEdD]*)"),    
+                        SM(r"Dispersion corrected final energy\*\,\sEcor\s*\=\s*(?P<x_castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),
+                        SM(r"Dispersion corrected final free energy\*\,\s(Ecor\-TS)\s\=\s*(?P<x_castep_total_dispersion_corrected_free_energy__eV>[-+0-9.eEdD]*)"),
+                        SM(r"NB dispersion corrected est\. 0K energy\*\(E\-0\.5TS\)\s\= *(?P<x_castep_disp_corrected_energy_total_T0__eV>[-+0-9.eEdD]*)"), 
+                        ]),
+
                     SM(startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
                          subMatchers = [
                                     SM(r"\s*\*\s*[A-Za-z]+\s*[0-9]\s*(?P<x_castep_store_atom_forces>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
