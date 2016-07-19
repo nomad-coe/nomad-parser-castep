@@ -256,12 +256,12 @@ class CastepParserContext(object):
             " Koelling-Harmon": "scalar_relativistic"
         }
         self.relativistic = []
-
-        for name in relativistic_names:
-            match = relativistic_map.get(name)
-            if match:
-                self.relativistic.append(match)
-        self.relativistic = "_".join(sorted(self.relativistic))
+        if relativistic_names:
+            for name in relativistic_names:
+                match = relativistic_map.get(name)
+                if match:
+                    self.relativistic.append(match)
+            self.relativistic = "_".join(sorted(self.relativistic))
 # Here we add info about the XC functional and relativistic treatment
     
     def onClose_x_castep_section_geom_optimisation_method(self, backend, gIndex, section):
@@ -288,43 +288,75 @@ class CastepParserContext(object):
             pass
         #backend.addValue('van_der_Waals_method',self.dispersion)
         
-        
-        if self.functional_weight is not None:
-            self.func_and_weight = []
-            for i in range(len(self.functional_types)):
-                self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i]) 
-                backend.openSection('section_XC_functionals')            
-                backend.addValue('XC_functional_name', self.functionals[i]) 
-                backend.addValue('XC_functional_weight', self.functional_weight[i])
-                backend.closeSection('section_XC_functionals',gIndex+i)        
-        # Push the functional string into the backend
-        # Push the relativistic treatment string into the backend
-            backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
-            backend.addValue('relativity_method', self.relativistic)
-        #if self.functional_weight = 0
-            if self.dispersion is not None:
-                backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.dispersion+'_'+self.relativistic)
+        if self.relativistic:
+            if self.functional_weight is not None:
+                self.func_and_weight = []
+                for i in range(len(self.functional_types)):
+                    self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i]) 
+                    backend.openSection('section_XC_functionals')            
+                    backend.addValue('XC_functional_name', self.functionals[i]) 
+                    backend.addValue('XC_functional_weight', self.functional_weight[i])
+                    backend.closeSection('section_XC_functionals',gIndex+i)        
+            # Push the functional string into the backend
+            # Push the relativistic treatment string into the backend
+                backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
+                backend.addValue('relativity_method', self.relativistic)
+            #if self.functional_weight = 0
+                if self.dispersion is not None:
+                    backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.dispersion+'_'+self.relativistic)
+                else:
+                    backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.relativistic)
             else:
-                backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.relativistic)
-        else:
-            for i in range(len(self.functionals)):
-          #      self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i])
-                backend.openSection('section_XC_functionals')            
-                backend.addValue('XC_functional_name', self.functionals[i]) 
-         #       backend.addValue('XC_functional_weight', self.functional_weight[i])
-                backend.closeSection('section_XC_functionals',gIndex+i)
-            backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
-            backend.addValue('relativity_method', self.relativistic)
-            if self.dispersion is not None:
-                print('ciao')
-                # backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion+'_'+self.relativistic)
+                for i in range(len(self.functionals)):
+              #      self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i])
+                    backend.openSection('section_XC_functionals')            
+                    backend.addValue('XC_functional_name', self.functionals[i]) 
+             #       backend.addValue('XC_functional_weight', self.functional_weight[i])
+                    backend.closeSection('section_XC_functionals',gIndex+i)
+                backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
+                backend.addValue('relativity_method', self.relativistic)
+                if self.dispersion is not None:
+                   
+                    backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion+'_'+self.relativistic)
+                else:
+                    backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.relativistic)
+            
+            
+        else: 
+            if self.functional_weight is not None:
+                self.func_and_weight = []
+                for i in range(len(self.functional_types)):
+                    self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i]) 
+                    backend.openSection('section_XC_functionals')            
+                    backend.addValue('XC_functional_name', self.functionals[i]) 
+                    backend.addValue('XC_functional_weight', self.functional_weight[i])
+                    backend.closeSection('section_XC_functionals',gIndex+i)        
+            # Push the functional string into the backend
+            # Push the relativistic treatment string into the backend
+                backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
+                
+            #if self.functional_weight = 0
+                if self.dispersion is not None:
+                    backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.dispersion)
+                else:
+                    backend.addValue('XC_method_current', ("_".join(sorted(self.func_total))))
             else:
-                backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.relativistic)
-        
+                for i in range(len(self.functionals)):
+              #      self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i])
+                    backend.openSection('section_XC_functionals')            
+                    backend.addValue('XC_functional_name', self.functionals[i]) 
+             #       backend.addValue('XC_functional_weight', self.functional_weight[i])
+                    backend.closeSection('section_XC_functionals',gIndex+i)
+                backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
+                
+                if self.dispersion is not None:
+                   
+                    backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion)
+                else:
+                    backend.addValue('XC_method_current', ("_".join(sorted(self.functionals))))
+            
         if self.n_spin_channels:
             backend.addValue('number_of_spin_channels', self.n_spin_channels[0])
-         
-
     
     
 # Here we add basis set name and kind for the plane wave code
@@ -1560,7 +1592,7 @@ def build_CastepMainFileSimpleMatcher():
                         SM(r"\%\'TS\'\/PBE structure energy corr.\s*\=\s*(?P<x_castep_structure_energy_corr__eV>[-+0-9.eEdD]*)"),
                         SM(r"\%\'TS\'\/PBE image interaction corr.\s*\=\s*(?P<x_castep_PBC_image_inter_corr__eV>[-+0-9.eEdD]*)"),
                         SM(r"\%\'TS\'\/PBE total energy correction\s*\=\s*(?P<x_castep_total_energy_correction__eV>[-+0-9.eEdD]*)"),    
-                        SM(r"\%\'TS\'\/PBE correction \|F\|max\s*\=\s*(?P<x_castep_total_fmax_correction>[-+0-9.eEdD]*)"),    
+                        SM(r"\%\'TS\'\/PBE correction \|F\|max\s*\=\s*(?P<x_castep_total_fmax_correction__eV>[-+0-9.eEdD]*)"),    
                         SM(r"Dispersion corrected final energy\*\,\sEcor\s*\=\s*(?P<x_castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),
                         SM(r"Dispersion corrected final free energy\*\,\s(Ecor\-TS)\s\=\s*(?P<x_castep_total_dispersion_corrected_free_energy__eV>[-+0-9.eEdD]*)"),
                         SM(r"NB dispersion corrected est\. 0K energy\*\(E\-0\.5TS\)\s\= *(?P<x_castep_disp_corrected_energy_total_T0__eV>[-+0-9.eEdD]*)"), 
