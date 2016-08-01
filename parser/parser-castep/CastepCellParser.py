@@ -57,7 +57,7 @@ class CastepCellParserContext(object):
         Store the parsed values and write them if writeMetaData is True.
         """
         k_p = section['x_castep_store_k_path']
-
+        
         k_count = len(k_p)
         self.k_crd = []
         for i in range(0, k_count):
@@ -74,6 +74,7 @@ class CastepCellParserContext(object):
 
 
         backend.addArrayValues('x_castep_k_path', np.asarray(self.k_crd))
+       
         # backend.addArrayValues('band_segm_start_end', np.asarray(self.k_sgt_start_end))
         # backend.addValue('number_of_k_point_segments', len(self.k_sgt_start_end))
 
@@ -117,6 +118,40 @@ def build_CastepCellFileSimpleMatcher():
 
                                  ]),
 
+            
+            # SM(startReStr = r"\s*\%block kpoint\_list\s*",
+            #       sections = ['section_k_band'],
+            #       forwardMatch = True,
+            #       subMatchers = [
+
+            #          SM (r"\s*(?P<x_castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+[\d\.]+)", repeats = True)
+            #                      ]),
+            
+            # SM(startReStr = r"\s*\%BLOCK KPOINT\_LIST\s*",
+            #       sections = ['section_k_band'],
+            #       forwardMatch = True,
+            #       subMatchers = [
+
+            #           SM (r"\s*(?P<x_castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+[\d\.]+)", repeats = True)
+
+            #                      ]),
+            
+            SM(startReStr = r"\%block kpoint\_list\s*",
+                  sections = ['section_k_band'],
+                  forwardMatch = True,
+                  subMatchers = [
+
+                     SM (r"\s*(?P<x_castep_store_k_path>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)", repeats = True)
+                                 ]),
+            
+            # SM(startReStr = r"\%BLOCK KPOINT\_LIST\s*",
+            #       sections = ['section_k_band'],
+            #       forwardMatch = True,
+            #       subMatchers = [
+
+            #           SM (r"\s*(?P<x_castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+[\d\.]+)", repeats = True)
+
+            #                      ]),
             #SM (name = 'Root3',
             #    startReStr = r"\s*\%block bs\_kpoint\_path\s*",
             #    sections = ['section_k_band'],

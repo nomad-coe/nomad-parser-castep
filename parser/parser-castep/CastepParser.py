@@ -912,6 +912,7 @@ class CastepParserContext(object):
 # Processing k points (given in fractional coordinates)
         #get cached values of castep_store_k_points
         k_st_1 = section['x_castep_store_k_points_1']
+        
         self.k_count_1 = len(k_st_1)
         self.k_nr_1   += 1
         for i in range(0, self.k_count_1):
@@ -965,6 +966,7 @@ class CastepParserContext(object):
            
         self.k_start_end = cellSuperContext.k_sgt_start_end  # recover k path segments coordinartes from *.cell file
         self.k_path_nr = len(self.k_start_end)
+        
         # backend.openSection('section_single_configuration_to_calculation_ref')
         if self.n_spin_channels_bands:
             backend.openSection('section_method')
@@ -989,10 +991,11 @@ class CastepParserContext(object):
             else:
                 self.band_en = self.castep_band_energies  # single spin
 
-    
+           
             path_end_index = []
             for i in range(self.k_path_nr):
                 boundary = self.k_start_end[i][1]
+            
                 a = get_last_index(boundary, self.castep_band_kpoints)
                 path_end_index.append(a)
 
@@ -1020,8 +1023,7 @@ class CastepParserContext(object):
                 backend.closeSection('section_k_band_segment',i)
             
         else: 
-            pass    
-
+           pass
     def onClose_section_run(self, backend, gIndex, section):
         # self.basis_set_type = 'plane_waves'
         backend.addValue('program_basis_set_type', self.basis_set_kind)
@@ -1351,6 +1353,24 @@ def build_CastepMainFileSimpleMatcher():
         subMatchers = [
             SM(r"\s*Population analysis with cutoff\s*\:\s*(?P<x_castep_population_analysis_cutoff>[-+0-9.eEd]+)"),
            
+            ])
+    
+    CoreSpectraParameterSubMatcher = SM(name = 'Core spectra' ,            
+        sections = ["x_castep_section_core_parameters"],
+        startReStr = r"\s\*\*\** Core Level Spectra Parameters \*\*\**\s*",
+        subMatchers = [
+            SM(r"\s*number of bands\s*\:\s*(?P<x_castep_core_spectra_n_bands>[0-9.]+)"),
+            SM(r"\s*band convergence tolerance\s*\:\s*(?P<x_castep_core_spectra_conv_tolerance__eV>[-+0-9.eEdD]+)"),
+            ])
+
+    BandParameterSubMatcher = SM(name = 'Band calculation parameters' ,            
+        sections = ["x_castep_section_band_parameters"],
+        startReStr = r"\s\*\*\** Band Structure Parameters \*\*\**\s*",
+        subMatchers = [
+            SM(r"\s*max\. number of iterations\s*\:\s*(?P<x_castep_band_n_iterations>[0-9.]+)"),
+            SM(r"\s*max\. CG steps in BS calc\s*\:\s*(?P<x_castep_band_max_cg>[-+0-9.eEdD]+)"),
+            SM(r"\s*number of bands \/ k\-point\s*\:\s*(?P<x_castep_band_n_bands>[0-9.]+)"),
+            SM(r"\s*band convergence tolerance\s*\:\s*(?P<x_castep_band_conv_tolerance__eV>[-+0-9.eEdD]+)"),
             ])
     MDParameterSubMatcher = SM(name = 'MD_parameters' ,            
         sections = ["section_sampling_method"],
@@ -2189,6 +2209,10 @@ def build_CastepMainFileSimpleMatcher():
 
                 PopulationAnalysisParameterSubMatcher,
 
+                BandParameterSubMatcher,
+
+                CoreSpectraParameterSubMatcher,
+                
                 MDParameterSubMatcher,
                 
                 GeomOptimParameterSubMatcher,
