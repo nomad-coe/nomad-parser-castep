@@ -453,13 +453,13 @@ class CastepParserContext(object):
         self.initial_scf_iter_time = section['x_castep_initial_scf_iteration_wall_time']
         
         f_st = section['x_castep_store_atom_forces']
-      
+        evAtoN = float(1.6021766e-9)
         if f_st is not None:
             for i in range(0, self.at_nr):
                 f_st[i] = f_st[i].split()
                 f_st[i] = [float(j) for j in f_st[i]]
                 f_st_int = f_st[i]
-                 
+                f_st_int = [x * evAtoN for x in f_st_int] 
                 self.atom_forces.append(f_st_int)
                
                 self.atom_forces = self.atom_forces[-self.at_nr:] 
@@ -1028,7 +1028,7 @@ class CastepParserContext(object):
         # self.basis_set_type = 'plane_waves'
         backend.addValue('program_basis_set_type', self.basis_set_kind)
         f_st_band = section['x_castep_store_atom_forces_band']
-        
+        evAtoN = float(1.6021766e-9)
         if f_st_band:
             gindex_band = 1
             for i in range(0, self.at_nr):
@@ -1036,7 +1036,7 @@ class CastepParserContext(object):
                 f_st_band[i] = [float(j) for j in f_st_band[i]]
 
                 f_st_int_band = f_st_band[i]
-                 
+                f_st_int_band = [x * evAtoN for x in f_st_int_band] 
                 self.atom_forces_band.append(f_st_int_band)
                 self.atom_forces_band = self.atom_forces_band[-self.at_nr:] 
             backend.addArrayValues('x_castep_atom_forces', np.asarray(self.atom_forces_band))        

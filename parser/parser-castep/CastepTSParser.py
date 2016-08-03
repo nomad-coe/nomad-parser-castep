@@ -79,7 +79,7 @@ class CastepTSParserContext(object):
       
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
-        
+        evAtoN = float(1.6021766e-9)
         for i in energy:
          
             energy = [x * Hr_J_converter for x in energy]
@@ -113,7 +113,7 @@ class CastepTSParserContext(object):
                 f = f.split()
                 f = [float(k) for k in f]
                 f_st_intts = f
-                
+                f_st_intts = [x * evAtoN for x in f_st_intts] 
                 self.ts_forces.append(f_st_intts)                 
             self.total_forces.append(self.ts_forces)
              
