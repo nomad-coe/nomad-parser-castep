@@ -73,7 +73,7 @@ class CastepMDParserContext(object):
         
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
-        
+        evAtoN = float(1.6021766e-9)
         for i in range(len(temp)):
             temp[i] = temp[i]/HrK_to_K_coverter
             self.frame_temperature.append(temp[i])
@@ -148,6 +148,7 @@ class CastepMDParserContext(object):
                 f = f.split()
                 f = [float(k) for k in f]
                 f_st_int = f
+                f_st_int = [x * evAtoN for x in f_st_int]
                 self.md_forces.append(f_st_int)                
             self.total_forces.append(self.md_forces)
 

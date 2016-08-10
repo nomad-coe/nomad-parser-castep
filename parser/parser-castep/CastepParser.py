@@ -453,13 +453,13 @@ class CastepParserContext(object):
         self.initial_scf_iter_time = section['x_castep_initial_scf_iteration_wall_time']
         
         f_st = section['x_castep_store_atom_forces']
-      
+        evAtoN = float(1.6021766e-9)
         if f_st is not None:
             for i in range(0, self.at_nr):
                 f_st[i] = f_st[i].split()
                 f_st[i] = [float(j) for j in f_st[i]]
                 f_st_int = f_st[i]
-                 
+                f_st_int = [x * evAtoN for x in f_st_int] 
                 self.atom_forces.append(f_st_int)
                
                 self.atom_forces = self.atom_forces[-self.at_nr:] 
@@ -912,6 +912,7 @@ class CastepParserContext(object):
 # Processing k points (given in fractional coordinates)
         #get cached values of castep_store_k_points
         k_st_1 = section['x_castep_store_k_points_1']
+        
         self.k_count_1 = len(k_st_1)
         self.k_nr_1   += 1
         for i in range(0, self.k_count_1):
@@ -971,6 +972,7 @@ class CastepParserContext(object):
         # with open(fName) as fIn:
         #     cellParser.parseFile(fIn)  # parsing *.cell file to get the k path segments
            
+
                     self.k_start_end = cellSuperContext.k_sgt_start_end  # recover k path segments coordinartes from *.cell file
                     self.k_path_nr = len(self.k_start_end)
                     # backend.openSection('section_single_configuration_to_calculation_ref')
@@ -1030,11 +1032,12 @@ class CastepParserContext(object):
                     else: 
                         pass    
 
+
     def onClose_section_run(self, backend, gIndex, section):
         # self.basis_set_type = 'plane_waves'
         backend.addValue('program_basis_set_type', self.basis_set_kind)
         f_st_band = section['x_castep_store_atom_forces_band']
-        
+        evAtoN = float(1.6021766e-9)
         if f_st_band:
             gindex_band = 1
             for i in range(0, self.at_nr):
@@ -1042,7 +1045,7 @@ class CastepParserContext(object):
                 f_st_band[i] = [float(j) for j in f_st_band[i]]
 
                 f_st_int_band = f_st_band[i]
-                 
+                f_st_int_band = [x * evAtoN for x in f_st_int_band] 
                 self.atom_forces_band.append(f_st_int_band)
                 self.atom_forces_band = self.atom_forces_band[-self.at_nr:] 
             backend.addArrayValues('x_castep_atom_forces', np.asarray(self.atom_forces_band))        
@@ -1359,6 +1362,24 @@ def build_CastepMainFileSimpleMatcher():
         subMatchers = [
             SM(r"\s*Population analysis with cutoff\s*\:\s*(?P<x_castep_population_analysis_cutoff>[-+0-9.eEd]+)"),
            
+            ])
+    
+    CoreSpectraParameterSubMatcher = SM(name = 'Core spectra' ,            
+        sections = ["x_castep_section_core_parameters"],
+        startReStr = r"\s\*\*\** Core Level Spectra Parameters \*\*\**\s*",
+        subMatchers = [
+            SM(r"\s*number of bands\s*\:\s*(?P<x_castep_core_spectra_n_bands>[0-9.]+)"),
+            SM(r"\s*band convergence tolerance\s*\:\s*(?P<x_castep_core_spectra_conv_tolerance__eV>[-+0-9.eEdD]+)"),
+            ])
+
+    BandParameterSubMatcher = SM(name = 'Band calculation parameters' ,            
+        sections = ["x_castep_section_band_parameters"],
+        startReStr = r"\s\*\*\** Band Structure Parameters \*\*\**\s*",
+        subMatchers = [
+            SM(r"\s*max\. number of iterations\s*\:\s*(?P<x_castep_band_n_iterations>[0-9.]+)"),
+            SM(r"\s*max\. CG steps in BS calc\s*\:\s*(?P<x_castep_band_max_cg>[-+0-9.eEdD]+)"),
+            SM(r"\s*number of bands \/ k\-point\s*\:\s*(?P<x_castep_band_n_bands>[0-9.]+)"),
+            SM(r"\s*band convergence tolerance\s*\:\s*(?P<x_castep_band_conv_tolerance__eV>[-+0-9.eEdD]+)"),
             ])
     MDParameterSubMatcher = SM(name = 'MD_parameters' ,            
         sections = ["section_sampling_method"],
@@ -2197,6 +2218,10 @@ def build_CastepMainFileSimpleMatcher():
 
                 PopulationAnalysisParameterSubMatcher,
 
+                BandParameterSubMatcher,
+
+                CoreSpectraParameterSubMatcher,
+                
                 MDParameterSubMatcher,
                 
                 GeomOptimParameterSubMatcher,
