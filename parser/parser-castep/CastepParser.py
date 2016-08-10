@@ -696,7 +696,7 @@ class CastepParserContext(object):
             
             for i in range(0, self.at_nr):
                 lab[i] = re.sub('\s+', ' ', lab[i]).strip()
-            self.atom_labels.append(lab)
+            self.atom_labels.extend(lab)
             backend.addArrayValues('atom_labels', np.asarray(self.atom_labels))
 
             backend.addValue('number_of_atoms', self.at_nr)
@@ -958,69 +958,77 @@ class CastepParserContext(object):
         for file in os.listdir(dirName):
             if file.endswith(extFile):
                 cFile = file
-        fName = os.path.normpath(os.path.join(dirName, cFile))
+            fName = os.path.normpath(os.path.join(dirName, cFile))
+            if file.endswith(".cell"):
+                with open(fName) as fIn:
+                    cellParser.parseFile(fIn)  
+                    
+        # for file in os.listdir(dirName):
+        #     if file.endswith(extFile):
+        #         cFile = file
+        # fName = os.path.normpath(os.path.join(dirName, cFile))
 
-        with open(fName) as fIn:
-            cellParser.parseFile(fIn)  # parsing *.cell file to get the k path segments
+        # with open(fName) as fIn:
+        #     cellParser.parseFile(fIn)  # parsing *.cell file to get the k path segments
            
-        self.k_start_end = cellSuperContext.k_sgt_start_end  # recover k path segments coordinartes from *.cell file
-        self.k_path_nr = len(self.k_start_end)
-        # backend.openSection('section_single_configuration_to_calculation_ref')
-        if self.n_spin_channels_bands:
-            backend.openSection('section_method')
-            backend.addValue('number_of_spin_channels',self.n_spin_channels_bands)     
-            backend.closeSection('section_method',gIndex+1)
+                    self.k_start_end = cellSuperContext.k_sgt_start_end  # recover k path segments coordinartes from *.cell file
+                    self.k_path_nr = len(self.k_start_end)
+                    # backend.openSection('section_single_configuration_to_calculation_ref')
+                    if self.n_spin_channels_bands:
+                        backend.openSection('section_method')
+                        backend.addValue('number_of_spin_channels',self.n_spin_channels_bands)     
+                        backend.closeSection('section_method',gIndex+1)
         
-        ########################################################################################
-        def get_last_index(el, check):  # function that returns end index for each k path segment
-            found = None
-            for i, next in enumerate(check):
-                if next == el:
-                    found = i
+                    ########################################################################################
+                    def get_last_index(el, check):  # function that returns end index for each k path segment
+                        found = None
+                        for i, next in enumerate(check):
+                            if next == el:
+                                found = i
 
-            assert found != None
-            return found
-        ########################################################################################
-        if self.k_start_end: 
-            if self.castep_band_energies_1 != []:  # handling k band energies
-                for i in range(self.k_nr):
-                    a = [ self.castep_band_energies[i], self.castep_band_energies_1[i] ]  # spin polarised
-                    self.band_en.append(a)
-            else:
-                self.band_en = self.castep_band_energies  # single spin
+                        assert found != None
+                        return found
+                    ########################################################################################
+                    if self.k_start_end: 
+                        if self.castep_band_energies_1 != []:  # handling k band energies
+                            for i in range(self.k_nr):
+                                a = [ self.castep_band_energies[i], self.castep_band_energies_1[i] ]  # spin polarised
+                                self.band_en.append(a)
+                        else:
+                            self.band_en = self.castep_band_energies  # single spin
 
-    
-            path_end_index = []
-            for i in range(self.k_path_nr):
-                boundary = self.k_start_end[i][1]
-                a = get_last_index(boundary, self.castep_band_kpoints)
-                path_end_index.append(a)
+                
+                        path_end_index = []
+                        for i in range(self.k_path_nr):
+                            boundary = self.k_start_end[i][1]
+                            a = get_last_index(boundary, self.castep_band_kpoints)
+                            path_end_index.append(a)
 
-            path_end_index = [0] + path_end_index  # list storing the end index of each k segment
-
-
-            k_point_path = []
-            for i in range(self.k_path_nr):
-                a = self.castep_band_kpoints[ path_end_index[i] : path_end_index[i+1]+1 ]
-                k_point_path.append(a)          # storing the k point fractional coordinates for each segment
+                        path_end_index = [0] + path_end_index  # list storing the end index of each k segment
 
 
-            band_en_path = []
-            for i in range(self.k_path_nr):
-                a = self.band_en[ path_end_index[i] : path_end_index[i+1]+1 ]
-                band_en_path.append(a)          # storing the band energies for each segment, k point and spin channel
-           
-            for i in range(self.k_path_nr):    
-              
-                backend.openSection('section_k_band_segment')
-                backend.addArrayValues('band_k_points', np.asarray(k_point_path[i]))
-                backend.addArrayValues('band_energies', np.asarray(band_en_path[i]))
-                backend.addArrayValues('band_segm_start_end', np.asarray(self.k_start_end[i])) 
-                backend.addValue('number_of_k_points_per_segment', len(k_point_path[i])) 
-                backend.closeSection('section_k_band_segment',i)
-            
-        else: 
-            pass    
+                        k_point_path = []
+                        for i in range(self.k_path_nr):
+                            a = self.castep_band_kpoints[ path_end_index[i] : path_end_index[i+1]+1 ]
+                            k_point_path.append(a)          # storing the k point fractional coordinates for each segment
+
+
+                        band_en_path = []
+                        for i in range(self.k_path_nr):
+                            a = self.band_en[ path_end_index[i] : path_end_index[i+1]+1 ]
+                            band_en_path.append(a)          # storing the band energies for each segment, k point and spin channel
+                       
+                        for i in range(self.k_path_nr):    
+                          
+                            backend.openSection('section_k_band_segment')
+                            backend.addArrayValues('band_k_points', np.asarray(k_point_path[i]))
+                            backend.addArrayValues('band_energies', np.asarray(band_en_path[i]))
+                            backend.addArrayValues('band_segm_start_end', np.asarray(self.k_start_end[i])) 
+                            backend.addValue('number_of_k_points_per_segment', len(k_point_path[i])) 
+                            backend.closeSection('section_k_band_segment',i)
+                        
+                    else: 
+                        pass    
 
     def onClose_section_run(self, backend, gIndex, section):
         # self.basis_set_type = 'plane_waves'

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="latin1"?>
+<!DOCTYPE XCD []>
+<XCD Version="3.2" NumCharts="1">
+	<CHART_2D>
+		<DATA_2D NumSeries="6">
+			<SERIES_2D UniqueID="0" Name="Energy Change (eV/atom)" NumPoints="7">
+				<POINT_2D XY="2,-3.052793288160947" ItemData="2"/>
+				<POINT_2D XY="3,-3.035244585805109" ItemData="3"/>
+				<POINT_2D XY="4,-4.065920087053195" ItemData="4"/>
+				<POINT_2D XY="5,-5.167652125439353" ItemData="5"/>
+				<POINT_2D XY="6,-4.762373834153221" ItemData="6"/>
+				<POINT_2D XY="7,-4.847564570916998" ItemData="7"/>
+				<POINT_2D XY="8,-5.906782200905471" ItemData="8"/>
+			</SERIES_2D>
+			<SERIES_2D UniqueID="1" Name="Max. Displacement (Å)" NumPoints="7">
+				<POINT_2D XY="2,-2.185824481817842" ItemData="2"/>
+				<POINT_2D XY="3,-1.834412055227332" ItemData="3"/>
+				<POINT_2D XY="4,-2.678123519559186" ItemData="4"/>
+				<POINT_2D XY="5,-3.131521083436105" ItemData="5"/>
+				<POINT_2D XY="6,-2.423279930473895" ItemData="6"/>
+				<POINT_2D XY="7,-2.524626528879431" ItemData="7"/>
+				<POINT_2D XY="8,-3.315636847213817" ItemData="8"/>
+			</SERIES_2D>
+			<SERIES_2D UniqueID="2" Name="Max. Force (eV/Å)" NumPoints="7">
+				<POINT_2D XY="2,-0.617099769457321" ItemData="2"/>
+				<POINT_2D XY="3,-0.71030471629266" ItemData="3"/>
+				<POINT_2D XY="4,-1.381719121052936" ItemData="4"/>
+				<POINT_2D XY="5,-1.439154018410906" ItemData="5"/>
+				<POINT_2D XY="6,-1.100048408558944" ItemData="6"/>
+				<POINT_2D XY="7,-1.470752180072832" ItemData="7"/>
+				<POINT_2D XY="8,-1.816658112126649" ItemData="8"/>
+			</SERIES_2D>
+			<SERIES_2D UniqueID="3" Name="" NumPoints="2">
+				<POINT_2D XY="2,-5.301029995663981"/>
+				<POINT_2D XY="8,-5.301029995663981"/>
+			</SERIES_2D>
+			<SERIES_2D UniqueID="4" Name="" NumPoints="2">
+				<POINT_2D XY="2,-3.301029995663981"/>
+				<POINT_2D XY="8,-3.301029995663981"/>
+			</SERIES_2D>
+			<SERIES_2D UniqueID="5" Name="" NumPoints="2">
+				<POINT_2D XY="2,-2"/>
+				<POINT_2D XY="8,-2"/>
+			</SERIES_2D>
+		</DATA_2D>
+		<MARKERS_2D NumMarkers="0"/>
+		<CARTESIAN_2D_PLOT PlotType="Line" Visible="1" BackgroundColor="255,255,255" ForegroundColor="0,0,0" Box="1">
+			<TITLE Visible="1" Text="CASTEP Optimization Convergence"/>
+			<LEGEND Visible="1" Heading=""/>
+			<CARTESIAN_AXES_2D XVisible="1" YVisible="1" XReversed="0" YReversed="0" XLabel="Optimization Step" YLabel="Convergence (log10)" XOriginPos="Min" YOriginPos="Min" XTickPos="Auto" YTickPos="Auto"/>
+			<CARTESIAN_GRID_2D XGrid="Off" YGrid="Off"/>
+			<CARTESIAN_GRAPH_2D_STYLE LineWidth="1" LineStyle="Solid" LineColor="0,128,255" SymbolSize="6" SymbolShape="Dot" SymbolColor="0,128,255" BarOrientation="Horizontal" BarWidth="0.5" BarColor="0,0,255" DendrogramCursorColor="0,0,255" DendrogramCursorWidth="1" DendrogramCursorPosition="0.5"/>
+			<CARTESIAN_GRAPH_2D_STYLE LineWidth="1" LineStyle="Dash" LineColor="255,128,64" SymbolSize="6" SymbolShape="Box" SymbolColor="255,128,64" BarOrientation="Horizontal" BarWidth="0.5" BarColor="255,0,0" DendrogramCursorColor="255,0,0" DendrogramCursorWidth="1" DendrogramCursorPosition="0.5"/>
+			<CARTESIAN_GRAPH_2D_STYLE LineWidth="1" LineStyle="ShortDash" LineColor="64,0,128" SymbolSize="6" SymbolShape="Cross" SymbolColor="64,0,128" BarOrientation="Horizontal" BarWidth="0.5" BarColor="0,255,0" DendrogramCursorColor="0,255,0" DendrogramCursorWidth="1" DendrogramCursorPosition="0.5"/>
+			<CARTESIAN_GRAPH_2D_STYLE LineWidth="1" LineStyle="Dash" LineColor="0,128,255" SymbolSize="6" SymbolShape="None" SymbolColor="0,128,255" BarOrientation="Horizontal" BarWidth="0.5" BarColor="92,92,205" DendrogramCursorColor="92,92,205" DendrogramCursorWidth="1" DendrogramCursorPosition="0.5"/>
+			<CARTESIAN_GRAPH_2D_STYLE LineWidth="1" LineStyle="Dash" LineColor="255,128,64" SymbolSize="6" SymbolShape="None" SymbolColor="255,128,64" BarOrientation="Horizontal" BarWidth="0.5" BarColor="255,112,132" DendrogramCursorColor="255,112,132" DendrogramCursorWidth="1" DendrogramCursorPosition="0.5"/>
+			<CARTESIAN_GRAPH_2D_STYLE LineWidth="2" LineStyle="Dash" LineColor="64,0,128" SymbolSize="6" SymbolShape="None" SymbolColor="64,0,128" BarOrientation="Horizontal" BarWidth="0.5" BarColor="50,205,154" DendrogramCursorColor="50,205,154" DendrogramCursorWidth="1" DendrogramCursorPosition="0.5"/>
+		</CARTESIAN_2D_PLOT>
+	</CHART_2D>
+</XCD>

@@ -126,3 +126,33 @@ object CastepParserSpec11 extends Specification {
     }
   }
 }
+object CastepParserSpec12 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/benzene_cell/benzene_cell.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/benzene_cell/benzene_cell.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
+object CastepParserSpec13 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/Gph-H/Gph-H.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/Gph-H/Gph-H.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
+object CastepParserSpec14 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/CHchair/CH-chair_bands_DOS.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/CHchair/CH-chair_bands_DOS.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}

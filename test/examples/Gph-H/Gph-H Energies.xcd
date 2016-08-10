@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="latin1"?>
+<!DOCTYPE XCD []>
+<XCD Version="3.2" NumCharts="1">
+	<CHART_2D>
+		<DATA_2D NumSeries="1">
+			<SERIES_2D UniqueID="0" Name="Total Energy" NumPoints="98">
+				<POINT_2D XY="1,-697.2814560000001" ItemData="1"/>
+				<POINT_2D XY="2,-699.045782" ItemData="2"/>
+				<POINT_2D XY="3,-699.369051" ItemData="3"/>
+				<POINT_2D XY="4,-699.400725" ItemData="4"/>
+				<POINT_2D XY="5,-699.4025380000001" ItemData="5"/>
+				<POINT_2D XY="6,-699.405075" ItemData="6"/>
+				<POINT_2D XY="7,-699.358695" ItemData="7"/>
+				<POINT_2D XY="8,-699.39841" ItemData="8"/>
+				<POINT_2D XY="9,-699.395925" ItemData="9"/>
+				<POINT_2D XY="10,-699.351343" ItemData="10"/>
+				<POINT_2D XY="11,-699.355116" ItemData="11"/>
+				<POINT_2D XY="12,-699.313942" ItemData="12"/>
+				<POINT_2D XY="13,-699.328247" ItemData="13"/>
+				<POINT_2D XY="14,-699.340418" ItemData="14"/>
+				<POINT_2D XY="15,-699.339425" ItemData="15"/>
+				<POINT_2D XY="16,-699.305972" ItemData="16"/>
+				<POINT_2D XY="17,-699.344324" ItemData="17"/>
+				<POINT_2D XY="18,-699.307206" ItemData="18"/>
+				<POINT_2D XY="19,-699.320461" ItemData="19"/>
+				<POINT_2D XY="20,-699.321955" ItemData="20"/>
+				<POINT_2D XY="21,-699.334821" ItemData="21"/>
+				<POINT_2D XY="22,-699.3095060000001" ItemData="22"/>
+				<POINT_2D XY="23,-699.324063" ItemData="23"/>
+				<POINT_2D XY="24,-699.323758" ItemData="24"/>
+				<POINT_2D XY="25,-699.308803" ItemData="25"/>
+				<POINT_2D XY="26,-699.286595" ItemData="26"/>
+				<POINT_2D XY="27,-699.289747" ItemData="27"/>
+				<POINT_2D XY="28,-699.290003" ItemData="28"/>
+				<POINT_2D XY="29,-699.290932" ItemData="29"/>
+				<POINT_2D XY="30,-699.308936" ItemData="30"/>
+				<POINT_2D XY="31,-699.335091" ItemData="31"/>
+				<POINT_2D XY="32,-699.3153589999999" ItemData="32"/>
+				<POINT_2D XY="33,-699.3232400000001" ItemData="33"/>
+				<POINT_2D XY="34,-699.322074" ItemData="34"/>
+				<POINT_2D XY="35,-699.339022" ItemData="35"/>
+				<POINT_2D XY="36,-699.306735" ItemData="36"/>
+				<POINT_2D XY="37,-699.319331" ItemData="37"/>
+				<POINT_2D XY="38,-699.317822" ItemData="38"/>
+				<POINT_2D XY="39,-699.291874" ItemData="39"/>
+				<POINT_2D XY="40,-699.295486" ItemData="40"/>
+				<POINT_2D XY="41,-699.294844" ItemData="41"/>
+				<POINT_2D XY="42,-699.2888850000001" ItemData="42"/>
+				<POINT_2D XY="43,-699.287454" ItemData="43"/>
+				<POINT_2D XY="44,-699.287453" ItemData="44"/>
+				<POINT_2D XY="45,-699.288143" ItemData="45"/>
+				<POINT_2D XY="46,-699.291578" ItemData="46"/>
+				<POINT_2D XY="47,-699.305649" ItemData="47"/>
+				<POINT_2D XY="48,-699.302251" ItemData="48"/>
+				<POINT_2D XY="49,-699.304662" ItemData="49"/>
+				<POINT_2D XY="50,-699.3044650000001" ItemData="50"/>
+				<POINT_2D XY="51,-699.3044180000001" ItemData="51"/>
+				<POINT_2D XY="52,-699.304224" ItemData="52"/>
+				<POINT_2D XY="53,-699.322893" ItemData="53"/>
+				<POINT_2D XY="54,-699.342743" ItemData="54"/>
+				<POINT_2D XY="55,-699.351359" ItemData="55"/>
+				<POINT_2D XY="56,-699.351272" ItemData="56"/>
+				<POINT_2D XY="57,-699.350594" ItemData="57"/>
+				<POINT_2D XY="58,-699.350094" ItemData="58"/>
+				<POINT_2D XY="59,-699.387668" ItemData="59"/>
+				<POINT_2D XY="60,-699.39369" ItemData="60"/>
+				<POINT_2D XY="61,-699.426294" ItemData="61"/>
+				<POINT_2D XY="62,-699.473762" ItemData="62"/>
+				<POINT_2D XY="63,-699.661418" ItemData="63"/>
+				<POINT_2D XY="64,-699.80545" ItemData="64"/>
+				<POINT_2D XY="65,-699.889226" ItemData="65"/>
+				<POINT_2D XY="66,-699.915198" ItemData="66"/>
+				<POINT_2D XY="67,-699.672737" ItemData="67"/>
+				<POINT_2D XY="68,-699.828497" ItemData="68"/>
+				<POINT_2D XY="69,-699.854689" ItemData="69"/>
+				<POINT_2D XY="70,-699.9938079999999" ItemData="70"/>
+				<POINT_2D XY="71,-699.848243" ItemData="71"/>
+				<POINT_2D XY="72,-699.966604" ItemData="72"/>
+				<POINT_2D XY="73,-700.007086" ItemData="73"/>
+				<POINT_2D XY="74,-699.791648" ItemData="74"/>
+				<POINT_2D XY="75,-699.860072" ItemData="75"/>
+				<POINT_2D XY="76,-699.911612" ItemData="76"/>
+				<POINT_2D XY="77,-700.050344" ItemData="77"/>
+				<POINT_2D XY="78,-700.4841750000001" ItemData="78"/>
+				<POINT_2D XY="79,-700.783765" ItemData="79"/>
+				<POINT_2D XY="80,-700.858309" ItemData="80"/>
+				<POINT_2D XY="81,-700.4939930000001" ItemData="81"/>
+				<POINT_2D XY="82,-700.851046" ItemData="82"/>
+				<POINT_2D XY="83,-701.074082" ItemData="83"/>
+				<POINT_2D XY="84,-701.835095" ItemData="84"/>
+				<POINT_2D XY="85,-701.844648" ItemData="85"/>
+				<POINT_2D XY="86,-701.884248" ItemData="86"/>
+				<POINT_2D XY="87,-701.945441" ItemData="87"/>
+				<POINT_2D XY="88,-701.983833" ItemData="88"/>
+				<POINT_2D XY="89,-702.0343830000001" ItemData="89"/>
+				<POINT_2D XY="90,-701.936361" ItemData="90"/>
+				<POINT_2D XY="91,-702.106315" ItemData="91"/>
+				<POINT_2D XY="92,-701.941746" ItemData="92"/>
+				<POINT_2D XY="93,-702.110417" ItemData="93"/>
+				<POINT_2D XY="94,-702.126698" ItemData="94"/>
+				<POINT_2D XY="95,-702.002757" ItemData="95"/>
+				<POINT_2D XY="96,-702.054" ItemData="96"/>
+				<POINT_2D XY="97,-702.063658" ItemData="97"/>
+				<POINT_2D XY="98,-702.1468650000001" ItemData="98"/>
+			</SERIES_2D>
+		</DATA_2D>
+		<MARKERS_2D NumMarkers="0"/>
+		<CARTESIAN_2D_PLOT PlotType="Line" Visible="1" BackgroundColor="255,255,255" ForegroundColor="0,0,0" Box="1">
+			<TITLE Visible="1" Text="CASTEP Geometry Optimization"/>
+			<LEGEND Visible="0" Heading=""/>
+			<CARTESIAN_AXES_2D XVisible="1" YVisible="1" XReversed="0" YReversed="0" XLabel="Optimization Step" YLabel="Energy (eV)" XOriginPos="Min" YOriginPos="Min" XTickPos="Auto" YTickPos="Auto"/>
+			<CARTESIAN_GRID_2D XGrid="Off" YGrid="Off"/>
+			<CARTESIAN_GRAPH_2D_STYLE LineWidth="1" LineStyle="Solid" LineColor="0,155,0" SymbolSize="6" SymbolShape="Dot" SymbolColor="0,155,0" BarOrientation="Horizontal" BarWidth="0.5" BarColor="0,0,255" DendrogramCursorColor="0,0,255" DendrogramCursorWidth="1" DendrogramCursorPosition="0.5"/>
+		</CARTESIAN_2D_PLOT>
+	</CHART_2D>
+</XCD>
