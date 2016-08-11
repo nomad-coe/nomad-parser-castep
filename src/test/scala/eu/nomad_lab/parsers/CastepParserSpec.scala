@@ -156,3 +156,23 @@ object CastepParserSpec14 extends Specification {
     }
   }
 }
+object CastepParserSpec15 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/test2/CF-boat.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/test2/CF-boat.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
+object CastepParserSpec16 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/c4h3/C4H3.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/c4h3/C4H3.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
