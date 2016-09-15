@@ -358,7 +358,14 @@ class CastepParserContext(object):
         if self.n_spin_channels:
             backend.addValue('number_of_spin_channels', self.n_spin_channels[0])
     
-    
+    def onClose_x_castep_section_scf_parameters(self, backend, gIndex, section):    
+        if section['x_castep_smearing_kind'] and section['x_castep_smearing_width']:
+            sm_kind = section['x_castep_smearing_kind']
+            sm_width = section['x_castep_smearing_width']
+            gindexsis =  backend.openSection('section_method') 
+            backend.addValue('smearing_kind', sm_kind)
+            backend.addValue('smearing_width', sm_width)
+            backend.closeSection('section_method',gindexsis)  
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
         ecut_str = section['x_castep_basis_set_planewave_cutoff']
@@ -2382,6 +2389,8 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 'x_castep_basis_set_planewave_cutoff' : CachingLevel.Cache,
                                 # 'eigenvalues_values': CachingLevel.Cache,
                                 # 'eigenvalues_kpoints':CachingLevel.Cache,
+                                'x_castep_smearing_width': CachingLevel.Cache,
+                                'x_castep_smearing_kind': CachingLevel.Cache,
                                 'x_castep_total_energy_corrected_for_finite_basis_store': CachingLevel.Cache,
                                 'x_castep_frame_time':CachingLevel.Cache,
                                 'x_castep_section_SCF_iteration_frame':CachingLevel.Cache,
