@@ -134,6 +134,7 @@ class CastepParserContext(object):
         self.ts_path_p =[]
         self.basis_set_kind=[]
         self.segm_label =[]
+        self.method =[]
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
         self.pippo = None
@@ -168,9 +169,7 @@ class CastepParserContext(object):
 
             backend.addValue('atom_type_name', name[i])
             backend.closeSection('section_atom_type', gIndex+i)
-    
-
-# Translating the XC functional name to the NOMAD standard
+        
     def onClose_x_castep_section_functionals(self, backend, gIndex, section):
         """When all the functional definitions have been gathered, matches them
         with the nomad correspondents and combines into one single string which
@@ -1044,6 +1043,13 @@ class CastepParserContext(object):
 
     def onClose_section_run(self, backend, gIndex, section):
         # self.basis_set_type = 'plane_waves'
+        if section['x_castep_elec_methd']:
+            self.method = 'DFT+U'            
+        else:
+            self.method = 'DFT' 
+        meth_ind=backend.openSection('section_method')
+        backend.addValue('electronic_structure_method',self.method)    
+        backend.closeSection('section_method',meth_ind)
         backend.addValue('program_basis_set_type', self.basis_set_kind)
         f_st_band = section['x_castep_store_atom_forces_band']
         evAtoN = float(1.6021766e-9)
@@ -2257,9 +2263,12 @@ def build_CastepMainFileSimpleMatcher():
                       SM(r"\s*(?P<x_castep_store_atom_name>[a-zA-Z]+)\s*(?P<x_castep_store_atom_mass>[\d\.]+)\s*",
                         #endReStr = "\n",   
                         repeats = True),
+                      
+                      
+                        #endReStr = "\n",),  
                      ]), # CLOSING section_atom_topology
                
-
+                SM(r"\s*Units for (?P<x_castep_elec_methd>[a-zA-Z]+)\sU\svalues\sare+"),
                 SM(r"\s*Point group of crystal\s\=\s*[0-9.]+\:\s(?P<x_castep_crystal_point_group>[a-zA-Z0-9.]+)"),
                 SM(r"\s*Space group of crystal\s\=\s*[0-9.]+\:\s(?P<x_castep_space_group>[a-zA-Z0-9.]+)"),
 
@@ -2391,6 +2400,7 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 'x_castep_basis_set_planewave_cutoff' : CachingLevel.Cache,
                                 # 'eigenvalues_values': CachingLevel.Cache,
                                 # 'eigenvalues_kpoints':CachingLevel.Cache,
+                                'x_castep_elec_methd':CachingLevel.Cache,
                                 'x_castep_smearing_width': CachingLevel.Cache,
                                 'x_castep_smearing_kind': CachingLevel.Cache,
                                 'x_castep_total_energy_corrected_for_finite_basis_store': CachingLevel.Cache,
