@@ -363,8 +363,8 @@ class CastepParserContext(object):
             sm_kind = section['x_castep_smearing_kind']
             sm_width = section['x_castep_smearing_width']
             gindexsis =  backend.openSection('section_method') 
-            backend.addValue('smearing_kind', sm_kind)
-            backend.addValue('smearing_width', sm_width)
+            backend.addValue('smearing_kind', sm_kind[0])
+            backend.addValue('smearing_width', sm_width[0])
             backend.closeSection('section_method',gindexsis)  
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
