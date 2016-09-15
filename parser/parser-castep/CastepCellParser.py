@@ -47,7 +47,7 @@ class CastepCellParserContext(object):
         self.band_energies = None
         self.band_k_points = None
         self.band_occupations = None
-
+        self.klabel_seg = []
         self.k_crd = []
         self.k_sgt_start_end = []
 
@@ -74,7 +74,8 @@ class CastepCellParserContext(object):
 
 
         backend.addArrayValues('x_castep_k_path', np.asarray(self.k_crd))
-       
+        self.klabel_seg = section['x_castep_store_k_label']
+        
         # backend.addArrayValues('band_segm_start_end', np.asarray(self.k_sgt_start_end))
         # backend.addValue('number_of_k_point_segments', len(self.k_sgt_start_end))
 
@@ -106,7 +107,7 @@ def build_CastepCellFileSimpleMatcher():
                   forwardMatch = True,
                   subMatchers = [
 
-                     SM (r"(?P<x_castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
+                     SM (r"(?P<x_castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)\s*\!\s(?P<x_castep_store_k_label>[A-Z])", repeats = True)
                                  ]),
 
             SM(startReStr = r"\s*\%BLOCK BS\_KPOINT\_PATH\s*",
@@ -114,7 +115,7 @@ def build_CastepCellFileSimpleMatcher():
                   forwardMatch = True,
                   subMatchers = [
 
-                      SM (r"(?P<x_castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
+                      SM (r"(?P<x_castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)\s*\!\s(?P<x_castep_store_k_label>[A-Z])", repeats = True)
 
                                  ]),
 
@@ -141,7 +142,7 @@ def build_CastepCellFileSimpleMatcher():
                   forwardMatch = True,
                   subMatchers = [
 
-                     SM (r"\s*(?P<x_castep_store_k_path>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)", repeats = True)
+                     SM (r"\s*(?P<x_castep_store_k_path>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)\s*\!\s(?P<x_castep_store_k_label>[A-Z])", repeats = True)
                                  ]),
             
             # SM(startReStr = r"\%BLOCK KPOINT\_LIST\s*",

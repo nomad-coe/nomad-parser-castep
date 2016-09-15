@@ -133,7 +133,7 @@ class CastepParserContext(object):
         self.ts_positions_p = []
         self.ts_path_p =[]
         self.basis_set_kind=[]
-
+        self.segm_label =[]
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
         self.pippo = None
@@ -979,7 +979,8 @@ class CastepParserContext(object):
         # with open(fName) as fIn:
         #     cellParser.parseFile(fIn)  # parsing *.cell file to get the k path segments
            
-
+                    self.segm_label = cellSuperContext.klabel_seg
+                    
                     self.k_start_end = cellSuperContext.k_sgt_start_end  # recover k path segments coordinartes from *.cell file
                     self.k_path_nr = len(self.k_start_end)
                     # backend.openSection('section_single_configuration_to_calculation_ref')
@@ -1033,6 +1034,7 @@ class CastepParserContext(object):
                             backend.addArrayValues('band_k_points', np.asarray(k_point_path[i]))
                             backend.addArrayValues('band_energies', np.asarray(band_en_path[i]))
                             backend.addArrayValues('band_segm_start_end', np.asarray(self.k_start_end[i])) 
+                            backend.addArrayValues('band_segm_labels', np.asarray([self.segm_label[0],self.segm_label[-1]])) 
                             backend.addValue('number_of_k_points_per_segment', len(k_point_path[i])) 
                             backend.closeSection('section_k_band_segment',i)
                         
