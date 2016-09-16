@@ -31,6 +31,8 @@ class CastepParserContext(object):
 
     def __init__(self):
         """ Initialise variables used within the current superContext """
+        self.secMethodIndex =[]
+        self.secSystemDescriptionIndex =[]
         self.functionals                       = []
         self.func_total                        = []
         self.relativistic                      = []
@@ -267,7 +269,7 @@ class CastepParserContext(object):
         self.optim_method = section["x_castep_geometry_optim_method"]
 
     def onClose_section_method(self, backend, gIndex, section):
-        
+        self.secMethodIndex = gIndex
         self.van_der_waals_name = section["van_der_Waals_method"]
         
         if self.van_der_waals_name is not None:
@@ -537,7 +539,8 @@ class CastepParserContext(object):
         else:    
             backend.addValue('number_of_scf_iterations', len(self.energy_total_scf_iteration_list))
             backend.addArrayValues('stress_tensor',np.asarray(self.stress_tensor_value))
-    
+        backend.addValue('single_configuration_to_calculation_method_ref', self.secMethodIndex)
+        backend.addValue('single_configuration_calculation_to_system_ref', self.secSystemDescriptionIndex)
     def onClose_section_scf_iteration(self, backend, gIndex, section):
         """trigger called when _section_scf_iteration is closed"""
         # get cached values for energy_total_scf_iteration
@@ -678,7 +681,7 @@ class CastepParserContext(object):
 
     def onClose_section_system(self, backend, gIndex, section):
         """trigger called when _section_system is closed"""
-
+        self.secSystemDescriptionIndex = gIndex
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
         backend.addArrayValues('configuration_periodic_dimensions', np.asarray([True, True, True]))
         pos = section['x_castep_store_atom_positions']
