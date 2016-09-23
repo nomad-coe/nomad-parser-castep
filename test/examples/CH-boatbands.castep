@@ -1,0 +1,352 @@
+ +-------------------------------------------------+
+ |                                                 |
+ |      CCC   AA    SSS  TTTTT  EEEEE  PPPP        |
+ |     C     A  A  S       T    E      P   P       |
+ |     C     AAAA   SS     T    EEE    PPPP        |
+ |     C     A  A     S    T    E      P           |
+ |      CCC  A  A  SSS     T    EEEEE  P           |
+ |                                                 |
+ +-------------------------------------------------+
+ |                                                 |
+ | Welcome to Materials Studio CASTEP version 3.2  |
+ | Ab Initio Total Energy Program                  |
+ |                                                 |
+ | Authors:                                        |
+ | M. Segall, M. Probert, C. Pickard, P. Hasnip    |
+ | S. Clark, K. Refson, M. Payne                   |
+ |                                                 |
+ | Contributors:                                   |
+ | P. Lindan, P. Haynes, J. White, V. Milman       |
+ | N. Govind, M. Gibson, P. Tulip, V. Cocula       |
+ | B. Montanari, D. Quigley                        |
+ |                                                 |
+ | Copyright (c) 2000,2001,2002,2003,2004          |
+ |                                                 |
+ | Please cite                                     |
+ |                                                 |
+ |    "First-principles simulation: ideas,         |
+ |    illustrations and the CASTEP code",          |
+ |                                                 |
+ | J. Phys.: Cond. Matt. 14(11) pp.2717-2743 (2002)|
+ |                                                 |
+ | M. D. Segall, P. J. D. Lindan, M. J. Probert,   |
+ | C. J. Pickard, P. J. Hasnip, S. J. Clark,       |
+ | M. C. Payne                                     |
+ |                                                 |
+ |       in all publications arising from          |
+ |              your use of CASTEP                 |
+ |                                                 |
+ +-------------------------------------------------+
+ 
+License checkout of MS_castep successful
+Number of licenses checked out     1
+ 
+ 
+ Pseudo atomic calculation performed for H 1s1
+ 
+ Converged in 18 iterations to a total energy of -12.460019 eV
+ 
+ 
+ Pseudo atomic calculation performed for C 2s2 2p2
+ 
+ Converged in 21 iterations to a total energy of -146.419565 eV
+ 
+Calculation parallelised over    1 nodes.
+K-points are distributed over    1 groups, each containing    1 nodes.
+
+ ************************************ Title ************************************
+ CASTEP calculation from Materials Studio
+
+ ***************************** General Parameters ******************************
+  
+ output verbosity                               : normal  (1)
+ write checkpoint data to                       : CH-boat_sym_c16x0_bands.check
+ type of calculation                            : single point energy
+ stress calculation                             : off
+ density difference calculation                 : on
+ unlimited duration calculation
+ timing information                             : on
+  
+ output         length unit                     : A
+ output           mass unit                     : amu
+ output           time unit                     : ps
+ output         charge unit                     : e
+ output         energy unit                     : eV
+ output          force unit                     : eV/A
+ output       velocity unit                     : A/ps
+ output       pressure unit                     : GPa
+ output     inv_length unit                     : 1/A
+ output      frequency unit                     : cm-1
+ output force constant unit                     : eV/A**2
+ output         volume unit                     : A**3
+  
+ wavefunctions paging                           : none
+ random number generator seed                   : randomised (113954765)
+ data distribution                              : optimal for this architecture
+ optimization strategy                          : balance speed and memory
+
+ *********************** Exchange-Correlation Parameters ***********************
+  
+ using functional                               : Perdew Burke Ernzerhof
+
+ ************************* Pseudopotential Parameters **************************
+  
+ pseudopotential representation                 : reciprocal space
+ <beta|phi> representation                      : reciprocal space
+
+ **************************** Basis Set Parameters *****************************
+  
+ plane wave basis set cut-off                   :   310.0000   eV
+ size of standard grid                          :     1.7500
+ size of fine grid                              :    15.7855   1/A
+ finite basis set correction                    : none
+
+ **************************** Electronic Parameters ****************************
+  
+ number of  electrons                           :         20
+ net charge of system                           :          0
+ net spin   of system                           :          0
+ number of  up  spins                           :         10
+ number of down spins                           :         10
+ treating system as non-spin-polarized
+ number of bands                                :         14
+
+ ********************* Electronic Minimization Parameters **********************
+  
+ Method: Treating system as metallic with density mixing treatment of electrons,
+         and number of  SD  steps               :          1
+         and number of  CG  steps               :          4
+  
+ total energy / atom convergence tol.           : 0.5000E-06   eV
+ eigen-energy convergence tolerance             : 0.2857E-06   eV
+ convergence tolerance window                   :          3   cycles
+ max. number of SCF cycles                      :        100
+ number of fixed-spin iterations                :         10
+ smearing scheme                                : Gaussian
+ smearing width                                 : 0.1000       eV
+ Fermi energy convergence tolerance             : 0.2857E-07   eV
+
+ ************************** Density Mixing Parameters **************************
+  
+ density-mixing scheme                          : Pulay
+ max. length of mixing history                  :         20
+ charge density mixing amplitude                : 0.5000    
+ cut-off energy for mixing                      :  310.0       eV
+ charge density mixing g-vector                 :  1.500       1/A
+
+ *********************** Population Analysis Parameters ************************
+  
+ Population analysis with cutoff                :  3.000       A
+ Partial DOS weights calculated
+
+ *******************************************************************************
+  
+ 
+                           -------------------------------
+                                      Unit Cell
+                           -------------------------------
+        Real Lattice(A)                      Reciprocal Lattice(1/A)
+   4.2764638   0.0000000   0.0000000        1.4692479   0.0000000   0.0000000
+   0.0000000   2.5073589   0.0000000        0.0000000   2.5058979   0.0000000
+   0.0000000   0.0000000  16.0000000        0.0000000   0.0000000   0.3926991
+ 
+                       Lattice parameters(A)       Cell Angles
+                    a =    4.276464          alpha =   90.000000
+                    b =    2.507359          beta  =   90.000000
+                    c =   16.000000          gamma =   90.000000
+ 
+                       Current cell volume =  171.562072       A**3
+ 
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+                         Total number of ions in cell =    8
+                      Total number of species in cell =    2
+                        Max number of any one species =    4
+ 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom        Fractional coordinates of atoms  x
+            x            Number           u          v          w      x
+            x----------------------------------------------------------x
+            x   H          1          0.255349   0.000000   0.585777   x
+            x   H          2         -0.255349   0.000000   0.585777   x
+            x   H          3          0.244651   0.500000  -0.585777   x
+            x   H          4          0.755349   0.500000  -0.585777   x
+            x   C          1          0.182083   0.000000   0.519997   x
+            x   C          2         -0.182083   0.000000   0.519997   x
+            x   C          3          0.317917   0.500000  -0.519997   x
+            x   C          4          0.682083   0.500000  -0.519997   x
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ 
+ 
+                         No user defined ionic velocities
+ 
+                           -------------------------------
+                                   Details of Species
+                           -------------------------------
+ 
+                               Mass of species in AMU
+                                    H      1.0080000
+                                    C     12.0109997
+ 
+                          Electric Quadrupole Moment (Barn)
+                                    H      0.0028600 Isotope  2
+                                    C      1.0000000 No Isotope Defined
+ 
+                          Files used for pseudopotentials:
+                                    H H_00.usp
+                                    C C_00.usp
+ 
+                           -------------------------------
+                              k-Points For BZ Sampling
+                           -------------------------------
+                         Number of kpoints used =          15
+ 
+             +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+             +  Number       Fractional coordinates        Weight  +
+             +-----------------------------------------------------+
+             +     1   0.416667   0.450000   0.250000   0.0666667  +
+             +     2   0.416667   0.350000   0.250000   0.0666667  +
+             +     3   0.416667   0.250000   0.250000   0.0666667  +
+             +     4   0.416667   0.150000   0.250000   0.0666667  +
+             +     5   0.416667   0.050000   0.250000   0.0666667  +
+             +     6   0.250000   0.450000   0.250000   0.0666667  +
+             +     7   0.250000   0.350000   0.250000   0.0666667  +
+             +     8   0.250000   0.250000   0.250000   0.0666667  +
+             +     9   0.250000   0.150000   0.250000   0.0666667  +
+             +    10   0.250000   0.050000   0.250000   0.0666667  +
+             +    11   0.083333   0.450000   0.250000   0.0666667  +
+             +    12   0.083333   0.350000   0.250000   0.0666667  +
+             +    13   0.083333   0.250000   0.250000   0.0666667  +
+             +    14   0.083333   0.150000   0.250000   0.0666667  +
+             +    15   0.083333   0.050000   0.250000   0.0666667  +
+             +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
+                           -------------------------------
+                               Symmetry and Constraints
+                           -------------------------------
+ 
+                          Number of symmetry operations =           8
+                 Set iprint > 1 for symmetry rotation details
+ 
+                        Centre of mass is NOT constrained
+       There are no ionic constraints specified or generated for this cell
+ 
+                         Number of cell constraints= 3
+                         Cell constraints are:  1 2 3 0 0 0
+ 
+                         External pressure/stress (GPa)
+                          0.00000   0.00000   0.00000
+                                    0.00000   0.00000
+                                              0.00000
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -4.19676915E+001  5.40587163E+001                         3.53  <-- SCF
+      1  -5.50980143E+002  2.31577988E+000   6.36265565E+001       9.50  <-- SCF
+      2  -6.86546245E+002 -7.94668223E+000   1.69457627E+001      14.33  <-- SCF
+      3  -6.88924828E+002 -6.54666966E+000   2.97322951E-001      21.84  <-- SCF
+      4  -6.87818258E+002 -3.76417700E+000  -1.38321255E-001      28.94  <-- SCF
+      5  -6.87681415E+002 -4.38493277E+000  -1.71053642E-002      36.16  <-- SCF
+      6  -6.87624730E+002 -4.09040295E+000  -7.08573366E-003      43.25  <-- SCF
+      7  -6.87631474E+002 -4.09730558E+000   8.43063130E-004      50.98  <-- SCF
+      8  -6.87577512E+002 -3.48587108E+000  -6.74523828E-003      57.94  <-- SCF
+      9  -6.87600654E+002 -3.64324740E+000   2.89272637E-003      65.44  <-- SCF
+     10  -6.87567498E+002 -3.30071640E+000  -4.14451654E-003      72.16  <-- SCF
+     11  -6.87554982E+002 -2.86709373E+000  -1.56443228E-003      78.94  <-- SCF
+     12  -6.87563018E+002 -2.98710356E+000   1.00447054E-003      85.73  <-- SCF
+     13  -6.87554837E+002 -2.66723443E+000  -1.02265866E-003      93.62  <-- SCF
+     14  -6.87558393E+002 -2.39041587E+000   4.44561165E-004     101.64  <-- SCF
+     15  -6.87558802E+002 -2.39959085E+000   5.10892834E-005     108.41  <-- SCF
+     16  -6.87559101E+002 -2.43936687E+000   3.73716014E-005     114.91  <-- SCF
+     17  -6.87559158E+002 -2.44643848E+000   7.06036256E-006     121.70  <-- SCF
+     18  -6.87559173E+002 -2.44317093E+000   1.98398989E-006     127.09  <-- SCF
+     19  -6.87559174E+002 -2.44244921E+000   3.09464438E-008     133.69  <-- SCF
+     20  -6.87559174E+002 -2.44258844E+000   1.48008283E-008     139.42  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -687.5591738095     eV
+Final free energy (E-TS)    =  -687.5591738134     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS) =  -687.5591738114     eV
+ 
+ 
+ ************** Symmetrised Forces ***************
+ *                                               *
+ *          Cartesian components (eV/A)          *
+ * --------------------------------------------- *
+ *              x            y            z      *
+ *                                               *
+ * H    1      0.00391      0.00000     -0.00521 *
+ * H    2     -0.00391      0.00000     -0.00521 *
+ * H    3     -0.00391      0.00000      0.00521 *
+ * H    4      0.00391      0.00000      0.00521 *
+ * C    1      0.02233      0.00000      0.10131 *
+ * C    2     -0.02233      0.00000      0.10131 *
+ * C    3     -0.02233      0.00000     -0.10131 *
+ * C    4      0.02233      0.00000     -0.10131 *
+ *                                               *
+ *************************************************
+ 
+ Pseudo atomic calculation performed for H 1s1
+ 
+ Converged in 18 iterations to a total energy of -12.460019 eV
+ 
+ 
+ Pseudo atomic calculation performed for C 2s2 2p2
+ 
+ Converged in 21 iterations to a total energy of -146.419564 eV
+ 
+Charge spilling parameter for spin component 1 = 0.79%
+ 
+     Atomic Populations
+     ------------------
+Species   Ion     s      p      d      f     Total  Charge (e)
+==============================================================
+  H        1     0.77   0.00   0.00   0.00   0.77     0.23
+  H        2     0.77   0.00   0.00   0.00   0.77     0.23
+  H        3     0.77   0.00   0.00   0.00   0.77     0.23
+  H        4     0.77   0.00   0.00   0.00   0.77     0.23
+  C        1     1.18   3.05   0.00   0.00   4.23    -0.23
+  C        2     1.18   3.05   0.00   0.00   4.23    -0.23
+  C        3     1.18   3.05   0.00   0.00   4.23    -0.23
+  C        4     1.18   3.05   0.00   0.00   4.23    -0.23
+==============================================================
+ 
+  Bond     Population     Length (A)
+====================================
+ H 3-- C 3     0.82      1.09813
+ H 4-- C 4     0.82      1.09813
+ H 2-- C 2     0.82      1.09813
+ H 1-- C 1     0.82      1.09813
+ C 1-- C 3     1.69      1.52270
+ C 2-- C 4     1.69      1.52270
+ C 3-- C 4     0.58      1.55735
+ C 1-- C 2     0.58      1.55735
+ H 3-- H 4    -0.15      2.09248
+ H 1-- H 2    -0.15      2.09248
+ H 4-- C 2    -0.30      2.12308
+ H 3-- C 1    -0.30      2.12308
+ H 2-- C 4    -0.30      2.12308
+ H 1-- C 3    -0.30      2.12308
+ H 3-- C 4    -0.19      2.14642
+ H 4-- C 3    -0.19      2.14642
+ H 2-- C 1    -0.19      2.14642
+ H 1-- C 2    -0.19      2.14642
+ C 2-- C 3    -0.50      2.55993
+ C 1-- C 4    -0.50      2.55993
+ H 4-- C 1    -0.01      2.78679
+ H 3-- C 2    -0.01      2.78679
+ H 2-- C 3    -0.01      2.78679
+ H 1-- C 4    -0.01      2.78679
+====================================
+ 
+All bands spilling parameter for spin component 1 =17.38%
+ 
+Writing model to CH-boat_sym_c16x0_bands.check                                                                                                                                                                                                                                   
+Initialisation time =      0.84
+Calculation time    =    144.53
+Finalisation time   =      0.39
+Total time          =    145.77
