@@ -27,12 +27,16 @@ import logging, os, re, sys
 
 logger = logging.getLogger("nomad.CastepParser")
 
+def dftPlusU(parser):
+    parser.superContext.method="DFT+U"
+
 class CastepParserContext(object):
 
     def __init__(self):
         """ Initialise variables used within the current superContext """
-        self.secMethodIndex =[]
-        self.secSystemDescriptionIndex =[]
+        self.rootSecMethodIndex = None
+        self.secMethodIndex = None
+        self.secSystemDescriptionIndex = None
         self.functionals                       = []
         self.func_total                        = []
         self.relativistic                      = []
@@ -166,11 +170,11 @@ class CastepParserContext(object):
             #converting mass in Kg from AMU
             mass[i] = float(mass[i]) * 1.66053904e-27
 
-            backend.openSection('section_atom_type')
+            atomGIndex = backend.openSection('section_atom_type')
             backend.addValue('atom_type_mass', float(mass[i]))
 
             backend.addValue('atom_type_name', name[i])
-            backend.closeSection('section_atom_type', gIndex+i)
+            backend.closeSection('section_atom_type', atomGIndex)
         
     def onClose_x_castep_section_functionals(self, backend, gIndex, section):
         """When all the functional definitions have been gathered, matches them
@@ -268,8 +272,15 @@ class CastepParserContext(object):
     def onClose_x_castep_section_geom_optimisation_method(self, backend, gIndex, section):
         self.optim_method = section["x_castep_geometry_optim_method"]
 
-    def onClose_section_method(self, backend, gIndex, section):
+    def onOpen_section_method(self, backend, gIndex, section):
+        if self.rootSecMethodIndex is None:
+            self.rootSecMethodIndex = gIndex
         self.secMethodIndex = gIndex
+
+    def onClose_section_method(self, backend, gIndex, section):
+        if not self.method:
+            self.method = 'DFT' 
+        backend.addValue('electronic_structure_method',self.method)    
         self.van_der_waals_name = section["van_der_Waals_method"]
         
         if self.van_der_waals_name is not None:
@@ -294,10 +305,10 @@ class CastepParserContext(object):
                 self.func_and_weight = []
                 for i in range(len(self.functional_types)):
                     self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i]) 
-                    backend.openSection('section_XC_functionals')            
+                    xcIndex = backend.openSection('section_XC_functionals')            
                     backend.addValue('XC_functional_name', self.functionals[i]) 
                     backend.addValue('XC_functional_weight', self.functional_weight[i])
-                    backend.closeSection('section_XC_functionals',gIndex+i)        
+                    backend.closeSection('section_XC_functionals', xcIndex)
             # Push the functional string into the backend
             # Push the relativistic treatment string into the backend
                 backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
@@ -363,10 +374,8 @@ class CastepParserContext(object):
         if section['x_castep_smearing_kind'] and section['x_castep_smearing_width']:
             sm_kind = section['x_castep_smearing_kind']
             sm_width = section['x_castep_smearing_width']
-            gindexsis =  backend.openSection('section_method') 
             backend.addValue('smearing_kind', sm_kind[0])
             backend.addValue('smearing_width', sm_width[0])
-            backend.closeSection('section_method',gindexsis)  
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
         ecut_str = section['x_castep_basis_set_planewave_cutoff']
@@ -452,7 +461,6 @@ class CastepParserContext(object):
                                      * math.cos(np.deg2rad(self.gamma[0])) ) * self.a[0]*self.b[0]*self.c[0]    
        
 # Storing the total energy of each SCF iteration in an array
-    
 
 # Processing forces acting on atoms (final converged forces)
     def onClose_section_single_configuration_calculation(self, backend, gIndex, section):
@@ -683,9 +691,11 @@ class CastepParserContext(object):
 ################ Triggers on closure section_system ######################
 ######################################################################################
 
+    def onOpen_section_system(self, backend, gIndex, section):
+        self.secSystemDescriptionIndex = gIndex
+
     def onClose_section_system(self, backend, gIndex, section):
         """trigger called when _section_system is closed"""
-        self.secSystemDescriptionIndex = gIndex
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
         backend.addArrayValues('configuration_periodic_dimensions', np.asarray([True, True, True]))
         pos = section['x_castep_store_atom_positions']
@@ -990,10 +1000,8 @@ class CastepParserContext(object):
                     self.k_start_end = cellSuperContext.k_sgt_start_end  # recover k path segments coordinartes from *.cell file
                     self.k_path_nr = len(self.k_start_end)
                     # backend.openSection('section_single_configuration_to_calculation_ref')
-                    if self.n_spin_channels_bands:
-                        backend.openSection('section_method')
-                        backend.addValue('number_of_spin_channels',self.n_spin_channels_bands)     
-                        backend.closeSection('section_method',gIndex+1)
+                    # if self.n_spin_channels_bands:
+                    #     backend.addValue('number_of_spin_channels',self.n_spin_channels_bands)     
         
                     ########################################################################################
                     def get_last_index(el, check):  # function that returns end index for each k path segment
@@ -1050,13 +1058,6 @@ class CastepParserContext(object):
 
     def onClose_section_run(self, backend, gIndex, section):
         # self.basis_set_type = 'plane_waves'
-        if section['x_castep_elec_methd']:
-            self.method = 'DFT+U'            
-        else:
-            self.method = 'DFT' 
-        meth_ind=backend.openSection('section_method')
-        backend.addValue('electronic_structure_method',self.method)    
-        backend.closeSection('section_method',meth_ind)
         backend.addValue('program_basis_set_type', self.basis_set_kind)
         f_st_band = section['x_castep_store_atom_forces_band']
         evAtoN = float(1.6021766e-9)
@@ -1122,13 +1123,13 @@ class CastepParserContext(object):
                 gIndexGroupscf = backend.openSection('section_scf_iteration')
                 for i in range(len(self.frame_atom_forces)):
                     
-                    backend.openSection('section_system')
+                    backend.openNonOverlappingSection('section_system')
                     backend.addArrayValues('atom_velocities', np.asarray(self.frame_atom_veloc[i]))
                     backend.addArrayValues('atom_labels', np.asarray(self.atom_labels))
                     backend.addArrayValues('atom_positions', np.asarray(self.frame_position[i]))
                     backend.addArrayValues('simulation_cell', np.asarray(self.frame_cell[i]))
                     backend.addArrayValues('x_castep_velocities_cell_vector',np.asarray(self.frame_vet_velocities[i]))
-                    backend.closeSection('section_system',i+2)
+                    backend.closeNonOverlappingSection('section_system')
                     
                     backend.openSection('section_single_configuration_calculation')
                     backend.addArrayValues('atom_forces', np.asarray(self.frame_atom_forces[i]))
@@ -1264,7 +1265,7 @@ def build_CastepMainFileSimpleMatcher():
     calculationMethodSubMatcher = SM(name = 'calculationMethods',
         startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Exchange-Correlation Parameters \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*",
         forwardMatch = True,
-        sections = ["section_method"],
+        sections = [],
         subMatchers = [
 
            SM(name = "castepXC",
@@ -2206,7 +2207,7 @@ def build_CastepMainFileSimpleMatcher():
             startReStr = r"\s\|\s*CCC\s*AA\s*SSS\s*TTTTT\s*EEEEE\s*PPPP\s*\|\s*",
             required = True,
             forwardMatch = True,
-            sections = ['section_run'],
+            sections = ['section_run', "section_method"],
             subMatchers = [
                 
     
@@ -2276,7 +2277,7 @@ def build_CastepMainFileSimpleMatcher():
                         #endReStr = "\n",),  
                      ]), # CLOSING section_atom_topology
                
-                SM(r"\s*Units for (?P<x_castep_elec_methd>[a-zA-Z]+)\sU\svalues\sare+"),
+                SM(r"\s*Units for (?P<x_castep_elec_methd>[a-zA-Z]+)\sU\svalues\sare+", adHoc = dftPlusU ), # x_castep_elec_methd should be in the section method...
                 SM(r"\s*Point group of crystal\s\=\s*[0-9.]+\:\s(?P<x_castep_crystal_point_group>[a-zA-Z0-9.]+)"),
                 SM(r"\s*Space group of crystal\s\=\s*[0-9.]+\:\s(?P<x_castep_space_group>[a-zA-Z0-9.]+)"),
 

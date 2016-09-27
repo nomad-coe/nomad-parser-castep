@@ -176,3 +176,25 @@ object CastepParserSpec16 extends Specification {
     }
   }
 }
+object CastepParserSpec17 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/CH-boatbands.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/CH-boatbands.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
+object CastepParserSpec18 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/ch-chair2/CH-chairc04x00.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/ch-chair2/CH-chairc04x00.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
+
+
