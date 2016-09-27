@@ -538,7 +538,10 @@ class CastepParserContext(object):
             pass
         else:    
             backend.addValue('number_of_scf_iterations', len(self.energy_total_scf_iteration_list))
-            backend.addArrayValues('stress_tensor',np.asarray(self.stress_tensor_value))
+            if self.stress_tensor_value[-3:]:
+                backend.addArrayValues('stress_tensor',np.asarray(self.stress_tensor_value[-3:])) 
+            else:
+                pass        
         backend.addValue('single_configuration_to_calculation_method_ref', self.secMethodIndex)
         backend.addValue('single_configuration_calculation_to_system_ref', self.secSystemDescriptionIndex)
     def onClose_section_scf_iteration(self, backend, gIndex, section):
@@ -644,15 +647,16 @@ class CastepParserContext(object):
      #get cached values for stress tensor
         stress_tens =[]
         stress_tens = section['x_castep_store_stress_tensor']
-    
+        
         for i in range(len(stress_tens)):
+        
             stress_tens[i] = stress_tens[i].split()
             stress_tens[i] = [float(j) for j in stress_tens[i]]
             stress_tens_int = stress_tens[i]
             stress_tens_int = [x / 10e9 for x in stress_tens_int] #converting GPa in Pa.
             self.stress_tensor_value.append(stress_tens_int)
-        self.stress_tensor_value = self.stress_tensor_value[-3:]     
-
+        # self.stress_tensor_value = self.stress_tensor_value[-3:]     
+     
     def onClose_x_castep_section_raman_tensor(self, backend, gIndex, section): 
      #get cached values for stress tensor
         ram_tens =[]
@@ -1128,7 +1132,8 @@ class CastepParserContext(object):
                     
                     backend.openSection('section_single_configuration_calculation')
                     backend.addArrayValues('atom_forces', np.asarray(self.frame_atom_forces[i]))
-                    backend.addArrayValues('stress_tensor',np.asarray(self.frame_stress_tensor[i]))
+                    if self.frame_stress_tensor is not None:
+                        backend.addArrayValues('stress_tensor',np.asarray(self.frame_stress_tensor[i]))
                     backend.addValue('number_of_scf_iterations', len(self.frame_energies))
                     if i > 0:
                      
@@ -2403,6 +2408,7 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 'x_castep_basis_set_planewave_cutoff' : CachingLevel.Cache,
                                 # 'eigenvalues_values': CachingLevel.Cache,
                                 # 'eigenvalues_kpoints':CachingLevel.Cache,
+                                'x_castep_store_stress_tensor': CachingLevel.Cache,
                                 'x_castep_elec_methd':CachingLevel.Cache,
                                 'x_castep_smearing_width': CachingLevel.Cache,
                                 'x_castep_smearing_kind': CachingLevel.Cache,
