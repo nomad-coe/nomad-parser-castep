@@ -1,0 +1,25 @@
+#task : GeometryOptimization
+#reuse : default
+#continuation : default
+
+geom_method : delocalized
+geom_max_iter : 200
+geom_force_tol : 0.025
+
+cut_off_energy : 350.0
+elec_energy_tol : 1e-08
+fix_occupancy : False
+grid_scale : 2.0
+iprint : 1
+max_scf_cycles : 200
+metals_method : dm
+mixing_scheme : Pulay
+nextra_bands : 32
+num_dump_cycles : 0
+opt_strategy_bias : 3
+sedc_apply : True
+sedc_scheme : TS
+smearing_scheme : Gaussian
+smearing_width : 0.15
+xc_functional : PBE
+

@@ -1,0 +1,665 @@
+ +-------------------------------------------------+
+ |                                                 |
+ |      CCC   AA    SSS  TTTTT  EEEEE  PPPP        |
+ |     C     A  A  S       T    E      P   P       |
+ |     C     AAAA   SS     T    EEE    PPPP        |
+ |     C     A  A     S    T    E      P           |
+ |      CCC  A  A  SSS     T    EEEEE  P           |
+ |                                                 |
+ +-------------------------------------------------+
+ |                                                 |
+ | Welcome to Academic Release CASTEP version 6.0  |
+ | Ab Initio Total Energy Program                  |
+ |                                                 |
+ | Authors:                                        |
+ | M. Segall, M. Probert, C. Pickard, P. Hasnip,   |
+ | S. Clark, K. Refson, J. R. Yates, M. Payne      |
+ |                                                 |
+ | Contributors:                                   |
+ | P. Lindan, P. Haynes, J. White, V. Milman,      |
+ | N. Govind, M. Gibson, P. Tulip, V. Cocula,      |
+ | B. Montanari, D. Quigley, M. Glover,            |
+ | L. Bernasconi, A. Perlov, M. Plummer,           |
+ | E. McNellis, J. Meyer, J. Gale, D. Jochym       |
+ | J. Aarons, B. Walker                            |
+ |                                                 |
+ | Copyright (c) 2000 - 2011                       |
+ |                                                 |
+ |     Distributed under the terms of an           |
+ |     Agreement between the United Kingdom        |
+ |     Car-Parrinello (UKCP) Consortium,           |
+ |     Daresbury Laboratory and Accelrys, Inc.     |
+ |                                                 |
+ | Please cite                                     |
+ |                                                 |
+ |     "First principles methods using CASTEP"     |
+ |                                                 |
+ |         Zeitschrift fuer Kristallographie       |
+ |           220(5-6) pp. 567-570 (2005)           |
+ |                                                 |
+ | S. J. Clark, M. D. Segall, C. J. Pickard,       |
+ | P. J. Hasnip, M. J. Probert, K. Refson,         |
+ | M. C. Payne                                     |
+ |                                                 |
+ |       in all publications arising from          |
+ |              your use of CASTEP                 |
+ |                                                 |
+ +-------------------------------------------------+
+ 
+ 
+ Compiled for linux_x86_64_ifort10 on Sun Sep  9 07:00:34 2012
+ from source code version 1a6693096e0f+ Castep60_branch 2012-01-15
+ using fast optimisation, mkl FFTs and mkl10 LAPACK and BLAS.
+ 
+ +---------------------------------------------------+
+ |                                                   |
+ |  Using DFT-SEDC - the DFT Semi-Empirical          |
+ |  Dispersion interaction Correction module         |
+ |  Copyright (c) 2008 Erik McNellis and Joerg Meyer |
+ |  Fritz-Haber-Institut der MPG. Distributed under  |
+ |  the GNU Lesser General Public License (LGPL).    |
+ |                                                   |
+ | Please cite the following publications in all     |
+ | work arising from your use of CASTEP SEDC.        |
+ |                                                   |
+ | Erik R. McNellis, Joerg Meyer, and Karsten Reuter |
+ | Phys. Rev. B 80, 205414 (2009)                    |
+ +---------------------------------------------------+
+ 
+ 
+ Pseudo atomic calculation performed for Ag 4d10 5s1
+ 
+ Converged in 42 iterations to a total energy of -1024.8892 eV
+ 
+ Calculation parallelised over 240 processes.
+ Data is distributed by G-vector(10-way) and k-point(24-way)
+
+ ************************************ Title ************************************
+ 
+
+ ***************************** General Parameters ******************************
+  
+ output verbosity                               : normal  (1)
+ write checkpoint data to                       : surf.check
+ type of calculation                            : single point energy
+ stress calculation                             : off
+ density difference calculation                 : off
+ electron localisation func (ELF) calculation   : off
+ Hirshfeld analysis                             : off
+ unlimited duration calculation
+ timing information                             : on
+ memory usage estimate                          : on
+ write final potential to formatted file        : off
+ write final density to formatted file          : off
+ write BibTeX reference list                    : on
+  
+ output         length unit                     : A
+ output           mass unit                     : amu
+ output           time unit                     : ps
+ output         charge unit                     : e
+ output         energy unit                     : eV
+ output          force unit                     : eV/A
+ output       velocity unit                     : A/ps
+ output       pressure unit                     : GPa
+ output     inv_length unit                     : 1/A
+ output      frequency unit                     : cm-1
+ output force constant unit                     : eV/A**2
+ output         volume unit                     : A**3
+ output   IR intensity unit                     : (D/A)**2/amu
+ output         dipole unit                     : D
+ output         efield unit                     : eV/A/e
+ output        entropy unit                     : J/mol/K
+  
+ wavefunctions paging                           : none
+ random number generator seed                   : randomised (175742150)
+ data distribution                              : optimal for this architecture
+ optimization strategy                          : maximize speed(+++)
+
+ *********************** Exchange-Correlation Parameters ***********************
+  
+ using functional                               : Perdew Burke Ernzerhof
+ Divergence correction                          : off
+ DFT+D: Semi-empirical dispersion correction    : on
+ SEDC with                                      : TS correction scheme
+
+ ************************* Pseudopotential Parameters **************************
+  
+ pseudopotential representation                 : reciprocal space
+ <beta|phi> representation                      : reciprocal space
+
+ **************************** Basis Set Parameters *****************************
+  
+ plane wave basis set cut-off                   :   350.0000   eV
+ size of standard grid                          :     2.0000
+ size of   fine   gmax                          :    19.1691   1/A
+ largest prime factor in FFT                    :          5
+ finite basis set correction                    : none
+
+ **************************** Electronic Parameters ****************************
+  
+ number of  electrons                           :  352.0    
+ net charge of system                           :  0.000    
+ net spin   of system                           :  0.000    
+ number of  up  spins                           :  176.0    
+ number of down spins                           :  176.0    
+ treating system as non-spin-polarized
+ number of bands                                :        208
+
+ ********************* Electronic Minimization Parameters **********************
+  
+ Method: Treating system as metallic with density mixing treatment of electrons,
+         and number of  SD  steps               :          1
+         and number of  CG  steps               :          4
+  
+ total energy / atom convergence tol.           : 0.1000E-07   eV
+ eigen-energy convergence tolerance             : 0.1538E-08   eV
+ max force / atom convergence tol.              : ignored
+ convergence tolerance window                   :          3   cycles
+ max. number of SCF cycles                      :        200
+ number of fixed-spin iterations                :         10
+ smearing scheme                                : Gaussian
+ smearing width                                 : 0.1500       eV
+ Fermi energy convergence tolerance             : 0.1538E-09   eV
+
+ ************************** Density Mixing Parameters **************************
+  
+ density-mixing scheme                          : Pulay
+ max. length of mixing history                  :          7
+ charge density mixing amplitude                : 0.8000    
+ cut-off energy for mixing                      :  350.0       eV
+ charge density mixing g-vector                 :  1.500       1/A
+
+ *********************** Population Analysis Parameters ************************
+  
+ Population analysis with cutoff                :  3.000       A
+
+ *******************************************************************************
+  
+ 
+                           -------------------------------
+                                      Unit Cell
+                           -------------------------------
+        Real Lattice(A)                      Reciprocal Lattice(1/A)
+   5.8517329   0.0000000   0.0000000        1.0737307   0.6199187   0.0000000
+  -5.8517329  10.1354987   0.0000000        0.0000000   0.6199187   0.0000000
+   0.0000000   0.0000000  35.0000000        0.0000000   0.0000000   0.1795196
+ 
+                       Lattice parameters(A)       Cell Angles
+                    a =    5.851733          alpha =   90.000000
+                    b =   11.703466          beta  =   90.000000
+                    c =   35.000000          gamma =  120.000000
+ 
+                       Current cell volume = 2075.858076       A**3
+ 
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+                         Total number of ions in cell =   32
+                      Total number of species in cell =    1
+                        Max number of any one species =   32
+ 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom        Fractional coordinates of atoms  x
+            x            Number           u          v          w      x
+            x----------------------------------------------------------x
+            x  Ag           1         0.001214   0.999773  -0.000509   x
+            x  Ag           2         0.000651   0.749455  -0.000534   x
+            x  Ag           3         0.000238   0.499492  -0.000620   x
+            x  Ag           4         0.502633   1.000178  -0.000563   x
+            x  Ag           5         0.502001   0.749603  -0.000609   x
+            x  Ag           6        -0.000589   0.248858  -0.000586   x
+            x  Ag           7         0.500960   0.249223  -0.000549   x
+            x  Ag           8         0.501515   0.499670  -0.000543   x
+            x  Ag           9         0.333331   1.083331  -0.068257   x
+            x  Ag          10         0.833339   0.333333  -0.068257   x
+            x  Ag          11         0.333333   0.833338  -0.068257   x
+            x  Ag          12         0.833330   0.583336  -0.068257   x
+            x  Ag          13         0.333342   0.583336  -0.068257   x
+            x  Ag          14         0.833337   1.083331  -0.068257   x
+            x  Ag          15         0.833338   0.833338  -0.068257   x
+            x  Ag          16         0.333333   0.333333  -0.068257   x
+            x  Ag          17         0.166677   1.166672  -0.136511   x
+            x  Ag          18         0.166669   0.916669  -0.136511   x
+            x  Ag          19         0.166661   0.666667  -0.136511   x
+            x  Ag          20         0.666666   1.166672  -0.136511   x
+            x  Ag          21         0.666675   0.916669  -0.136511   x
+            x  Ag          22         0.166670   0.416664  -0.136511   x
+            x  Ag          23         0.666659   0.416664  -0.136511   x
+            x  Ag          24         0.666667   0.666667  -0.136511   x
+            x  Ag          25         0.000006   1.000000  -0.204769   x
+            x  Ag          26        -0.000002   0.749998  -0.204769   x
+            x  Ag          27        -0.000011   0.499995  -0.204769   x
+            x  Ag          28         0.499994   1.000000  -0.204769   x
+            x  Ag          29         0.500003   0.749998  -0.204769   x
+            x  Ag          30         0.000008   0.250002  -0.204769   x
+            x  Ag          31         0.499997   0.250002  -0.204769   x
+            x  Ag          32         0.499995   0.499995  -0.204769   x
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ 
+ 
+                         No user defined ionic velocities
+ 
+                           -------------------------------
+                                   Details of Species
+                           -------------------------------
+ 
+                               Mass of species in AMU
+                                    Ag  107.8682000
+ 
+                          Electric Quadrupole Moment (Barn)
+                                    Ag    1.0000000 No Isotope Defined
+ 
+                          Files used for pseudopotentials:
+                                    Ag /home/hpc/pr63ya/lu32dov2/cc/Pseudopotentials-MS/Ag_00PBE.usp
+ 
+                           -------------------------------
+                              k-Points For BZ Sampling
+                           -------------------------------
+                       MP grid size for SCF calculation is  8  6  1
+                         Number of kpoints used =          24
+ 
+             +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+             +  Number       Fractional coordinates        Weight  +
+             +-----------------------------------------------------+
+             +     1  -0.437500  -0.416667   0.000000   0.0416667  +
+             +     2  -0.437500  -0.250000   0.000000   0.0416667  +
+             +     3  -0.312500   0.416667   0.000000   0.0416667  +
+             +     4  -0.187500   0.083333   0.000000   0.0416667  +
+             +     5  -0.187500   0.416667   0.000000   0.0416667  +
+             +     6  -0.062500  -0.416667   0.000000   0.0416667  +
+             +     7  -0.062500  -0.250000   0.000000   0.0416667  +
+             +     8  -0.062500  -0.083333   0.000000   0.0416667  +
+             +     9  -0.062500   0.083333   0.000000   0.0416667  +
+             +    10  -0.062500   0.250000   0.000000   0.0416667  +
+             +    11  -0.062500   0.416667   0.000000   0.0416667  +
+             +    12   0.187500  -0.250000   0.000000   0.0416667  +
+             +    13   0.187500   0.083333   0.000000   0.0416667  +
+             +    14   0.187500   0.250000   0.000000   0.0416667  +
+             +    15   0.187500   0.416667   0.000000   0.0416667  +
+             +    16   0.312500  -0.250000   0.000000   0.0416667  +
+             +    17   0.312500  -0.083333   0.000000   0.0416667  +
+             +    18   0.312500   0.083333   0.000000   0.0416667  +
+             +    19   0.312500   0.250000   0.000000   0.0416667  +
+             +    20   0.312500   0.416667   0.000000   0.0416667  +
+             +    21   0.437500  -0.416667   0.000000   0.0416667  +
+             +    22   0.437500  -0.250000   0.000000   0.0416667  +
+             +    23   0.437500  -0.083333   0.000000   0.0416667  +
+             +    24   0.437500   0.083333   0.000000   0.0416667  +
+             +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
+                           -------------------------------
+                               Symmetry and Constraints
+                           -------------------------------
+ 
+         There are no symmetry operations specified or generated for this cell
+                      Number of ionic constraints     =          96
+                      Maximum deviation from symmetry =  0.00000         ANG
+               Point group of crystal =     1: C1, 1, 1
+ 
+                        Centre of mass is NOT constrained
+             Set iprint > 1 for details of linear ionic constraints
+ 
+                         Number of cell constraints= 6
+                         Cell constraints are:  0 0 0 0 0 0
+ 
+                         External pressure/stress (GPa)
+                          0.00000   0.00000   0.00000
+                                    0.00000   0.00000
+                                              0.00000
+  
++---------------- MEMORY AND SCRATCH DISK ESTIMATES PER NODE -----------------+
+|                                                     Memory          Disk    |
+| Model and support data                              113.3 MB         0.0 MB |
+| Electronic energy minimisation requirements          35.0 MB         0.0 MB |
+|                                               ----------------------------- |
+| Approx. total storage required per node             148.4 MB         0.0 MB |
+|                                                                             |
+| Requirements will fluctuate during execution and may exceed these estimates |
++-----------------------------------------------------------------------------+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial  -5.35842908E+003  0.00000000E+000                         2.45  <-- SCF
+      1  -3.09044249E+004  9.44290965E-001   7.98312369E+002      18.90  <-- SCF
+      2  -3.27555315E+004 -6.61690989E+000   5.78470823E+001      32.01  <-- SCF
+      3  -3.28895043E+004 -5.62247856E+000   4.18665026E+000      42.73  <-- SCF
+      4  -3.28916059E+004 -5.61130720E+000   6.56745382E-002      53.61  <-- SCF
+      5  -3.28877929E+004 -6.12795730E+000  -1.19158448E-001      67.26  <-- SCF
+      6  -3.28843346E+004 -5.95419371E+000  -1.08071838E-001      80.92  <-- SCF
+      7  -3.28844437E+004 -5.92492800E+000   3.41223875E-003      95.36  <-- SCF
+      8  -3.28844403E+004 -5.91276767E+000  -1.07081231E-004     109.71  <-- SCF
+      9  -3.28844351E+004 -5.89681418E+000  -1.63888362E-004     123.76  <-- SCF
+     10  -3.28844259E+004 -5.85781104E+000  -2.85349445E-004     137.57  <-- SCF
+     11  -3.28844226E+004 -5.83156406E+000  -1.04412377E-004     151.78  <-- SCF
+     12  -3.28844221E+004 -5.80260122E+000  -1.54982108E-005     165.38  <-- SCF
+     13  -3.28844198E+004 -5.78213002E+000  -7.07604682E-005     179.08  <-- SCF
+     14  -3.28844203E+004 -5.76130584E+000   1.44024815E-005     193.07  <-- SCF
+     15  -3.28844218E+004 -5.74601205E+000   4.57431639E-005     206.87  <-- SCF
+     16  -3.28844244E+004 -5.73608136E+000   8.35630758E-005     220.69  <-- SCF
+     17  -3.28844247E+004 -5.71927397E+000   6.69108528E-006     234.68  <-- SCF
+     18  -3.28844249E+004 -5.71064260E+000   7.49644991E-006     248.88  <-- SCF
+     19  -3.28844251E+004 -5.69372223E+000   6.03216591E-006     262.65  <-- SCF
+     20  -3.28844251E+004 -5.68317421E+000  -9.13212886E-007     273.74  <-- SCF
+     21  -3.28844248E+004 -5.67094560E+000  -8.97334333E-006     287.38  <-- SCF
+     22  -3.28844240E+004 -5.65328617E+000  -2.26431097E-005     300.91  <-- SCF
+     23  -3.28844244E+004 -5.63995320E+000   1.01773493E-005     313.59  <-- SCF
+     24  -3.28844250E+004 -5.62886133E+000   1.82412554E-005     327.48  <-- SCF
+     25  -3.28844257E+004 -5.62001667E+000   2.38031003E-005     340.20  <-- SCF
+     26  -3.28844261E+004 -5.61785161E+000   1.28407483E-005     350.87  <-- SCF
+     27  -3.28844264E+004 -5.61636932E+000   9.12473831E-006     361.22  <-- SCF
+     28  -3.28844266E+004 -5.61609857E+000   4.21050734E-006     371.40  <-- SCF
+     29  -3.28844266E+004 -5.61587164E+000   1.41368701E-006     381.45  <-- SCF
+     30  -3.28844266E+004 -5.61572644E+000   8.50345229E-007     391.42  <-- SCF
+     31  -3.28844266E+004 -5.61547499E+000   6.04843657E-007     401.40  <-- SCF
+     32  -3.28844267E+004 -5.61522831E+000   3.58344407E-007     411.31  <-- SCF
+     33  -3.28844267E+004 -5.61475755E+000   1.08907806E-007     421.20  <-- SCF
+     34  -3.28844267E+004 -5.61449564E+000   6.55977379E-008     431.03  <-- SCF
+     35  -3.28844267E+004 -5.61424590E+000   1.47073256E-007     440.86  <-- SCF
+     36  -3.28844267E+004 -5.61413667E+000   4.26464956E-008     450.61  <-- SCF
+     37  -3.28844267E+004 -5.61414037E+000   1.38128180E-009     460.15  <-- SCF
+     38  -3.28844267E+004 -5.61413764E+000   7.26990423E-010     469.49  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -32884.31332164     eV
+Final free energy (E-TS)    =  -32884.42666872     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -32884.36999518     eV
+ 
+ WARNING: Your unit cell might be too small to get accurate results for van der 
+ Waals
+%  	  DFT-SEDC: DFT SemiEmpirical Dispersion interaction Correction module
+%  	+----------------------------------------------------------------------+
+%  
+%  	Copyright (c) 2008 Erik McNellis, Joerg Meyer, Fritz-Haber-Institut
+%  	der MPG. Distributed under the GNU Lesser General Public License (LGPL).
+%  	Please cite "Erik R. McNellis, Joerg Meyer, and Karsten Reuter,
+%  	Phys. Rev. B 80, 205414 (2009)" in all publications using this module.
+%  
+%  	Using scheme (see: Phys. Rev. Lett. 102, 073005 (2009)) : 'TS'
+%  	Parameters optimized for DFT x-c functional             :  PBE
+%  
+%  			  SEDC Parameter / Setting Summary
+%  			+----------------------------------+
+%  
+%  	Output print level				: High
+%  	Printing XYZ file of geometry / forces 		: No
+%  	Periodic Boundary Condition (PBC) interaction
+%  	energy / atom conv. threshold; shell |dE|	: 1.0E-06 [eV]
+%  	 force / atom conv. threshold; shell |dF|max	: 1.0E-07 [eV/A]
+%  
+%  	  PBC Groups:     Atoms in Group      A    B    C   Fold  Skip  Skip intra      
+%  	--------------------------------------------------------------------------
+%  	            1    1(Ag) -   32(Ag)    +/-  +/-   0    F     F       F
+%  
+%  			  SEDC PBC Interaction Energy
+%  			+-----------------------------+
+%  
+%  	Shell     Total E corr.     |dE| / atom     |dF|max / atom
+%  	----------------------------------------------------------
+%  	    1      -9.26104655     1.910462E-01     1.215400E-01
+%  	    2      -9.56484653     9.493749E-03     1.489084E-02
+%  	    3      -9.59792466     1.033691E-03     6.829486E-04
+%  	    4      -9.60531225     2.308621E-04     8.274929E-05
+%  	    5      -9.60766880     7.364235E-05     1.654091E-05
+%  	    6      -9.60860243     2.917573E-05     4.493305E-06
+%  	    7      -9.60903073     1.338437E-05     1.502198E-06
+%  	    8      -9.60924921     6.827522E-06     5.835060E-07
+%  	    9      -9.60937000     3.774686E-06     2.539234E-07
+%  	   10      -9.60944113     2.222999E-06     1.207938E-07
+%  	   11      -9.60948522     1.377604E-06     6.173705E-08
+%  	   12      -9.60951371     8.902974E-07     3.347271E-08
+%  
+%  	'TS'/PBE structure energy corr.      =    -3.14756761 [eV]
+%  	'TS'/PBE PBC image interaction corr. =    -6.46194610 [eV]
+%  	'TS'/PBE total energy correction     =    -9.60951371 [eV]
+%  	'TS'/PBE correction |F|max           =     0.14576692 [eV/A]
+
+Dispersion corrected final energy*, Ecor          =  -32893.92283535     eV
+Dispersion corrected final free energy* (Ecor-TS) =  -32894.03618243     eV
+NB dispersion corrected est. 0K energy* (Ecor-0.5TS) =  -32893.97950889     eV
+
+ * not corrected for finite basis set
+
+ 
+Writing model to surf.check
+ 
+ *********************** Forces ***********************
+ *                                                    *
+ *            Cartesian components (eV/A)             *
+ * -------------------------------------------------- *
+ *                   x            y            z      *
+ *                                                    *
+ * Ag        1      0.01192     -0.00848     -0.12383 *
+ * Ag        2      0.01758      0.02196     -0.12329 *
+ * Ag        3      0.01941      0.00401     -0.11448 *
+ * Ag        4     -0.03322     -0.04037     -0.11810 *
+ * Ag        5     -0.03365      0.00296     -0.11536 *
+ * Ag        6      0.02500      0.04755     -0.11608 *
+ * Ag        7     -0.02732      0.01895     -0.12022 *
+ * Ag        8     -0.02706     -0.01801     -0.12278 *
+ * Ag        9      0.00326     -0.00419     -0.13779 *
+ * Ag       10      0.00482      0.00042     -0.14071 *
+ * Ag       11      0.00347      0.00047     -0.12823 *
+ * Ag       12      0.00488      0.00083     -0.14214 *
+ * Ag       13      0.00420     -0.00362     -0.13486 *
+ * Ag       14      0.00969     -0.00306     -0.14929 *
+ * Ag       15      0.00930      0.00385     -0.13843 *
+ * Ag       16      0.00271     -0.00121     -0.12808 *
+ * Ag       17      0.00016     -0.00256      0.08193 *
+ * Ag       18      0.00051     -0.00218      0.08181 *
+ * Ag       19      0.00060     -0.00224      0.08171 *
+ * Ag       20      0.00067     -0.00248      0.08176 *
+ * Ag       21      0.00030     -0.00209      0.08169 *
+ * Ag       22      0.00020     -0.00191      0.08174 *
+ * Ag       23      0.00067     -0.00197      0.08183 *
+ * Ag       24      0.00039     -0.00229      0.08183 *
+ * Ag       25      0.00015     -0.00061      0.17496 *
+ * Ag       26      0.00046     -0.00024      0.17491 *
+ * Ag       27      0.00052     -0.00045      0.17484 *
+ * Ag       28      0.00025     -0.00087      0.17502 *
+ * Ag       29     -0.00015     -0.00042      0.17499 *
+ * Ag       30      0.00014     -0.00050      0.17489 *
+ * Ag       31      0.00023     -0.00066      0.17494 *
+ * Ag       32     -0.00006     -0.00057      0.17482 *
+ *                                                    *
+ ******************************************************
+ 
+ Pseudo atomic calculation performed for Ag 4d10 5s1
+ 
+ Converged in 42 iterations to a total energy of -1024.8892 eV
+ 
+Charge spilling parameter for spin component 1 = 0.07%
+ 
+     Atomic Populations (Mulliken)
+     -----------------------------
+Species   Ion     s      p      d      f     Total  Charge (e)
+==============================================================
+  Ag       1     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag       2     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag       3     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag       4     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag       5     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag       6     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag       7     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag       8     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag       9     0.58   0.54   9.78   0.00  10.90     0.10
+  Ag      10     0.58   0.54   9.78   0.00  10.90     0.10
+  Ag      11     0.58   0.54   9.78   0.00  10.91     0.09
+  Ag      12     0.58   0.54   9.78   0.00  10.91     0.09
+  Ag      13     0.58   0.54   9.78   0.00  10.91     0.09
+  Ag      14     0.58   0.54   9.78   0.00  10.90     0.10
+  Ag      15     0.58   0.54   9.78   0.00  10.91     0.09
+  Ag      16     0.58   0.54   9.78   0.00  10.91     0.09
+  Ag      17     0.58   0.55   9.78   0.00  10.91     0.09
+  Ag      18     0.58   0.55   9.78   0.00  10.91     0.09
+  Ag      19     0.58   0.55   9.78   0.00  10.91     0.09
+  Ag      20     0.58   0.55   9.78   0.00  10.91     0.09
+  Ag      21     0.58   0.55   9.78   0.00  10.91     0.09
+  Ag      22     0.58   0.55   9.78   0.00  10.91     0.09
+  Ag      23     0.58   0.55   9.78   0.00  10.91     0.09
+  Ag      24     0.58   0.55   9.78   0.00  10.91     0.09
+  Ag      25     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag      26     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag      27     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag      28     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag      29     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag      30     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag      31     0.78   0.49   9.82   0.00  11.09    -0.09
+  Ag      32     0.78   0.49   9.82   0.00  11.09    -0.09
+==============================================================
+ 
+     Bond                     Population      Length (A)
+============================================================
+  Ag 004 --   Ag 014              -0.01        2.90213
+  Ag 006 --   Ag 014               0.02        2.90249
+  Ag 005 --   Ag 015              -0.01        2.90269
+  Ag 003 --   Ag 010               0.02        2.90522
+  Ag 007 --   Ag 009               0.02        2.90571
+  Ag 008 --   Ag 012              -0.01        2.90596
+  Ag 005 --   Ag 013               0.02        2.90622
+  Ag 002 --   Ag 012               0.02        2.90744
+  Ag 007 --   Ag 010              -0.01        2.90746
+  Ag 003 --   Ag 013              -0.01        2.90754
+  Ag 001 --   Ag 009              -0.01        2.90782
+  Ag 008 --   Ag 016               0.02        2.90848
+  Ag 004 --   Ag 006               0.32        2.90872
+  Ag 002 --   Ag 011              -0.01        2.90875
+  Ag 001 --   Ag 015               0.02        2.91003
+  Ag 004 --   Ag 011               0.02        2.91089
+  Ag 006 --   Ag 016              -0.01        2.91094
+  Ag 003 --   Ag 012              -0.01        2.91193
+  Ag 006 --   Ag 010              -0.01        2.91418
+  Ag 002 --   Ag 015              -0.01        2.91580
+  Ag 001 --   Ag 014              -0.02        2.91627
+  Ag 004 --   Ag 009              -0.01        2.91656
+  Ag 008 --   Ag 013              -0.01        2.91681
+  Ag 005 --   Ag 011              -0.01        2.91682
+  Ag 007 --   Ag 016              -0.01        2.91766
+  Ag 002 --   Ag 005               0.69        2.91883
+  Ag 006 --   Ag 007               0.69        2.91894
+  Ag 003 --   Ag 008               0.69        2.91943
+  Ag 004 --   Ag 007               0.32        2.91960
+  Ag 001 --   Ag 004               0.69        2.91994
+  Ag 001 --   Ag 006               0.32        2.92045
+  Ag 001 --   Ag 007               0.32        2.92191
+  Ag 002 --   Ag 008               0.32        2.92208
+  Ag 005 --   Ag 008               0.32        2.92367
+  Ag 002 --   Ag 003               0.32        2.92423
+  Ag 001 --   Ag 005               0.32        2.92457
+  Ag 003 --   Ag 007               0.32        2.92533
+  Ag 017 --   Ag 023               0.19        2.92577
+  Ag 031 --   Ag 032               0.32        2.92579
+  Ag 030 --   Ag 032               0.32        2.92579
+  Ag 009 --   Ag 011               0.19        2.92579
+  Ag 014 --   Ag 015               0.19        2.92579
+  Ag 016 --   Ag 017               0.22        2.92579
+  Ag 010 --   Ag 020               0.22        2.92579
+  Ag 014 --   Ag 021               0.22        2.92579
+  Ag 009 --   Ag 018               0.22        2.92579
+  Ag 016 --   Ag 022               0.22        2.92579
+  Ag 016 --   Ag 023               0.22        2.92579
+  Ag 013 --   Ag 024               0.22        2.92579
+  Ag 012 --   Ag 024               0.22        2.92579
+  Ag 011 --   Ag 018               0.22        2.92579
+  Ag 015 --   Ag 021               0.22        2.92579
+  Ag 017 --   Ag 020               0.44        2.92580
+  Ag 025 --   Ag 028               0.69        2.92580
+  Ag 022 --   Ag 023               0.44        2.92580
+  Ag 012 --   Ag 013               0.44        2.92580
+  Ag 030 --   Ag 031               0.69        2.92580
+  Ag 020 --   Ag 023               0.19        2.92580
+  Ag 017 --   Ag 022               0.19        2.92580
+  Ag 027 --   Ag 031               0.32        2.92580
+  Ag 009 --   Ag 015               0.19        2.92580
+  Ag 010 --   Ag 022               0.22        2.92581
+  Ag 015 --   Ag 018               0.22        2.92581
+  Ag 012 --   Ag 019               0.22        2.92581
+  Ag 009 --   Ag 020               0.22        2.92582
+  Ag 009 --   Ag 017               0.22        2.92582
+  Ag 010 --   Ag 016               0.44        2.92583
+  Ag 027 --   Ag 032               0.69        2.92583
+  Ag 026 --   Ag 029               0.69        2.92583
+  Ag 011 --   Ag 015               0.44        2.92583
+  Ag 019 --   Ag 024               0.44        2.92583
+  Ag 018 --   Ag 021               0.44        2.92583
+  Ag 009 --   Ag 014               0.44        2.92583
+  Ag 027 --   Ag 030               0.32        2.92584
+  Ag 014 --   Ag 017               0.22        2.92584
+  Ag 010 --   Ag 023               0.22        2.92584
+  Ag 013 --   Ag 019               0.22        2.92584
+  Ag 011 --   Ag 021               0.22        2.92584
+  Ag 013 --   Ag 022               0.22        2.92585
+  Ag 012 --   Ag 023               0.22        2.92585
+  Ag 015 --   Ag 024               0.22        2.92585
+  Ag 011 --   Ag 019               0.22        2.92585
+  Ag 025 --   Ag 031               0.32        2.92585
+  Ag 017 --   Ag 031              -0.01        2.92586
+  Ag 023 --   Ag 031               0.02        2.92587
+  Ag 022 --   Ag 030               0.02        2.92587
+  Ag 014 --   Ag 016               0.19        2.92587
+  Ag 025 --   Ag 026               0.32        2.92587
+  Ag 018 --   Ag 020               0.19        2.92587
+  Ag 017 --   Ag 018               0.19        2.92587
+  Ag 013 --   Ag 016               0.19        2.92587
+  Ag 026 --   Ag 028               0.32        2.92587
+  Ag 029 --   Ag 032               0.32        2.92587
+  Ag 026 --   Ag 027               0.32        2.92587
+  Ag 022 --   Ag 024               0.19        2.92587
+  Ag 021 --   Ag 024               0.19        2.92587
+  Ag 018 --   Ag 019               0.19        2.92587
+  Ag 012 --   Ag 016               0.19        2.92587
+  Ag 012 --   Ag 015               0.19        2.92587
+  Ag 023 --   Ag 024               0.19        2.92587
+  Ag 013 --   Ag 015               0.19        2.92587
+  Ag 014 --   Ag 020               0.22        2.92587
+  Ag 018 --   Ag 025              -0.01        2.92588
+  Ag 024 --   Ag 029              -0.01        2.92588
+  Ag 023 --   Ag 032              -0.01        2.92588
+  Ag 019 --   Ag 026              -0.01        2.92588
+  Ag 022 --   Ag 032              -0.01        2.92588
+  Ag 018 --   Ag 028              -0.01        2.92588
+  Ag 010 --   Ag 014               0.19        2.92589
+  Ag 009 --   Ag 016               0.19        2.92589
+  Ag 028 --   Ag 031               0.32        2.92589
+  Ag 025 --   Ag 030               0.32        2.92589
+  Ag 020 --   Ag 031              -0.01        2.92589
+  Ag 017 --   Ag 030              -0.01        2.92589
+  Ag 023 --   Ag 027              -0.01        2.92589
+  Ag 024 --   Ag 026              -0.01        2.92589
+  Ag 021 --   Ag 025              -0.01        2.92589
+  Ag 028 --   Ag 029               0.32        2.92592
+  Ag 020 --   Ag 021               0.19        2.92592
+  Ag 019 --   Ag 022               0.19        2.92592
+  Ag 010 --   Ag 012               0.19        2.92592
+  Ag 011 --   Ag 013               0.19        2.92592
+  Ag 020 --   Ag 030              -0.01        2.92592
+  Ag 021 --   Ag 028              -0.01        2.92593
+  Ag 022 --   Ag 027              -0.01        2.92593
+  Ag 019 --   Ag 029              -0.01        2.92593
+  Ag 024 --   Ag 032               0.02        2.92593
+  Ag 021 --   Ag 029               0.02        2.92593
+  Ag 020 --   Ag 028               0.02        2.92593
+  Ag 019 --   Ag 027               0.02        2.92593
+  Ag 018 --   Ag 026               0.02        2.92593
+  Ag 017 --   Ag 025               0.02        2.92593
+  Ag 001 --   Ag 002               0.32        2.92794
+  Ag 007 --   Ag 008               0.32        2.92947
+  Ag 004 --   Ag 005               0.32        2.93075
+  Ag 003 --   Ag 006               0.32        2.93087
+============================================================
+ 
+ 
+Writing model to surf.check
+ 
+Writing analysis data to surf.castep_bin
+ 
+ A BibTeX formatted list of references used in this run has been written to 
+ surf.bib
+ 
+Initialisation time =      1.17 s
+Calculation time    =    480.99 s
+Finalisation time   =      3.36 s
+Total time          =    485.52 s
+Peak Memory Use     = 851444 kB
