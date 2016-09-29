@@ -74,6 +74,10 @@ class CastepMDParserContext(object):
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
         evAtoN = float(1.6021766e-9)
+        a_to_m = 1e-10
+      
+        
+        
         for i in range(len(temp)):
             temp[i] = temp[i]/HrK_to_K_coverter
             self.frame_temperature.append(temp[i])
@@ -97,7 +101,9 @@ class CastepMDParserContext(object):
             for i in range(len(vet)):
                 vet[i] = vet[i].split()  
                 vet[i] = [float(j) for j in vet[i]]                
+                vet[i] = [ii * a_to_m  for ii in vet[i]]
                 vet_list = vet[i]               
+                
                 self.cell.append(vet_list)             
         self.frame_cell.append(self.cell)
         
@@ -107,6 +113,7 @@ class CastepMDParserContext(object):
             for i in range(len(vet_veloc)):
                 vet_veloc[i] = vet_veloc[i].split()
                 vet_veloc[i] = [float(k) for k in vet_veloc[i]]
+                
                 v_vet = vet_veloc[i]
                 self.vet_vel.append(v_vet)
             self.vector_velocities.append(self.vet_vel)
@@ -127,6 +134,7 @@ class CastepMDParserContext(object):
             for i in range(0, self.at_nr):
                 position[i] = position[i].split()
                 position[i] = [float(j) for j in position[i]]
+                position[i] = [ii * a_to_m  for ii in position[i]]
                 pos_list = position[i]
                 self.atom_position.append(pos_list)
             self.total_positions.append(self.atom_position)

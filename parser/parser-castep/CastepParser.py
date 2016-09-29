@@ -393,34 +393,34 @@ class CastepParserContext(object):
         """trigger called when _castep_section_cell is closed"""
         # get cached values for castep_cell_vector
         vet = section['x_castep_cell_vector_optim']
-     
+        a_to_m = 1e-10
         vet[0] = vet[0].split()
         vet[0] = [float(i) for i in vet[0]]
-
+        vet[0] = [ii * a_to_m  for ii in vet[0]]
         vet[1] = vet[1].split()
         vet[1] = [float(i) for i in vet[1]]
-
+        vet[1] = [ii * a_to_m  for ii in vet[1]]
         vet[2] = vet[2].split()
         vet[2] = [float(i) for i in vet[2]]
-
+        vet[2] = [ii * a_to_m  for ii in vet[2]]
         self.cell.append(vet[0])
         self.cell.append(vet[1])
-        self.cell.append(vet[2]) # Reconstructing the unit cell vector by vector    
+        self.cell.append(vet[2]) # Reconstructing the unit cconstructing the unit cell vector by vector    
 # Storing the unit cell
     def onClose_x_castep_section_cell(self, backend, gIndex, section):
         """trigger called when _castep_section_cell is closed"""
         # get cached values for castep_cell_vector
         vet = section['x_castep_cell_vector']
-
+        a_to_m = 1e-10
         vet[0] = vet[0].split()
         vet[0] = [float(i) for i in vet[0]]
-
+        vet[0] = [ii * a_to_m  for ii in vet[0]]
         vet[1] = vet[1].split()
         vet[1] = [float(i) for i in vet[1]]
-
+        vet[1] = [ii * a_to_m  for ii in vet[1]]
         vet[2] = vet[2].split()
         vet[2] = [float(i) for i in vet[2]]
-
+        vet[2] = [ii * a_to_m  for ii in vet[2]]
         self.cell.append(vet[0])
         self.cell.append(vet[1])
         self.cell.append(vet[2]) # Reconstructing the unit cell vector by vector
@@ -699,12 +699,13 @@ class CastepParserContext(object):
 # Processing the atom positions in fractionary coordinates (as given in the CASTEP output)
         backend.addArrayValues('configuration_periodic_dimensions', np.asarray([True, True, True]))
         pos = section['x_castep_store_atom_positions']
-        
+        a_to_m = 1e-10
         if pos:
             self.at_nr = len(pos)
             for i in range(0, self.at_nr):
                 pos[i] = pos[i].split()
                 pos[i] = [float(j) for j in pos[i]]
+                pos[i] = [ii * a_to_m  for ii in pos[i]]
                 self.castep_atom_positions.append(pos[i])
                
             backend.addArrayValues('x_castep_atom_positions', np.asarray(self.castep_atom_positions))
@@ -759,9 +760,11 @@ class CastepParserContext(object):
             backend.addArrayValues('atom_labels', np.asarray(self.atom_labels[-self.at_nr:]))
             
             self.at_nr_opt = len(pos_opt)
+            a_to_m = 1e-10
             for i in range(0, self.at_nr_opt):
                 pos_opt[i] = pos_opt[i].split()
                 pos_opt[i] = [float(j) for j in pos_opt[i]]
+                pos_opt[i] = [ii * a_to_m  for ii in pos_opt[i]]
                 self.castep_optimised_atom_positions.append(pos_opt[i])
             backend.addArrayValues('x_castep_atom_positions', np.asarray(self.castep_optimised_atom_positions[-self.at_nr:]))
         # #     print pos_opt[i]    
