@@ -199,12 +199,13 @@ class CastepParserContext(object):
             " hybrid HSE03"              :"HYB_GGA_XC_HSE03",
             " hybrid HSE06"              :"HYB_GGA_XC_HSE06",
             " hybrid PBE0"               :"GGA_C_PBE_GGA_X_PBE", 
+            " hybrid PBE0"               :"HYB_GGA_XC_PBEH",
             " PBE with Wu-Cohen exchange" :"GGA_C_PBE_GGA_X_WC",    
             " LDA-X" : "LDA_X_PZ",
             " LDA-C" : "LDA_C_PZ",
             #" 'EXX','EXX-LDA'" : ""
             #" 'SHF','SX'"      :
-             " Optimised Effective Potential" : " Optimised Effective Potential"
+             " Optimised Effective Potential" : " OEP_EXX",
         }
        
        
@@ -234,7 +235,7 @@ class CastepParserContext(object):
             "HF-LDA":"HF_X_LDA_C_PW",
             "HSE03"              :"HYB_GGA_XC_HSE03",
             "HSE06"              :"HYB_GGA_XC_HSE06",
-            "PBE0"               :"GGA_C_PBE_GGA_X_PBE", 
+            "PBE0"               :"HYB_GGA_XC_PBEH", 
             "WC" :"GGA_C_PBE_GGA_X_WC",    
             "LDA-X" : "LDA_X_PZ",
             "LDA-C" : "LDA_C_PZ",
@@ -242,7 +243,7 @@ class CastepParserContext(object):
             "b3lyp"       :"HYB_GGA_XC_B3LYP5",
             #" 'EXX','EXX-LDA'" : ""
             #" 'SHF','SX'"      :
-            " Optimised Effective Potential" : " Optimised Effective Potential"
+            " Optimised Effective Potential" : " OEP_EXX",
         }
         
         self.functionals = []
