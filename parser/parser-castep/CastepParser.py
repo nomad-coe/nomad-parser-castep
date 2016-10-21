@@ -198,7 +198,6 @@ class CastepParserContext(object):
             " Hartree-Fock + Local Density Approximation":"HF_X_LDA_C_PW",
             " hybrid HSE03"              :"HYB_GGA_XC_HSE03",
             " hybrid HSE06"              :"HYB_GGA_XC_HSE06",
-            " hybrid PBE0"               :"GGA_C_PBE_GGA_X_PBE", 
             " hybrid PBE0"               :"HYB_GGA_XC_PBEH",
             " PBE with Wu-Cohen exchange" :"GGA_C_PBE_GGA_X_WC",    
             " LDA-X" : "LDA_X_PZ",
