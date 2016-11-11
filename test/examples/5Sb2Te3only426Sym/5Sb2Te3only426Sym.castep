@@ -1,0 +1,465 @@
+ Job started on host ulmo
+ at Mon Jan  6 19:15:37 2014
+
+ +-------------------------------------------------+
+ |                                                 |
+ |      CCC   AA    SSS  TTTTT  EEEEE  PPPP        |
+ |     C     A  A  S       T    E      P   P       |
+ |     C     AAAA   SS     T    EEE    PPPP        |
+ |     C     A  A     S    T    E      P           |
+ |      CCC  A  A  SSS     T    EEEEE  P           |
+ |                                                 |
+ +-------------------------------------------------+
+ |                                                 |
+ | Welcome to Materials Studio CASTEP version 6.1  |
+ | Ab Initio Total Energy Program                  |
+ |                                                 |
+ | Authors:                                        |
+ | M. Segall, M. Probert, C. Pickard, P. Hasnip,   |
+ | S. Clark, K. Refson, J. R. Yates, M. Payne      |
+ |                                                 |
+ | Contributors:                                   |
+ | P. Lindan, P. Haynes, J. White, V. Milman,      |
+ | N. Govind, M. Gibson, P. Tulip, V. Cocula,      |
+ | B. Montanari, D. Quigley, M. Glover,            |
+ | L. Bernasconi, A. Perlov, M. Plummer,           |
+ | E. McNellis, J. Meyer, J. Gale, D. Jochym       |
+ | J. Aarons, B. Walker, R. Gillen                 |
+ |                                                 |
+ | Copyright (c) 2000 - 2012                       |
+ |                                                 |
+ | Please cite                                     |
+ |                                                 |
+ |     "First principles methods using CASTEP"     |
+ |                                                 |
+ |         Zeitschrift fuer Kristallographie       |
+ |           220(5-6) pp. 567-570 (2005)           |
+ |                                                 |
+ | S. J. Clark, M. D. Segall, C. J. Pickard,       |
+ | P. J. Hasnip, M. J. Probert, K. Refson,         |
+ | M. C. Payne                                     |
+ |                                                 |
+ |       in all publications arising from          |
+ |              your use of CASTEP                 |
+ |                                                 |
+ +-------------------------------------------------+
+ 
+ 
+ This version was compiled for x86_64-windows-msvc2008 on Nov 05 2012
+ 
+License checkout of MS_castep successful
+ 
+ 
+ Pseudo atomic calculation performed for Sb 5s2 5p3
+ 
+ Converged in 18 iterations to a total energy of -146.9167 eV
+ 
+ 
+ Pseudo atomic calculation performed for Te 5s2 5p4
+ 
+ Converged in 18 iterations to a total energy of -219.7491 eV
+ 
+ Calculation parallelised over 2 processes.
+ Data is distributed by k-point(2-way)
+
+ ************************************ Title ************************************
+ CASTEP calculation from Materials Studio
+
+ ***************************** General Parameters ******************************
+  
+ output verbosity                               : normal  (1)
+ write checkpoint data to                       : 5Sb2Te3only426Sym.check
+ type of calculation                            : single point energy
+ stress calculation                             : off
+ density difference calculation                 : off
+ electron localisation func (ELF) calculation   : off
+ Hirshfeld analysis                             : on
+ unlimited duration calculation
+ timing information                             : on
+ memory usage estimate                          : on
+ write final potential to formatted file        : off
+ write final density to formatted file          : off
+ write BibTeX reference list                    : on
+  
+ output         length unit                     : A
+ output           mass unit                     : amu
+ output           time unit                     : ps
+ output         charge unit                     : e
+ output         energy unit                     : eV
+ output          force unit                     : eV/A
+ output       velocity unit                     : A/ps
+ output       pressure unit                     : GPa
+ output     inv_length unit                     : 1/A
+ output      frequency unit                     : cm-1
+ output force constant unit                     : eV/A**2
+ output         volume unit                     : A**3
+ output   IR intensity unit                     : (D/A)**2/amu
+ output         dipole unit                     : D
+ output         efield unit                     : eV/A/e
+ output        entropy unit                     : J/mol/K
+  
+ wavefunctions paging                           : none
+ random number generator seed                   : randomised (191538822)
+ data distribution                              : optimal for this architecture
+ optimization strategy                          : balance speed and memory
+
+ *********************** Exchange-Correlation Parameters ***********************
+  
+ using functional                               : Perdew Burke Ernzerhof
+ Divergence correction                          : off
+ DFT+D: Semi-empirical dispersion correction    : off
+
+ ************************* Pseudopotential Parameters **************************
+  
+ pseudopotential representation                 : reciprocal space
+ <beta|phi> representation                      : reciprocal space
+
+ **************************** Basis Set Parameters *****************************
+  
+ plane wave basis set cut-off                   :   230.0000   eV
+ size of standard grid                          :     2.0000
+ size of   fine   grid                          :     3.0000
+ size of   fine   gmax                          :    23.3090   1/A
+ largest prime factor in FFT                    :          5
+ finite basis set correction                    : none
+
+ **************************** Electronic Parameters ****************************
+  
+ number of  electrons                           :  140.0    
+ net charge of system                           :  0.000    
+ net spin   of system                           :  0.000    
+ number of  up  spins                           :  70.00    
+ number of down spins                           :  70.00    
+ treating system as non-spin-polarized
+ number of bands                                :         85
+
+ ********************* Electronic Minimization Parameters **********************
+  
+ Method: Treating system as metallic with density mixing treatment of electrons,
+         and number of  SD  steps               :          1
+         and number of  CG  steps               :          4
+  
+ total energy / atom convergence tol.           : 0.5000E-06   eV
+ eigen-energy convergence tolerance             : 0.1471E-06   eV
+ max force / atom convergence tol.              : ignored
+ convergence tolerance window                   :          3   cycles
+ max. number of SCF cycles                      :        999
+ number of fixed-spin iterations                :         10
+ smearing scheme                                : Gaussian
+ smearing width                                 : 0.1000       eV
+ Fermi energy convergence tolerance             : 0.1471E-07   eV
+ periodic dipole correction                     : NONE
+
+ ************************** Density Mixing Parameters **************************
+  
+ density-mixing scheme                          : Pulay
+ max. length of mixing history                  :         20
+ charge density mixing amplitude                : 0.5000    
+ cut-off energy for mixing                      :  230.0       eV
+ charge density mixing g-vector                 :  1.500       1/A
+
+ *********************** Population Analysis Parameters ************************
+  
+ Population analysis with cutoff                :  3.000       A
+
+ *******************************************************************************
+  
+ 
+                           -------------------------------
+                                      Unit Cell
+                           -------------------------------
+        Real Lattice(A)                      Reciprocal Lattice(1/A)
+   3.6927323  -2.1320000   0.0000000        1.7015004   0.0000000   0.0000000
+   0.0000000   4.2639999   0.0000000        0.8507502   1.4735425   0.0000000
+   0.0000000   0.0000000  81.4530792        0.0000000   0.0000000   0.0771387
+ 
+                       Lattice parameters(A)       Cell Angles
+                    a =    4.264000          alpha =   90.000000
+                    b =    4.264000          beta  =   90.000000
+                    c =   81.453079          gamma =  120.000000
+ 
+                       Current cell volume = 1282.544723       A**3
+ 
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+                         Total number of ions in cell =   25
+                      Total number of species in cell =    2
+                        Max number of any one species =   15
+ 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom        Fractional coordinates of atoms  x
+            x            Number           u          v          w      x
+            x----------------------------------------------------------x
+            x  Sb           1         0.333333  -0.333333   0.399836   x
+            x  Sb           2         0.333333  -0.333333   0.773731   x
+            x  Sb           3        -0.333333   0.333333  -0.399836   x
+            x  Sb           4        -0.333333   0.333333  -0.773731   x
+            x  Sb           5        -0.333333  -1.666667   0.524480   x
+            x  Sb           6        -1.666667  -0.333333  -0.524480   x
+            x  Sb           7         0.000000  -1.000000   0.275230   x
+            x  Sb           8         0.000000  -1.000000   0.649124   x
+            x  Sb           9        -1.000000   0.000000  -0.275230   x
+            x  Sb          10        -1.000000   0.000000  -0.649124   x
+            x  Te           1         0.333333  -0.333333   0.545071   x
+            x  Te           2         0.333333  -0.333333   0.250749   x
+            x  Te           3         0.333333  -0.333333   0.624645   x
+            x  Te           4        -0.333333   0.333333  -0.545071   x
+            x  Te           5        -0.333333   0.333333  -0.250749   x
+            x  Te           6        -0.333333   0.333333  -0.624645   x
+            x  Te           7        -0.333333  -1.666667   0.295821   x
+            x  Te           8        -0.333333  -1.666667   0.669716   x
+            x  Te           9        -1.666667  -0.333333  -0.295821   x
+            x  Te          10        -1.666667  -0.333333  -0.669716   x
+            x  Te          11         0.000000  -1.000000   0.420427   x
+            x  Te          12         0.000000  -1.000000   0.794322   x
+            x  Te          13        -1.000000   0.000000  -0.420427   x
+            x  Te          14        -1.000000   0.000000  -0.794322   x
+            x  Te          15         0.000000  -1.000000   0.500000   x
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ 
+ 
+                         No user defined ionic velocities
+ 
+                           -------------------------------
+                                   Details of Species
+                           -------------------------------
+ 
+                               Mass of species in AMU
+                                    Sb  121.7500000
+                                    Te  127.5999985
+ 
+                          Electric Quadrupole Moment (Barn)
+                                    Sb   -0.5430000 Isotope121
+                                    Te    1.0000000 No Isotope Defined
+ 
+                          Files used for pseudopotentials:
+                                    Sb Sb_00PBE.usp
+                                    Te Te_00PBE.usp
+ 
+                           -------------------------------
+                              k-Points For BZ Sampling
+                           -------------------------------
+                       MP grid size for SCF calculation is  7  7  1
+                         Number of kpoints used =           8
+ 
+             +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+             +  Number       Fractional coordinates        Weight  +
+             +-----------------------------------------------------+
+             +     1   0.428571   0.428571   0.000000   0.1224490  +
+             +     2   0.428571   0.285714   0.000000   0.1224490  +
+             +     3   0.428571   0.000000   0.000000   0.1224490  +
+             +     4   0.428571  -0.142857   0.000000   0.2448980  +
+             +     5   0.285714   0.000000   0.000000   0.1224490  +
+             +     6   0.285714  -0.142857   0.000000   0.1224490  +
+             +     7   0.142857   0.000000   0.000000   0.1224490  +
+             +     8   0.000000   0.000000   0.000000   0.0204082  +
+             +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
+                           -------------------------------
+                               Symmetry and Constraints
+                           -------------------------------
+ 
+                      Number of symmetry operations   =          12
+         There are no ionic constraints specified or generated for this cell
+                      Maximum deviation from symmetry = 0.302975E-13     ANG
+               Point group of crystal =    20: D3d, -3m, -3 2/m
+           Set iprint > 1 for details on symmetry rotations/translations
+ 
+                        Centre of mass is NOT constrained
+ 
+                         Number of cell constraints= 4
+                         Cell constraints are:  1 1 3 0 0 0
+ 
+                         External pressure/stress (GPa)
+                          0.00000   0.00000   0.00000
+                                    0.00000   0.00000
+                                              0.00000
+  
++---------------- MEMORY AND SCRATCH DISK ESTIMATES PER NODE -----------------+
+|                                                     Memory          Disk    |
+| Model and support data                              678.4 MB       351.6 MB |
+| Electronic energy minimisation requirements         122.2 MB        53.0 MB |
+|                                               ----------------------------- |
+| Approx. total storage required per node             800.7 MB       404.6 MB |
+|                                                                             |
+| Requirements will fluctuate during execution and may exceed these estimates |
++-----------------------------------------------------------------------------+
+------------------------------------------------------------------------ <-- SCF
+SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
+                               energy          per atom          (sec)   <-- SCF
+------------------------------------------------------------------------ <-- SCF
+Initial   2.94155135E+003  0.00000000E+000                        41.47  <-- SCF
+      1  -3.91456524E+003  9.95792808E-001   2.74244664E+002     113.96  <-- SCF
+      2  -4.78715981E+003 -5.10499578E+000   3.49037826E+001     163.35  <-- SCF
+      3  -4.85659536E+003 -5.19359116E+000   2.77742211E+000     220.71  <-- SCF
+      4  -4.85866973E+003 -5.27577114E+000   8.29746949E-002     273.00  <-- SCF
+      5  -4.85810586E+003 -5.28656275E+000  -2.25548827E-002     352.48  <-- SCF
+      6  -4.85808039E+003 -5.27822049E+000  -1.01879151E-003     442.14  <-- SCF
+      7  -4.85808346E+003 -5.26527127E+000   1.23087759E-004     548.33  <-- SCF
+      8  -4.85808433E+003 -5.26110867E+000   3.48853127E-005     638.36  <-- SCF
+      9  -4.85808441E+003 -5.25693464E+000   2.91733300E-006     715.56  <-- SCF
+     10  -4.85808425E+003 -5.25483798E+000  -6.12066391E-006     784.19  <-- SCF
+     11  -4.85808418E+003 -5.25398696E+000  -2.92826842E-006     839.33  <-- SCF
+     12  -4.85808406E+003 -5.25226710E+000  -4.77290855E-006     898.49  <-- SCF
+     13  -4.85808398E+003 -5.25037244E+000  -3.33527961E-006     955.77  <-- SCF
+     14  -4.85808395E+003 -5.24868696E+000  -1.08839141E-006    1015.71  <-- SCF
+     15  -4.85808393E+003 -5.24321479E+000  -7.83918660E-007    1077.65  <-- SCF
+     16  -4.85808371E+003 -5.23913962E+000  -8.73944898E-006    1137.33  <-- SCF
+     17  -4.85808370E+003 -5.23624769E+000  -5.76399585E-007    1193.92  <-- SCF
+     18  -4.85808379E+003 -5.23457622E+000   3.50751706E-006    1262.02  <-- SCF
+     19  -4.85808388E+003 -5.23343510E+000   3.57314097E-006    1319.33  <-- SCF
+     20  -4.85808396E+003 -5.23151725E+000   3.16435581E-006    1374.56  <-- SCF
+     21  -4.85808403E+003 -5.22915421E+000   2.92742895E-006    1428.91  <-- SCF
+     22  -4.85808404E+003 -5.22750341E+000   2.97479779E-007    1481.74  <-- SCF
+     23  -4.85808403E+003 -5.22487941E+000  -4.13216159E-007    1544.75  <-- SCF
+------------------------------------------------------------------------ <-- SCF
+ 
+Final energy, E             =  -4858.083043131     eV
+Final free energy (E-TS)    =  -4858.084025494     eV
+(energies not corrected for finite basis set)
+ 
+NB est. 0K energy (E-0.5TS)      =  -4858.083534312     eV
+ 
+ 
+Writing model to 5Sb2Te3only426Sym.check
+ 
+ ***************** Symmetrised Forces *****************
+ *                                                    *
+ *            Cartesian components (eV/A)             *
+ * -------------------------------------------------- *
+ *                   x            y            z      *
+ *                                                    *
+ * Sb        1      0.00000      0.00000     -0.33347 *
+ * Sb        2      0.00000      0.00000     -0.22608 *
+ * Sb        3      0.00000      0.00000      0.33347 *
+ * Sb        4      0.00000      0.00000      0.22608 *
+ * Sb        5      0.00000      0.00000     -0.37659 *
+ * Sb        6      0.00000      0.00000      0.37659 *
+ * Sb        7      0.00000      0.00000     -0.38463 *
+ * Sb        8      0.00000      0.00000     -0.27533 *
+ * Sb        9      0.00000      0.00000      0.38463 *
+ * Sb       10      0.00000      0.00000      0.27533 *
+ * Te        1      0.00000      0.00000      0.26388 *
+ * Te        2      0.00000      0.00000      0.01302 *
+ * Te        3      0.00000      0.00000      0.01597 *
+ * Te        4      0.00000      0.00000     -0.26388 *
+ * Te        5      0.00000      0.00000     -0.01302 *
+ * Te        6      0.00000      0.00000     -0.01597 *
+ * Te        7      0.00000      0.00000      0.23501 *
+ * Te        8      0.00000      0.00000      0.21049 *
+ * Te        9      0.00000      0.00000     -0.23501 *
+ * Te       10      0.00000      0.00000     -0.21049 *
+ * Te       11      0.00000      0.00000      0.29329 *
+ * Te       12      0.00000      0.00000      0.16645 *
+ * Te       13      0.00000      0.00000     -0.29329 *
+ * Te       14      0.00000      0.00000     -0.16645 *
+ * Te       15      0.00000      0.00000      0.00000 *
+ *                                                    *
+ ******************************************************
+ 
+ Pseudo atomic calculation performed for Sb 5s2 5p3
+ 
+ Converged in 18 iterations to a total energy of -146.9167 eV
+ 
+ 
+ Pseudo atomic calculation performed for Te 5s2 5p4
+ 
+ Converged in 18 iterations to a total energy of -219.7491 eV
+ 
+Charge spilling parameter for spin component 1 = 0.57%
+ 
+     Atomic Populations (Mulliken)
+     -----------------------------
+Species   Ion     s      p      d      f     Total  Charge (e)
+==============================================================
+  Sb       1     2.15   2.80   0.00   0.00   4.95     0.05
+  Sb       2     2.06   2.77   0.00   0.00   4.83     0.17
+  Sb       3     2.15   2.80   0.00   0.00   4.95     0.05
+  Sb       4     2.06   2.77   0.00   0.00   4.83     0.17
+  Sb       5     2.15   2.80   0.00   0.00   4.95     0.05
+  Sb       6     2.15   2.80   0.00   0.00   4.95     0.05
+  Sb       7     2.13   2.80   0.00   0.00   4.93     0.07
+  Sb       8     2.15   2.80   0.00   0.00   4.95     0.05
+  Sb       9     2.13   2.80   0.00   0.00   4.93     0.07
+  Sb      10     2.15   2.80   0.00   0.00   4.95     0.05
+  Te       1     1.79   4.22   0.00   0.00   6.01    -0.01
+  Te       2     1.68   4.38   0.00   0.00   6.06    -0.06
+  Te       3     1.72   4.36   0.00   0.00   6.08    -0.08
+  Te       4     1.79   4.22   0.00   0.00   6.01    -0.01
+  Te       5     1.68   4.38   0.00   0.00   6.06    -0.06
+  Te       6     1.72   4.36   0.00   0.00   6.08    -0.08
+  Te       7     1.78   4.22   0.00   0.00   6.00     0.00
+  Te       8     1.80   4.22   0.00   0.00   6.02    -0.02
+  Te       9     1.78   4.22   0.00   0.00   6.00     0.00
+  Te      10     1.80   4.22   0.00   0.00   6.02    -0.02
+  Te      11     1.79   4.22   0.00   0.00   6.00     0.00
+  Te      12     1.93   4.24   0.00   0.00   6.18    -0.18
+  Te      13     1.79   4.22   0.00   0.00   6.00     0.00
+  Te      14     1.93   4.24   0.00   0.00   6.18    -0.18
+  Te      15     1.73   4.36   0.00   0.00   6.09    -0.09
+==============================================================
+ 
+     Bond                     Population      Length (A)
+============================================================
+  Sb 003 --   Te 013              -4.93        2.97885
+  Sb 001 --   Te 011              -4.93        2.97885
+  Sb 009 --   Te 009              -3.82        2.97885
+  Sb 007 --   Te 007              -3.82        2.97885
+  Sb 002 --   Te 012               0.72        2.97885
+  Sb 004 --   Te 014               0.72        2.97885
+  Sb 005 --   Te 001              -5.02        2.97888
+  Sb 006 --   Te 004              -5.02        2.97888
+  Sb 010 --   Te 010              -5.09        2.97888
+  Sb 008 --   Te 008              -5.09        2.97888
+============================================================
+ 
+ 
+     Hirshfeld Analysis
+     ------------------
+Species   Ion     Hirshfeld Charge (e)
+======================================
+  Sb       1                 0.11
+  Sb       2                 0.12
+  Sb       3                 0.11
+  Sb       4                 0.12
+  Sb       5                 0.11
+  Sb       6                 0.11
+  Sb       7                 0.11
+  Sb       8                 0.11
+  Sb       9                 0.11
+  Sb      10                 0.11
+  Te       1                -0.05
+  Te       2                -0.11
+  Te       3                -0.11
+  Te       4                -0.05
+  Te       5                -0.11
+  Te       6                -0.11
+  Te       7                -0.06
+  Te       8                -0.05
+  Te       9                -0.06
+  Te      10                -0.05
+  Te      11                -0.05
+  Te      12                -0.06
+  Te      13                -0.05
+  Te      14                -0.06
+  Te      15                -0.11
+======================================
+ 
+ 
+Writing model to 5Sb2Te3only426Sym.check
+ 
+Writing analysis data to 5Sb2Te3only426Sym.castep_bin
+ 
+ A BibTeX formatted list of references used in this run has been written to 
+ 5Sb2Te3only426Sym.bib
+ 
+Initialisation time =      3.12 s
+Calculation time    =   1698.15 s
+Finalisation time   =     26.13 s
+Total time          =   1727.40 s
+  
+Overall parallel efficiency rating: Excellent (95%)                             
+  
+Data was distributed by:-
+k-point (2-way); efficiency rating: Excellent (95%)                             

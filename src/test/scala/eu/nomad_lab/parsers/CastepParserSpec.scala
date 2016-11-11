@@ -208,3 +208,14 @@ object CastepParserSpec19 extends Specification {
   }
 }
 
+object CastepParserSpec20 extends Specification {
+  "CastepParserTest" >> {
+    "test with json-events" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/5Sb2Te3only426Sym/5Sb2Te3only426Sym.castep", "json-events") must_== ParseResult.ParseSuccess
+    }
+    "test with json" >> {
+      ParserRun.parse(CastepParser, "parsers/castep/test/examples/5Sb2Te3only426Sym/5Sb2Te3only426Sym.castep", "json") must_== ParseResult.ParseSuccess
+    }
+  }
+}
+
