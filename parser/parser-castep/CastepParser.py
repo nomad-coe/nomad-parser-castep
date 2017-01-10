@@ -1142,7 +1142,7 @@ class CastepParserContext(object):
                 samplingGIndex = backend.openSection("section_sampling_method")
                 backend.addValue("sampling_method", sampling_method)
                 backend.closeSection("section_sampling_method", samplingGIndex)
-                gIndexGroupscf = backend.openSection('section_scf_iteration')
+                #gIndexGroupscf = backend.openSection('section_scf_iteration')
                 for i in range(len(self.frame_atom_forces)):
                     
                     backend.openNonOverlappingSection('section_system')
@@ -1167,11 +1167,11 @@ class CastepParserContext(object):
                         for j in range(len(self.frame_energies)):
                             s = j + i*len(self.frame_energies) - len(self.frame_energies)
                             
-                            backend.openSection('section_scf_iteration')
+                            gIndexGroupscf = backend.openSection('section_scf_iteration')
                             backend.addValue('energy_total_scf_iteration', self.energy_frame[s])
                             backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
                             backend.addValue('time_scf_iteration_wall_end',  self.wall_time_end[s])
-                            backend.closeSection('section_scf_iteration',s+gIndexGroupscf)
+                            backend.closeSection('section_scf_iteration',gIndexGroupscf)
                                                          
                     backend.closeSection('section_single_configuration_calculation',i+1) 
 
