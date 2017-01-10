@@ -141,6 +141,7 @@ class CastepParserContext(object):
         self.basis_set_kind=[]
         self.segm_label =[]
         self.method =[]
+        self.singleConfCalcs =[]
     def initialize_values(self):
         """ Initializes the values of variables in superContexts that are used to parse different files """
         self.pippo = None
@@ -463,6 +464,12 @@ class CastepParserContext(object):
 # Storing the total energy of each SCF iteration in an array
 
 # Processing forces acting on atoms (final converged forces)
+    def onOpen_section_single_configuration_calculation(self, backend, gIndex, section):
+        # write the references to section_method and section_system
+        backend.addValue('single_configuration_to_calculation_method_ref', self.secMethodIndex)
+        backend.addValue('single_configuration_calculation_to_system_ref', self.secSystemDescriptionIndex)
+        self.singleConfCalcs.append(gIndex)
+
     def onClose_section_single_configuration_calculation(self, backend, gIndex, section):
         self.time_0 = section['x_castep_frame_time_0'] 
         
@@ -550,8 +557,8 @@ class CastepParserContext(object):
                 backend.addArrayValues('stress_tensor',np.asarray(self.stress_tensor_value[-3:])) 
             else:
                 pass        
-        backend.addValue('single_configuration_to_calculation_method_ref', self.secMethodIndex)
-        backend.addValue('single_configuration_calculation_to_system_ref', self.secSystemDescriptionIndex)
+        #backend.addValue('single_configuration_to_calculation_method_ref', self.secMethodIndex)
+        #backend.addValue('single_configuration_calculation_to_system_ref', self.secSystemDescriptionIndex)
     def onClose_section_scf_iteration(self, backend, gIndex, section):
         """trigger called when _section_scf_iteration is closed"""
         # get cached values for energy_total_scf_iteration
@@ -1083,9 +1090,17 @@ class CastepParserContext(object):
             else:
                 self.geoConvergence = False
         if self.geoConvergence is not None:
-            backend.openSection('section_frame_sequence')
+            sampling_method = "geometry_optimization"
+        
+            samplingGIndex = backend.openSection("section_sampling_method")
+            backend.addValue("sampling_method", sampling_method)
+            backend.closeSection("section_sampling_method", samplingGIndex)
+        
+            frameSequenceGIndex = backend.openSection("section_frame_sequence")
             backend.addValue('geometry_optimization_converged', self.geoConvergence)        
-            backend.closeSection('section_frame_sequence',gIndex)
+            backend.addValue("frame_sequence_to_sampling_ref", samplingGIndex)
+            backend.addArrayValues("frame_sequence_local_frames_ref", np.asarray(self.singleConfCalcs))
+            backend.closeSection('section_frame_sequence',frameSequenceGIndex)
         
 
         MDSuperContext = CastepMDParser.CastepMDParserContext(False)
@@ -1099,7 +1114,7 @@ class CastepParserContext(object):
         dirName = os.path.dirname(os.path.abspath(self.fName))
         cFile = str()
         for file in os.listdir(dirName):
-            if file.endswith(extFile):
+            if file.endswith(extFile):               
                 cFile = file
         fName = os.path.normpath(os.path.join(dirName, cFile))
 
@@ -1122,7 +1137,11 @@ class CastepParserContext(object):
 
             
             if self.frame_temp:
-                
+                sampling_method = "Molecular Dynamics"
+        
+                samplingGIndex = backend.openSection("section_sampling_method")
+                backend.addValue("sampling_method", sampling_method)
+                backend.closeSection("section_sampling_method", samplingGIndex)
                 gIndexGroupscf = backend.openSection('section_scf_iteration')
                 for i in range(len(self.frame_atom_forces)):
                     
@@ -1156,13 +1175,15 @@ class CastepParserContext(object):
                                                          
                     backend.closeSection('section_single_configuration_calculation',i+1) 
 
-                backend.openSection('section_frame_sequence')
+                frameSequenceGIndex = backend.openSection("section_frame_sequence")
                 backend.addValue('number_of_frames_in_sequence',(len(self.frame_potential)))
                 backend.addArrayValues('frame_sequence_temperature', np.asarray(self.frame_temp))
                 backend.addArrayValues('frame_sequence_pressure', np.asarray(self.frame_press))
                 backend.addArrayValues('frame_sequence_kinetic_energy', np.asarray(self.frame_kinetic))
                 backend.addArrayValues('frame_sequence_potential_energy', np.asarray(self.frame_potential))
                 backend.addArrayValues('frame_sequence_time', np.asarray(time_list))
+                backend.addValue("frame_sequence_to_sampling_ref", samplingGIndex)
+                backend.addArrayValues("frame_sequence_local_frames_ref", np.asarray(self.singleConfCalcs))
                 backend.closeSection('section_frame_sequence',gIndex)
             
             else:
@@ -1170,8 +1191,8 @@ class CastepParserContext(object):
         
         else:
             pass            
+    
 
-        
         TSSuperContext = CastepTSParser.CastepTSParserContext(False)
         TSParser = AncillaryParser(
             fileDescription = CastepTSParser.build_CastepTSFileSimpleMatcher(),
