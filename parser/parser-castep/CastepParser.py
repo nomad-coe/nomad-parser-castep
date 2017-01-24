@@ -2241,6 +2241,7 @@ def build_CastepMainFileSimpleMatcher():
                   subMatchers = [
 
                      SM(r"\s\|\sWelcome to Academic Release\s(?P<program_name>[a-zA-Z]+)* version *(?P<program_version>[0-9a-zA-Z_.]*)"),
+                     SM(r"\s\|\sWelcome to Materials Studio\s(?P<program_name>[a-zA-Z]+)* version *(?P<program_version>[0-9a-zA-Z_.]*)"),
                      SM(r"\sCompiled for *(?P<program_compilation_host>[-a-zA-Z0-9._]*)\son\s(?P<x_castep_program_compilation_date>[a-zA-Z,\s0-9]*)\s *(?P<x_castep_program_compilation_time>[0-9:]*)"),
                      SM(r"\sCompiler\: *(?P<x_castep_compiler>[a-zA-Z\s0-9.]*)"),
                      SM(r"\sMATHLIBS\: *(?P<x_castep_maths_library>[a-zA-Z0-9.() ]*)\s*"),
