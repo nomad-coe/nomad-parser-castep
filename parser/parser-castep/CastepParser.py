@@ -724,9 +724,10 @@ class CastepParserContext(object):
 # Processing the atom labels
         #get cached values of castep_store_atom_labels
             lab = section['x_castep_store_atom_labels']
-            
+            num = section['x_castep_store_atom_number']
             for i in range(0, self.at_nr):
                 lab[i] = re.sub('\s+', ' ', lab[i]).strip()
+                #num[i] = re.sub('\s+', ' ', num[i]).strip()
             self.atom_labels.extend(lab)
             backend.addArrayValues('atom_labels', np.asarray(self.atom_labels))
 
@@ -1528,7 +1529,7 @@ def build_CastepMainFileSimpleMatcher():
                  SM(r"\s*a \=\s*(?P<x_castep_cell_length_a>[\d\.]+)\s*alpha \=\s*(?P<x_castep_cell_angle_alpha>[\d\.]+)"),
                  SM(r"\s*b \=\s*(?P<x_castep_cell_length_b>[\d\.]+)\s*beta  \=\s*(?P<x_castep_cell_angle_beta>[\d\.]+)"),
                  SM(r"\s*c \=\s*(?P<x_castep_cell_length_c>[\d\.]+)\s*gamma \=\s*(?P<x_castep_cell_angle_gamma>[\d\.]+)"),
-                 SM(r"\s*x\s*(?P<x_castep_store_atom_labels>[A-Za-z0-9]+\s*[0-9.]+)\s*(?P<x_castep_store_atom_positions>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
+                 SM(r"\s*x\s*(?P<x_castep_store_atom_labels>[A-Za-z0-9]+)\s*(?P<x_castep_store_atom_number>[0-9.]+)\s*(?P<x_castep_store_atom_positions>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)",
                     endReStr = "\n",
                     repeats = True)
                 
