@@ -748,7 +748,7 @@ class CastepParserContext(object):
 
                 self.atom_positions.append(pos_a)
             
-            backend.addArrayValues('simulation_cell', np.asarray(self.cell[-3:]))
+            backend.addArrayValues('lattice_vectors', np.asarray(self.cell[-3:]))
             backend.addValue('x_castep_cell_volume', self.volume)     
             backend.addArrayValues('atom_positions', np.asarray(self.atom_positions))
         
@@ -792,7 +792,7 @@ class CastepParserContext(object):
 
                 self.atom_optim_position.append(pos_opt_a)
             
-            backend.addArrayValues('simulation_cell', np.asarray(self.cell[-3:])) 
+            backend.addArrayValues('lattice_vectors', np.asarray(self.cell[-3:])) 
             backend.addArrayValues('atom_positions', np.asarray(self.atom_optim_position[-self.at_nr:]))
             backend.addValue('x_castep_cell_volume', self.volume) 
         else:
@@ -1150,7 +1150,7 @@ class CastepParserContext(object):
                     backend.addArrayValues('atom_velocities', np.asarray(self.frame_atom_veloc[i]))
                     backend.addArrayValues('atom_labels', np.asarray(self.atom_labels))
                     backend.addArrayValues('atom_positions', np.asarray(self.frame_position[i]))
-                    backend.addArrayValues('simulation_cell', np.asarray(self.frame_cell[i]))
+                    backend.addArrayValues('lattice_vectors', np.asarray(self.frame_cell[i]))
                     backend.addArrayValues('x_castep_velocities_cell_vector',np.asarray(self.frame_vet_velocities[i]))
                     backend.closeNonOverlappingSection('section_system')
                     
