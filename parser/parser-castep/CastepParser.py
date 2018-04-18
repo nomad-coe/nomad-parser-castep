@@ -384,7 +384,7 @@ class CastepParserContext(object):
         eVtoRy = 0.073498618
         ecut_str_name = int(round(eVtoRy*self.ecut))
 
-        self.basis_set_kind = 'plane waves'
+        self.basis_set_kind = 'plane_waves'
         basis_set_name = 'PW_'+str(ecut_str_name)
         backend.addValue('basis_set_planewave_cutoff', self.ecut)
         backend.addValue('basis_set_cell_dependent_kind', self.basis_set_kind)
