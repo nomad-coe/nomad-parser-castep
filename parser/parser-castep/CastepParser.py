@@ -296,7 +296,7 @@ class CastepParserContext(object):
         if not self.method:
             self.method = 'DFT' 
         backend.addValue('electronic_structure_method',self.method)    
-        self.van_der_waals_name = section["van_der_Waals_method"]
+        self.van_der_waals_name = section["van_der_waals_method"]
         
         if self.van_der_waals_name is not None:
             dispersion_map = {
@@ -313,74 +313,74 @@ class CastepParserContext(object):
             self.dispersion = "_".join(sorted(self.dispersion))
         else:
             pass
-        #backend.addValue('van_der_Waals_method',self.dispersion)
+        #backend.addValue('van_der_waals_method',self.dispersion)
         
         if self.relativistic:
             if self.functional_weight is not None:
                 self.func_and_weight = []
                 for i in range(len(self.functional_types)):
-                    self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i]) 
-                    xcIndex = backend.openSection('section_XC_functionals')            
-                    backend.addValue('XC_functional_name', self.functionals[i]) 
-                    backend.addValue('XC_functional_weight', self.functional_weight[i])
-                    backend.closeSection('section_XC_functionals', xcIndex)
+                    self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i])
+                    xcIndex = backend.openSection('section_xc_functionals')
+                    backend.addValue('xc_functional_name', self.functionals[i])
+                    backend.addValue('xc_functional_weight', self.functional_weight[i])
+                    backend.closeSection('section_xc_functionals', xcIndex)
             # Push the functional string into the backend
             # Push the relativistic treatment string into the backend
-                backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
+                backend.addValue('xc_functional', "_".join(sorted(self.functionals)))
                 backend.addValue('relativity_method', self.relativistic)
             #if self.functional_weight = 0
                 if self.dispersion is not None:
-                    backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.dispersion+'_'+self.relativistic)
+                    backend.addValue('xc_method_current', ("_".join(sorted(self.func_total)))+'_'+self.dispersion+'_'+self.relativistic)
                 else:
-                    backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.relativistic)
+                    backend.addValue('xc_method_current', ("_".join(sorted(self.func_total)))+'_'+self.relativistic)
             else:
                 for i in range(len(self.functionals)):
               #      self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i])
-                    backend.openSection('section_XC_functionals')            
-                    backend.addValue('XC_functional_name', self.functionals[i]) 
-             #       backend.addValue('XC_functional_weight', self.functional_weight[i])
-                    backend.closeSection('section_XC_functionals',gIndex+i)
-                backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
+                    backend.openSection('section_xc_functionals')
+                    backend.addValue('xc_functional_name', self.functionals[i])
+             #       backend.addValue('xc_functional_weight', self.functional_weight[i])
+                    backend.closeSection('section_xc_functionals',gIndex+i)
+                backend.addValue('xc_functional', "_".join(sorted(self.functionals)))
                 backend.addValue('relativity_method', self.relativistic)
                 if self.dispersion is not None:
                    
-                    backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion+'_'+self.relativistic)
+                    backend.addValue('xc_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion+'_'+self.relativistic)
                 else:
-                    backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.relativistic)
+                    backend.addValue('xc_method_current', ("_".join(sorted(self.functionals)))+'_'+self.relativistic)
             
             
         else: 
             if self.functional_weight is not None:
                 self.func_and_weight = []
                 for i in range(len(self.functional_types)):
-                    self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i]) 
-                    backend.openSection('section_XC_functionals')            
-                    backend.addValue('XC_functional_name', self.functionals[i]) 
-                    backend.addValue('XC_functional_weight', self.functional_weight[i])
-                    backend.closeSection('section_XC_functionals',gIndex+i)        
+                    self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i])
+                    backend.openSection('section_xc_functionals')
+                    backend.addValue('xc_functional_name', self.functionals[i])
+                    backend.addValue('xc_functional_weight', self.functional_weight[i])
+                    backend.closeSection('section_xc_functionals',gIndex+i)
             # Push the functional string into the backend
             # Push the relativistic treatment string into the backend
-                backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
+                backend.addValue('xc_functional', "_".join(sorted(self.functionals)))
                 
             #if self.functional_weight = 0
                 if self.dispersion is not None:
-                    backend.addValue('XC_method_current', ("_".join(sorted(self.func_total)))+'_'+self.dispersion)
+                    backend.addValue('xc_method_current', ("_".join(sorted(self.func_total)))+'_'+self.dispersion)
                 else:
-                    backend.addValue('XC_method_current', ("_".join(sorted(self.func_total))))
+                    backend.addValue('xc_method_current', ("_".join(sorted(self.func_total))))
             else:
                 for i in range(len(self.functionals)):
               #      self.func_total.append(self.functionals[i]+'_'+self.functional_weight[i])
-                    backend.openSection('section_XC_functionals')            
-                    backend.addValue('XC_functional_name', self.functionals[i]) 
-             #       backend.addValue('XC_functional_weight', self.functional_weight[i])
-                    backend.closeSection('section_XC_functionals',gIndex+i)
-                backend.addValue('XC_functional', "_".join(sorted(self.functionals)))
+                    backend.openSection('section_xc_functionals')
+                    backend.addValue('xc_functional_name', self.functionals[i])
+             #       backend.addValue('xc_functional_weight', self.functional_weight[i])
+                    backend.closeSection('section_xc_functionals',gIndex+i)
+                backend.addValue('xc_functional', "_".join(sorted(self.functionals)))
                 
                 if self.dispersion is not None:
                    
-                    backend.addValue('XC_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion)
+                    backend.addValue('xc_method_current', ("_".join(sorted(self.functionals)))+'_'+self.dispersion)
                 else:
-                    backend.addValue('XC_method_current', ("_".join(sorted(self.functionals))))
+                    backend.addValue('xc_method_current', ("_".join(sorted(self.functionals))))
             
         if self.n_spin_channels:
             backend.addValue('number_of_spin_channels', self.n_spin_channels[0])
@@ -480,7 +480,7 @@ class CastepParserContext(object):
 # Processing forces acting on atoms (final converged forces)
     def onOpen_section_single_configuration_calculation(self, backend, gIndex, section):
         # write the references to section_method and section_system
-        backend.addValue('single_configuration_to_calculation_method_ref', self.secMethodIndex)
+        backend.addValue('single_configuration_calculation_to_method_ref', self.secMethodIndex)
         backend.addValue('single_configuration_calculation_to_system_ref', self.secSystemDescriptionIndex)
         self.singleConfCalcs.append(gIndex)
 
@@ -500,8 +500,9 @@ class CastepParserContext(object):
                 self.atom_forces.append(f_st_int)
                
                 self.atom_forces = self.atom_forces[-self.at_nr:] 
-                
+            fId = backend.openSection('section_atom_forces')
             backend.addArrayValues('atom_forces', np.asarray(self.atom_forces))
+            backend.closeSection('section_atom_forces', fId)
         else: 
             pass        
 # Add SCF k points and eigenvalue from *.band file to the backend (ONLY FOR SINGLE POINT CALCULATIONS AT THIS STAGE)
@@ -543,7 +544,7 @@ class CastepParserContext(object):
             if total_energy and van_der_waals_energy:
                 for i in range(len(total_energy)):
                     self.disp_energy = abs(van_der_waals_energy[i] - total_energy[i])
-                backend.addValue('energy_van_der_Waals', self.disp_energy)
+                backend.addValue('energy_van_der_waals', self.disp_energy)
         
 
         finite_basis_corr_energy = section['x_castep_total_energy_corrected_for_finite_basis_store'] ###Conversion to Jule
@@ -571,7 +572,7 @@ class CastepParserContext(object):
                 backend.addArrayValues('stress_tensor',np.asarray(self.stress_tensor_value[-3:])) 
             else:
                 pass        
-        #backend.addValue('single_configuration_to_calculation_method_ref', self.secMethodIndex)
+        #backend.addValue('single_configuration_calculation_to_method_ref', self.secMethodIndex)
         #backend.addValue('single_configuration_calculation_to_system_ref', self.secSystemDescriptionIndex)
     def onClose_section_scf_iteration(self, backend, gIndex, section):
         """trigger called when _section_scf_iteration is closed"""
@@ -586,9 +587,9 @@ class CastepParserContext(object):
     def onClose_x_castep_section_SCF_iteration_frame(self, backend, gIndex, section):
         
         self.frame_free_energy = section['x_castep_frame_energy_free']
-        self.frame_energies = section['x_castep_SCF_frame_energy']
-        self.frame_energies_gain = section['x_castep_SCF_frame_energy_gain']               
-        self.frame_T0 = section ['x_castep_frame_energy_total_T0']
+        self.frame_energies = section['x_castep_scf_frame_energy']
+        self.frame_energies_gain = section['x_castep_scf_frame_energy_gain']
+        self.frame_T0 = section ['x_castep_frame_energy_total_t0']
         self.wall_time_store = section ['x_castep_frame_time_scf_iteration_wall_end']
 
         frame_time = section['x_castep_frame_time']
@@ -1113,8 +1114,8 @@ class CastepParserContext(object):
         
             frameSequenceGIndex = backend.openSection("section_frame_sequence")
             backend.addValue('geometry_optimization_converged', self.geoConvergence)        
-            backend.addValue("frame_sequence_to_sampling_ref", samplingGIndex)
-            backend.addArrayValues("frame_sequence_local_frames_ref", np.asarray(self.singleConfCalcs))
+            backend.addValue("frame_sequence_to_sampling_method_ref", samplingGIndex)
+            backend.addArrayValues("frame_sequence_to_frames_ref", np.asarray(self.singleConfCalcs))
             backend.closeSection('section_frame_sequence',frameSequenceGIndex)
         
 
@@ -1169,14 +1170,16 @@ class CastepParserContext(object):
                     backend.closeNonOverlappingSection('section_system')
                     
                     backend.openSection('section_single_configuration_calculation')
+                    fId = backend.openSection('section_atom_forces')
                     backend.addArrayValues('atom_forces', np.asarray(self.frame_atom_forces[i]))
+                    backend.closeSection('section_atom_forces', fId)
                     if self.frame_stress_tensor is not None:
                         backend.addArrayValues('stress_tensor',np.asarray(self.frame_stress_tensor[i]))
                     backend.addValue('number_of_scf_iterations', len(self.frame_energies))
                     if i > 0:
                      
                         backend.addValue('energy_free', self.energy_frame_free[i-1]) 
-                        backend.addValue('energy_total_T0',self.energy_frame_T0[i-1])
+                        backend.addValue('energy_total_t0',self.energy_frame_T0[i-1])
                     
                     if i > 0:    
                         for j in range(len(self.frame_energies)):
@@ -1187,18 +1190,21 @@ class CastepParserContext(object):
                             backend.addValue('energy_change_scf_iteration', self.energy_frame_gain[s])
                             backend.addValue('time_scf_iteration_wall_end',  self.wall_time_end[s])
                             backend.closeSection('section_scf_iteration',gIndexGroupscf)
-                                                         
+
+                    if (len(self.frame_temp) != len(self.frame_atom_forces) or len(self.frame_press) != len(self.frame_atom_forces) or
+                        len(self.frame_kinetic) != len(self.frame_atom_forces) or len(self.frame_potential) != len(self.frame_atom_forces)):
+                        raise Exception("indexes to check: %s %s %s %s %s" % (self.frame_atom_forces, self.frame_temp, self.frame_press,
+                                                                              self.frame_kinetic, self.frame_potential))
+                    backend.addValue('instant_temperature', self.frame_temp[i])
+                    backend.addValue('instant_pressure', self.frame_press[i])
+                    backend.addValue('kinetic_energy', self.frame_kinetic[i])
+                    backend.addValue('potential_energy', self.frame_potential[i])
                     backend.closeSection('section_single_configuration_calculation',i+1) 
 
                 frameSequenceGIndex = backend.openSection("section_frame_sequence")
-                backend.addValue('number_of_frames_in_sequence',(len(self.frame_potential)))
-                backend.addArrayValues('frame_sequence_temperature', np.asarray(self.frame_temp))
-                backend.addArrayValues('frame_sequence_pressure', np.asarray(self.frame_press))
-                backend.addArrayValues('frame_sequence_kinetic_energy', np.asarray(self.frame_kinetic))
-                backend.addArrayValues('frame_sequence_potential_energy', np.asarray(self.frame_potential))
+                backend.addValue("frame_sequence_to_sampling_method_ref", samplingGIndex)
+                backend.addArrayValues("frame_sequence_to_frames_ref", np.asarray(self.singleConfCalcs))
                 backend.addArrayValues('frame_sequence_time', np.asarray(time_list))
-                backend.addValue("frame_sequence_to_sampling_ref", samplingGIndex)
-                backend.addArrayValues("frame_sequence_local_frames_ref", np.asarray(self.singleConfCalcs))
                 backend.closeSection('section_frame_sequence',gIndex)
             
             else:
@@ -1341,7 +1347,7 @@ def build_CastepMainFileSimpleMatcher():
                #forwardMatch = True,
                #sections = ["castep_section_relativity_treatment"],
                subMatchers = [
-                 SM(r"\sSEDC with\s*\: *(?P<van_der_Waals_method> [A-Za-z0-9() -]+)"),
+                 SM(r"\sSEDC with\s*\: *(?P<van_der_waals_method> [A-Za-z0-9() -]+)"),
                              ]), # CLOSING van der waals
             
             
@@ -1373,7 +1379,7 @@ def build_CastepMainFileSimpleMatcher():
             SM(r"\sphonon calculation method\s*\:\s*(?P<x_castep_phonon_method>[a-zA-Z]+\s[a-zA-Z]+)"),
             SM(r"\sphonon convergence tolerance\s*\:\s*(?P<x_castep_phonon_tolerance>[-+0-9.eEd]+)"),
             SM(r"\smax\. number of phonon cycles\s*\:\s*(?P<x_castep_phonon_cycles>[0-9.]+)"),
-            SM(r"\sDFPT solver method\s*\:\s*(?P<x_castep_DFPT_solver_method>[a-zA-Z0-9.() ]+)"),
+            SM(r"\sDFPT solver method\s*\:\s*(?P<x_castep_dfpt_solver_method>[a-zA-Z0-9.() ]+)"),
             SM(r"\sband convergence tolerance\s*\:\s*(?P<x_castep_band_tolerance>[-+0-9.eEd]+)"),
                           ])
 
@@ -1672,22 +1678,22 @@ def build_CastepMainFileSimpleMatcher():
                     SM(r"Dispersion corrected final energy\*\s=\s*(?P<x_castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),#total energy including dispersion correction
                     
                     SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"), # matching final converged total free energy
-                    SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<energy_total_T0__eV>[-+0-9.eEdD]*)"), # 0K corrected final SCF energy
+                    SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<energy_total_t0__eV>[-+0-9.eEdD]*)"), # 0K corrected final SCF energy
                     # 0K corrected final SCF energy
                     
-                    SM(sections = ['x_castep_section_DFT_SEDC'],
+                    SM(sections = ['x_castep_section_dft_sedc'],
                         startReStr = r"\%\s*SEDC PBC Interaction Energy\s*",
                         # endReStr = "\n",
                         subMatchers = [
                         SM(r"\%\s*(?P<x_castep_shell>[0-9]+)\s*(?P<x_castep_correction_energy__eV>[-\d\.]+)\s*(?P<x_castep_de_atom__eV>[\d\.]+)\s*(?P<x_castep_dfmax_atom__eV>[\d\.]+)\s*",
                                         repeats = True),
                         SM(r"\%\'TS\'\/PBE structure energy corr.\s*\=\s*(?P<x_castep_structure_energy_corr__eV>[-+0-9.eEdD]*)"),
-                        SM(r"\%\'TS\'\/PBE image interaction corr.\s*\=\s*(?P<x_castep_PBC_image_inter_corr__eV>[-+0-9.eEdD]*)"),
-                        SM(r"\%\'TS\'\/PBE total energy correction\s*\=\s*(?P<x_castep_total_energy_correction__eV>[-+0-9.eEdD]*)"),    
-                        SM(r"\%\'TS\'\/PBE correction \|F\|max\s*\=\s*(?P<x_castep_total_fmax_correction__eV>[-+0-9.eEdD]*)"),    
+                        SM(r"\%\'TS\'\/PBE image interaction corr.\s*\=\s*(?P<x_castep_pbc_image_inter_corr__eV>[-+0-9.eEdD]*)"),
+                        SM(r"\%\'TS\'\/PBE total energy correction\s*\=\s*(?P<x_castep_total_energy_correction__eV>[-+0-9.eEdD]*)"),
+                        SM(r"\%\'TS\'\/PBE correction \|F\|max\s*\=\s*(?P<x_castep_total_fmax_correction__eV>[-+0-9.eEdD]*)"),
                         SM(r"Dispersion corrected final energy\*\,\sEcor\s*\=\s*(?P<x_castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),
                         SM(r"Dispersion corrected final free energy\*\,\s(Ecor\-TS)\s\=\s*(?P<x_castep_total_dispersion_corrected_free_energy__eV>[-+0-9.eEdD]*)"),
-                        SM(r"NB dispersion corrected est\. 0K energy\*\(E\-0\.5TS\)\s\= *(?P<x_castep_disp_corrected_energy_total_T0__eV>[-+0-9.eEdD]*)"), 
+                        SM(r"NB dispersion corrected est\. 0K energy\*\(E\-0\.5TS\)\s\= *(?P<x_castep_disp_corrected_energy_total_t0__eV>[-+0-9.eEdD]*)"),
                         ]),
 
                     SM(startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
@@ -1732,7 +1738,7 @@ def build_CastepMainFileSimpleMatcher():
     MDSubMatcher = SM(name = 'MD',
                 startReStr = r"\sStarting MD iteration\s*[0-9.]+\s\.\.\.\s*",             
                 #endReStr = r"BFGS\: finished iteration     0 with enthalpy\= \-2\.14201700E\+002 eV",
-                sections = ["x_castep_section_SCF_iteration_frame"],
+                sections = ["x_castep_section_scf_iteration_frame"],
                 # sections = ["section_single_configuration_calculation"],
                 endReStr = r"\s\.\.\.\sfinished MD iteration\s*[0-9.]+\s*",
                 repeats =True,
@@ -1740,11 +1746,11 @@ def build_CastepMainFileSimpleMatcher():
                     # SM(r"\s*[0-9]+\s*(?P<castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*[0-9.]*\s*\<\-\-\sSCF\s*",
                     #     endReStr = "\n",
                     #     repeats = True),
-                    SM(r"\s*[0-9]+\s*(?P<x_castep_SCF_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<x_castep_SCF_frame_energy_gain>[-+0-9.eEdD]*)\s*(?P<x_castep_frame_time_scf_iteration_wall_end>[0-9.]*)\s*\<\-\-\sSCF\s*",
+                    SM(r"\s*[0-9]+\s*(?P<x_castep_scf_frame_energy>[-+0-9.eEdD]*)\s*[-+0-9.eEdD]*\s*(?P<x_castep_scf_frame_energy_gain>[-+0-9.eEdD]*)\s*(?P<x_castep_frame_time_scf_iteration_wall_end>[0-9.]*)\s*\<\-\-\sSCF\s*",
                         endReStr = "\n",
                         repeats = True),                
                     SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<x_castep_frame_energy_free>[-+0-9.eEdD]*)"), # matching final converged total free energy
-                    SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<x_castep_frame_energy_total_T0>[-+0-9.eEdD]*)"), # 0K corrected final SCF energy
+                    SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<x_castep_frame_energy_total_t0>[-+0-9.eEdD]*)"), # 0K corrected final SCF energy
                     SM(startReStr = r"\s*x\s*MD\sData\:\s*x",
                          subMatchers = [
                             SM(r"\s*x\s*time\s*\:\s*(?P<x_castep_frame_time>[+0-9.eEdD]+)\s*ps\s*x\s*"),
@@ -2220,7 +2226,7 @@ def build_CastepMainFileSimpleMatcher():
                             
                         SM(r"Final energy = *(?P<x_castep_scf_ts_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
                         SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<x_castep_scf_ts_total_energy_free__eV>[-+0-9.eEdD]*)"),
-                        SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<x_castep_scf_ts_T0__eV>[-+0-9.eEdD]*)"),
+                        SM(r"NB est\. 0K energy\s*\(E\-0\.5TS\)\s*= *(?P<x_castep_scf_ts_t0__eV>[-+0-9.eEdD]*)"),
                 
                  ]),   
              ])
@@ -2326,18 +2332,18 @@ def build_CastepMainFileSimpleMatcher():
                 SM(name = "van der Waals castep TS",
                    startReStr = r"\s*Dispersion\-correction scheme\s\:\s+",
                    forwardMatch = True,
-                   sections = ["x_castep_section_van_der_Waals_parameters"],
+                   sections = ["x_castep_section_van_der_waals_parameters"],
                    subMatchers = [
                         ######## Method TS #######
-                        SM(r"\s*Parameter sR\s*\: *(?P<x_castep_Parameter_sR> [0-9.]+)"),
-                        SM(r"\s*Parameter d\s*\: *(?P<x_castep_Parameter_d> [0-9.]+)"),
+                        SM(r"\s*Parameter sR\s*\: *(?P<x_castep_parameter_sr> [0-9.]+)"),
+                        SM(r"\s*Parameter d\s*\: *(?P<x_castep_parameter_d> [0-9.]+)"),
                         ######## Method OBS #######
-                        SM(r"\s*Parameter lambda\s*\: *(?P<x_castep_Parameter_LAMBDA> [0-9.]+)"),
-                        SM(r"\s*Parameter n\s*\: *(?P<x_castep_Parameter_n> [0-9.]+)"),
+                        SM(r"\s*Parameter lambda\s*\: *(?P<x_castep_parameter_lambda> [0-9.]+)"),
+                        SM(r"\s*Parameter n\s*\: *(?P<x_castep_parameter_n> [0-9.]+)"),
                
                         ######## Method G06 #######
-                        SM(r"\s*Parameter s6\s*\: *(?P<x_castep_Parameter_s6> [0-9.]+)"),
-                        SM(r"\s*Parameter d\s*\: *(?P<x_castep_Parameter_d> [0-9.]+)")
+                        SM(r"\s*Parameter s6\s*\: *(?P<x_castep_parameter_s6> [0-9.]+)"),
+                        SM(r"\s*Parameter d\s*\: *(?P<x_castep_parameter_d> [0-9.]+)")
                               ]), # CLOSING van der waals castep parameters
               
                 #geomOptimSubMatcher_init,
@@ -2455,13 +2461,13 @@ def get_cachingLevelForMetaName(metaInfoEnv):
                                 'x_castep_smearing_kind': CachingLevel.Cache,
                                 'x_castep_total_energy_corrected_for_finite_basis_store': CachingLevel.Cache,
                                 'x_castep_frame_time':CachingLevel.Cache,
-                                'x_castep_section_SCF_iteration_frame':CachingLevel.Cache,
+                                'x_castep_section_scf_iteration_frame':CachingLevel.Cache,
                                 'x_castep_raman_activity_store': CachingLevel.Cache,
-                                'x_castep_SCF_frame_energy_gain':CachingLevel.Cache,
+                                'x_castep_scf_frame_energy_gain':CachingLevel.Cache,
                                 'x_castep_frame_energy_free':CachingLevel.Cache,
-                                'x_castep_frame_energy_total_T0':CachingLevel.Cache,
+                                'x_castep_frame_energy_total_t0':CachingLevel.Cache,
                                 'x_castep_frame_time_scf_iteration_wall_end':CachingLevel.Cache,
-                                'x_castep_SCF_frame_energy':CachingLevel.Cache}
+                                'x_castep_scf_frame_energy':CachingLevel.Cache}
 
     # Set caching for temparary storage variables
     for name in metaInfoEnv.infoKinds:

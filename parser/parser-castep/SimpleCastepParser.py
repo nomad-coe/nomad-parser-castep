@@ -99,7 +99,7 @@ class CastepParserContext(object):
         functionals = "_".join(sorted(functionals))
 
         # Push the functional string into the backend
-        backend.addValue('XC_functional', functionals)
+        backend.addValue('xc_functional', functionals)
 
         # Match each castep relativity treatment name and sort the matches into a list
         relativistic = []
@@ -112,7 +112,7 @@ class CastepParserContext(object):
 
         # Push the relativistic treatment string into the backend
         backend.addValue('relativity_method', relativistic)
-        backend.addValue('XC_method_current', functionals+'_'+relativistic)
+        backend.addValue('xc_method_current', functionals+'_'+relativistic)
 
 
 
@@ -203,7 +203,10 @@ class CastepParserContext(object):
             f_st[i] = [float(j) for j in f_st[i]]
             f_st_int = f_st[i]
             self.atom_forces.append(f_st_int)
+
+        fId = backend.openSection('section_atom_forces')
         backend.addArrayValues('atom_forces', np.asarray(self.atom_forces))
+        backend.closeSection('section_atom_forces', fId)
 
 
 
