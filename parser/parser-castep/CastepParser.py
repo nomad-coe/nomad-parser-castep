@@ -584,7 +584,7 @@ class CastepParserContext(object):
    
 
 
-    def onClose_x_castep_section_SCF_iteration_frame(self, backend, gIndex, section):
+    def onClose_x_castep_section_scf_iteration_frame(self, backend, gIndex, section):
         
         self.frame_free_energy = section['x_castep_frame_energy_free']
         self.frame_energies = section['x_castep_scf_frame_energy']
