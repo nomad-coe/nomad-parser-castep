@@ -1,11 +1,11 @@
 # Copyright 2015-2018 Martina Stella, Massimo Riello, Fawzi Mohamed, Ankit Kariryaa
-# 
+#
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
 #   You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 #   Unless required by applicable law or agreed to in writing, software
 #   distributed under the License is distributed on an "AS IS" BASIS,
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,14 +14,13 @@
 
 from builtins import range
 from builtins import object
-import setup_paths
 import numpy as np
 import nomadcore.ActivateLogging
 from nomadcore.caching_backend import CachingLevel
 from nomadcore.simple_parser import mainFunction
 from nomadcore.simple_parser import SimpleMatcher as SM
 from nomadcore.local_meta_info import loadJsonFile, InfoKindEl
-from CastepCommon import get_metaInfo
+from castepparser.CastepCommon import get_metaInfo
 import logging, os, re, sys
 
 
@@ -71,7 +70,7 @@ class CastepCellParserContext(object):
         Store the parsed values and write them if writeMetaData is True.
         """
         k_p = section['x_castep_store_k_path']
-        
+
         k_count = len(k_p)
         self.k_crd = []
         for i in range(0, k_count):
@@ -89,7 +88,7 @@ class CastepCellParserContext(object):
 
         backend.addArrayValues('x_castep_k_path', np.asarray(self.k_crd))
         self.klabel_seg = section['x_castep_store_k_label']
-        
+
         # backend.addArrayValues('band_segm_start_end', np.asarray(self.k_sgt_start_end))
         # backend.addValue('number_of_k_point_segments', len(self.k_sgt_start_end))
 
@@ -115,7 +114,7 @@ def build_CastepCellFileSimpleMatcher():
             forwardMatch = True,
             weak = True,
             subMatchers = [
-            
+
             SM(startReStr = r"\s*\%block bs\_kpoint\_path\s*",
                   sections = ['section_k_band'],
                   forwardMatch = True,
@@ -133,7 +132,7 @@ def build_CastepCellFileSimpleMatcher():
 
                                  ]),
 
-            
+
             # SM(startReStr = r"\s*\%block kpoint\_list\s*",
             #       sections = ['section_k_band'],
             #       forwardMatch = True,
@@ -141,7 +140,7 @@ def build_CastepCellFileSimpleMatcher():
 
             #          SM (r"\s*(?P<x_castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+[\d\.]+)", repeats = True)
             #                      ]),
-            
+
             # SM(startReStr = r"\s*\%BLOCK KPOINT\_LIST\s*",
             #       sections = ['section_k_band'],
             #       forwardMatch = True,
@@ -150,7 +149,7 @@ def build_CastepCellFileSimpleMatcher():
             #           SM (r"\s*(?P<x_castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+[\d\.]+)", repeats = True)
 
             #                      ]),
-            
+
             SM(startReStr = r"\%block kpoint\_list\s*",
                   sections = ['section_k_band'],
                   forwardMatch = True,
@@ -158,7 +157,7 @@ def build_CastepCellFileSimpleMatcher():
 
                      SM (r"\s*(?P<x_castep_store_k_path>[-\d\.]+\s+[-\d\.]+\s+[-\d\.]+)\s*\!\s(?P<x_castep_store_k_label>[A-Z])", repeats = True)
                                  ]),
-            
+
             # SM(startReStr = r"\%BLOCK KPOINT\_LIST\s*",
             #       sections = ['section_k_band'],
             #       forwardMatch = True,
@@ -175,7 +174,7 @@ def build_CastepCellFileSimpleMatcher():
             #    subMatchers = [
             #    SM (r"(?P<castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
             #    ]),
-                
+
             ])
 
         ])

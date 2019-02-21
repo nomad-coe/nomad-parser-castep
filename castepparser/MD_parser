@@ -1,11 +1,10 @@
-import setup_paths
 import numpy as np
 import nomadcore.ActivateLogging
 from nomadcore.caching_backend import CachingLevel
 from nomadcore.simple_parser import mainFunction
 from nomadcore.simple_parser import SimpleMatcher as SM
 from nomadcore.local_meta_info import loadJsonFile, InfoKindEl
-from CastepCommon import get_metaInfo
+from castepparser.CastepCommon import get_metaInfo
 import logging, os, re, sys
 
 
@@ -42,7 +41,7 @@ class CastepCellParserContext(object):
         self.parser = parser
         # get unit from metadata for band energies
         # allows to reset values if the same superContext is used to parse different files
-        
+
 
 
 def build_CastepCellFileSimpleMatcher():
@@ -66,7 +65,7 @@ def build_CastepCellFileSimpleMatcher():
             forwardMatch = True,
             weak = True,
             # subMatchers = [
-            
+
             # SM(startReStr = r"\s*\%block bs\_kpoint\_path\s*",
             #       sections = ['section_k_band'],
             #       forwardMatch = True,
@@ -92,7 +91,7 @@ def build_CastepCellFileSimpleMatcher():
             #    subMatchers = [
             #    SM (r"(?P<castep_store_k_path>[\d\.]+\s+[\d\.]+\s+[\d\.]+)", repeats = True)
             #    ]),
-                
+
             )
         ])
 

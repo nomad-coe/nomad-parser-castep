@@ -1,4 +1,4 @@
-# Copyright 2015-2018 Lauri Himanen, Fawzi Mohamed, Ankit Kariryaa
+# Copyright 2015-2018 Lorenzo Pardini
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -12,4 +12,22 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from castepparser.CastepParser import CastepParser
+from setuptools import setup, find_packages
+
+
+def main():
+    setup(
+        name='castepparser',
+        version='0.1',
+        description='NOMAD parser implementation for Abinit.',
+        license='APACHE 2.0',
+        package_dir={'': './'},
+        packages=find_packages(),
+        install_requires=[
+            'nomadcore'
+        ],
+    )
+
+
+if __name__ == '__main__':
+    main()

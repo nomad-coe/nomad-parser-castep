@@ -1,11 +1,11 @@
 # Copyright 2015-2018 Martina Stella, Massimo Riello, Fawzi Mohamed, Ankit Kariryaa
-# 
+#
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
 #   You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 #   Unless required by applicable law or agreed to in writing, software
 #   distributed under the License is distributed on an "AS IS" BASIS,
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,14 +14,13 @@
 
 from builtins import range
 from builtins import object
-import setup_paths
 import numpy as np
 import nomadcore.ActivateLogging
 from nomadcore.caching_backend import CachingLevel
 from nomadcore.simple_parser import mainFunction
 from nomadcore.simple_parser import SimpleMatcher as SM
 from nomadcore.local_meta_info import loadJsonFile, InfoKindEl
-from CastepCommon import get_metaInfo
+from castepparser.CastepCommon import get_metaInfo
 import logging, os, re, sys
 
 
@@ -47,11 +46,11 @@ class CastepTSParserContext(object):
             writeMetaData: Deteremines if metadata is written or stored in class attributes.
         """
         self.writeMetaData = writeMetaData
-   
+
         self.total_energy = []
         self.total_energy_final = []
         self.total_energy_pro = []
-     
+
         self.md_forces =[]
         self.md_veloc =[]
         self.frame_atom_label =[]
@@ -77,39 +76,39 @@ class CastepTSParserContext(object):
             parser: The compiled parser. Is an object of the class SimpleParser in nomadcore.simple_parser.py.
         """
         self.parser = parser
-    
+
     def onClose_x_castep_section_ts_store(self, backend, gIndex, section):
-       
-        
+
+
         vet = section ['x_castep_ts_cell_vectors_store']
         forces_ts = section ['x_castep_ts_forces_store']
-       
+
         position = section ['x_castep_ts_positions_store']
         energy = section['x_castep_ts_energy']
-        # path_step = section ['x_castep_ts_path']        
-        
+        # path_step = section ['x_castep_ts_path']
+
         # for i in range (len(path_step)):
         #     self.path_ts.append(path_step[i])
-      
+
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
         evAtoN = float(1.6021766e-9)
         for i in energy:
-         
+
             energy = [x * Hr_J_converter for x in energy]
             self.total_energy.extend(energy)
-          
-   
+
+
         if vet:
             self.cell =[]
             for i in range(len(vet)):
-                vet[i] = vet[i].split()  
-                vet[i] = [float(j) for j in vet[i]]                
-                vet_list = vet[i]               
-                self.cell.append(vet_list)             
+                vet[i] = vet[i].split()
+                vet[i] = [float(j) for j in vet[i]]
+                vet_list = vet[i]
+                self.cell.append(vet_list)
             self.frame_cell.append(self.cell)
-             
-        
+
+
         if position:
             self.at_nr = len(position)
             self.atom_position=[]
@@ -119,48 +118,48 @@ class CastepTSParserContext(object):
                 pos_list = position[i]
                 self.atom_position.append(pos_list)
             self.total_positions.append(self.atom_position)
-      
+
         if forces_ts is not None:
-            
+
             self.ts_forces = []
-            for f in forces_ts:                
+            for f in forces_ts:
                 f = f.split()
                 f = [float(k) for k in f]
                 f_st_intts = f
-                f_st_intts = [x * evAtoN for x in f_st_intts] 
-                self.ts_forces.append(f_st_intts)                 
+                f_st_intts = [x * evAtoN for x in f_st_intts]
+                self.ts_forces.append(f_st_intts)
             self.total_forces.append(self.ts_forces)
-             
+
     def onClose_x_castep_section_ts_final_store(self, backend, gIndex, section):
-        # path_final_ts = section ['x_castep_ts_path_ts_final']  
+        # path_final_ts = section ['x_castep_ts_path_ts_final']
         vet_final = section ['x_castep_ts_cell_vectors_final_store']
         forces_final = section ['x_castep_ts_forces_final_store']
-        
+
         position_final = section ['x_castep_ts_positions_final_store']
         energy_final = section['x_castep_ts_energy_final_store']
-        
+
         # for i in range (len(path_final_ts)):
         #     self.path_final = path_final_ts[i]
-        
+
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
         evAtoN = float(1.6021766e-9)
-        
-            
+
+
         self.total_energy_final = Hr_J_converter * energy_final[0]
         # self.total_energy_final = energy_final
-        
-   
+
+
         if vet_final:
             self.cell_final =[]
             for i in range(len(vet_final)):
-                vet_final[i] = vet_final[i].split()  
-                vet_final[i] = [float(j) for j in vet_final[i]]                
-                vetf_list = vet_final[i]               
-                self.cell_final.append(vetf_list)             
+                vet_final[i] = vet_final[i].split()
+                vet_final[i] = [float(j) for j in vet_final[i]]
+                vetf_list = vet_final[i]
+                self.cell_final.append(vetf_list)
         # self.frame_cell_final.append(self.cell_final)
-             
-        
+
+
         if position_final:
             self.at_nr = len(position_final)
             self.atomf_position=[]
@@ -170,49 +169,49 @@ class CastepTSParserContext(object):
                 posf_list = position_final[i]
                 self.atomf_position.append(posf_list)
             # self.total_positions_final.append(self.atomf_position)
-      
+
         if forces_final is not None:
 
             self.md_forces_final = []
-            for f in forces_final:                
+            for f in forces_final:
                 f = f.split()
                 f = [float(k) for k in f]
                 f_st_intf = f
                 f_st_intf = [x * evAtoN for x in f_st_intf]
-                self.md_forces_final.append(f_st_intf)                
-               
+                self.md_forces_final.append(f_st_intf)
+
             # self.total_forces_final.append(self.md_forces_final)
-    
+
     def onClose_x_castep_section_ts_product_store(self, backend, gIndex, section):
-         # path_product = section ['x_castep_ts_path_product']  
+         # path_product = section ['x_castep_ts_path_product']
         vet_pro = section ['x_castep_ts_cell_vectors_pro_store']
         forces_pro = section ['x_castep_ts_forces_pro_store']
-        
+
         position_pro = section ['x_castep_ts_positions_pro_store']
         energy_pro = section['x_castep_ts_energy_product_store']
-        
-        
+
+
         Hr_J_converter = float(4.35974e-18)
         HrK_to_K_coverter= float(3.1668114e-6)
         evAtoN = float(1.6021766e-9)
-        # for i in range (len(path_product)):              
+        # for i in range (len(path_product)):
         #     self.path_pro = path_product[i]
-   
-        
-      
+
+
+
         self.total_energy_pro = energy_pro[0] * Hr_J_converter
-        
-   
+
+
         if vet_pro:
             self.cell_pro =[]
             for i in range(len(vet_pro)):
-                vet_pro[i] = vet_pro[i].split()  
-                vet_pro[i] = [float(j) for j in vet_pro[i]]                
-                vetp_list = vet_pro[i]               
-                self.cell_pro.append(vetp_list)             
+                vet_pro[i] = vet_pro[i].split()
+                vet_pro[i] = [float(j) for j in vet_pro[i]]
+                vetp_list = vet_pro[i]
+                self.cell_pro.append(vetp_list)
         # self.frame_cell_final.append(self.cell_final)
-             
-        
+
+
         if position_pro:
             self.at_nr = len(position_pro)
             self.atomp_position=[]
@@ -222,29 +221,29 @@ class CastepTSParserContext(object):
                 posp_list = position_pro[i]
                 self.atomp_position.append(posp_list)
             # self.total_positions_final.append(self.atomf_position)
-      
+
         if forces_pro is not None:
 
             self.md_forces_pro = []
-            for f in forces_pro:                
+            for f in forces_pro:
                 f = f.split()
                 f = [float(k) for k in f]
                 f_st_intp = f
                 f_st_intp = [x * evAtoN for x in f_st_intp]
-                self.md_forces_pro.append(f_st_intp)               
+                self.md_forces_pro.append(f_st_intp)
 
-    def onClose_section_run(self, backend, gIndex, section):            
-        path_product = section ['x_castep_ts_path_product']  
+    def onClose_section_run(self, backend, gIndex, section):
+        path_product = section ['x_castep_ts_path_product']
         path_final_ts = section ['x_castep_ts_path_ts_final']
-        path_step = section ['x_castep_ts_path'] 
+        path_step = section ['x_castep_ts_path']
         for i in range (len(path_step)):
             self.path_ts.append(path_step[i])
 
-        for i in range (len(path_product)):              
-            self.path_pro = path_product[i]    
+        for i in range (len(path_product)):
+            self.path_pro = path_product[i]
 
         for i in range (len(path_final_ts)):
-            self.path_final = path_final_ts[i]    
+            self.path_final = path_final_ts[i]
 
 def build_CastepTSFileSimpleMatcher():
     """Builds the SimpleMatcher to parse the *.md file of CASTEP.
@@ -268,11 +267,11 @@ def build_CastepTSFileSimpleMatcher():
             repeats = True,
             subMatchers = [
                 SM (r"\s*(?P<x_castep_ts_energy>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-                SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),                    
+                SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),
                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-                
-                   ]), 
+
+                   ]),
             SM (name = 'Root3',
             startReStr =r"\sQST\s*[0-9.]\s*(?P<x_castep_ts_path>[-+0-9.eEdD]+)\s*",
             endReStr ="/n",
@@ -280,11 +279,11 @@ def build_CastepTSFileSimpleMatcher():
             repeats = True,
             subMatchers = [
                 SM (r"\s*(?P<x_castep_ts_energy>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-                SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),                    
+                SM (r"\s*(?P<x_castep_ts_cell_vectors_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),
                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
                 SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-                
-                   ]), 
+
+                   ]),
             SM (name = 'Root4',
                 startReStr =r"\sTS\s*0\s*(?P<x_castep_ts_path_ts_final>[-+0-9.eEdD]+)\s*",
                 endReStr ="/n",
@@ -292,10 +291,10 @@ def build_CastepTSFileSimpleMatcher():
                 repeats = True,
                 subMatchers = [
                             SM (r"\s*(?P<x_castep_ts_energy_final_store>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-                            SM (r"\s*(?P<x_castep_ts_cell_vectors_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
+                            SM (r"\s*(?P<x_castep_ts_cell_vectors_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_final_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-                    ]),            
+                    ]),
             SM (name = 'Root5',
                 startReStr =r"\sPRO\s*0\s*(?P<x_castep_ts_path_product>[-+0-9.eEdD]+)\s*",
                 endReStr ="/n",
@@ -303,16 +302,16 @@ def build_CastepTSFileSimpleMatcher():
                 repeats = True,
                 subMatchers = [
                             SM (r"\s*(?P<x_castep_ts_energy_product_store>[-+0-9.eEdD]+)\s*[-+0-9.eEdD]+\s*\<\-\-\sE\s*"),
-                            SM (r"\s*(?P<x_castep_ts_cell_vectors_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True), 
+                            SM (r"\s*(?P<x_castep_ts_cell_vectors_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_positions_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
                             SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_ts_forces_pro_store>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
-                    ]),          
-                
-            ]) 
-            
-            
+                    ]),
 
-    
+            ])
+
+
+
+
 
 def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
     """Sets the caching level for the metadata.
@@ -330,7 +329,7 @@ def get_cachingLevelForMetaName(metaInfoEnv, CachingLvl):
                                  'section_run': CachingLvl,
                                  'x_castep_section_ts_store': CachingLvl,
                                  'x_castep_section_ts_final_store': CachingLvl,
-                                 'x_castep_section_ts_product_store': CachingLvl,   
+                                 'x_castep_section_ts_product_store': CachingLvl,
                               }
     # Set all band metadata to Cache as they need post-processsing.
     for name in metaInfoEnv.infoKinds:

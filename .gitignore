@@ -11,6 +11,7 @@ syntax: glob
 *.swp
 .DS_Store
 *.annotate
+*.egg-info
 
 # logging files
 detailed.log

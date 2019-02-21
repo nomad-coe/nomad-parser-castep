@@ -16,18 +16,18 @@ from __future__ import division
 from builtins import str
 from builtins import range
 from builtins import object
-import setup_paths
 import numpy as np
 import math
 import nomadcore.ActivateLogging
 from nomadcore.caching_backend import CachingLevel
 from nomadcore.simple_parser import AncillaryParser, mainFunction
 from nomadcore.simple_parser import SimpleMatcher as SM
-from CastepCommon import get_metaInfo
-import CastepCellParser
-import CastepBandParser
-import CastepMDParser
-import CastepTSParser
+from nomadcore.local_meta_info import loadJsonFile
+from castepparser.CastepCommon import get_metaInfo, InfoKindEl
+from castepparser import CastepCellParser as CastepCellParser
+from castepparser import CastepBandParser as CastepBandParser
+from castepparser import CastepMDParser as CastepMDParser
+from castepparser import CastepTSParser as CastepTSParser
 import logging, os, re, sys
 
 
@@ -2487,7 +2487,7 @@ class CastepParser():
        backend = self.backend_factory(metaInfoEnv)
        with patch.object(sys, 'argv', ['<exe>', '--uri', 'nmd://uri', mainfile]):
            mainFunction(
-               mainFileDescription=CastepMainFileSimpleMatcher,
+               mainFileDescription=build_CastepMainFileSimpleMatcher(),
                metaInfoEnv=metaInfoEnv,
                parserInfo = {'name':'castep-parser', 'version': '1.0'},
                cachingLevelForMetaName = get_cachingLevelForMetaName(metaInfoEnv),
