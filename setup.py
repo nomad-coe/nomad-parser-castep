@@ -19,7 +19,7 @@ def main():
     setup(
         name='castepparser',
         version='0.1',
-        description='NOMAD parser implementation for Abinit.',
+        description='NOMAD parser implementation for Castep.',
         license='APACHE 2.0',
         package_dir={'': './'},
         packages=find_packages(),
