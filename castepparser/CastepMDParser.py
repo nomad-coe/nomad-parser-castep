@@ -195,19 +195,19 @@ def build_CastepMDFileSimpleMatcher():
         weak = True,
         subMatchers = [
             SM (name = 'Root2',
-            startReStr =r"\s*(?P<x_castep_md_energies>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sE\s*",
+            startReStr =r"\s*(?P<x_castep_md_energies>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*\<\-\-\sE\s*",
             endReStr ="/n",
             sections = ['x_castep_section_md'],
             repeats = True,
             subMatchers = [
-                SM (r"\s*(?P<x_castep_md_temperature>[-+0-9.eEdD]+)\s*\<\-\-\sT\s*"),
-                SM (r"\s*(?P<x_castep_md_pressure>[-+0-9.eEdD]+)\s*\<\-\-\sP\s*"),
-                SM (r"\s*(?P<x_castep_md_cell_vectors>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh\s",repeats = True),
-                SM (r"\s*(?P<x_castep_md_cell_vectors_vel>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sh[a-z]\s*",repeats = True),
-                SM (r"\s*(?P<x_castep_md_stress_tensor>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sS\s",repeats = True),
-                SM(r"\s(?P<x_castep_md_lab>[A-Za-z]+\s*[0-9.]+)\s*(?P<x_castep_md_positions>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sR\s*",repeats = True),
-                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_md_veloc>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sV\s*",repeats = True),
-                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_md_forces>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
+                SM (r"\s*(?P<x_castep_md_temperature>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*\<\-\-\sT\s*"),
+                SM (r"\s*(?P<x_castep_md_pressure>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*\<\-\-\sP\s*"),
+                SM (r"\s*(?P<x_castep_md_cell_vectors>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*\<\-\-\sh\s",repeats = True),
+                SM (r"\s*(?P<x_castep_md_cell_vectors_vel>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*\<\-\-\sh[a-z]\s*",repeats = True),
+                SM (r"\s*(?P<x_castep_md_stress_tensor>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*\<\-\-\sS\s",repeats = True),
+                SM(r"\s(?P<x_castep_md_lab>[A-Za-z]+\s*[0-9.]+)\s*(?P<x_castep_md_positions>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*\<\-\-\sR\s*",repeats = True),
+                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_md_veloc>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*\<\-\-\sV\s*",repeats = True),
+                SM(r"\s[A-Za-z]+\s*[0-9.]+\s*(?P<x_castep_md_forces>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*\<\-\-\sF\s*",repeats = True,endReStr ="/n"),
 
             ]),
         ])

@@ -1432,7 +1432,7 @@ def build_CastepMainFileSimpleMatcher():
         startReStr = r"\s\*\*\** Core Level Spectra Parameters \*\*\**\s*",
         subMatchers = [
             SM(r"\s*number of bands\s*\:\s*(?P<x_castep_core_spectra_n_bands>[0-9.]+)"),
-            SM(r"\s*band convergence tolerance\s*\:\s*(?P<x_castep_core_spectra_conv_tolerance__eV>[-+0-9.eEdD]+)"),
+            SM(r"\s*band convergence tolerance\s*\:\s*(?P<x_castep_core_spectra_conv_tolerance__eV>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)"),
             ])
 
     BandParameterSubMatcher = SM(name = 'Band calculation parameters' ,
@@ -1440,9 +1440,9 @@ def build_CastepMainFileSimpleMatcher():
         startReStr = r"\s\*\*\** Band Structure Parameters \*\*\**\s*",
         subMatchers = [
             SM(r"\s*max\. number of iterations\s*\:\s*(?P<x_castep_band_n_iterations>[0-9.]+)"),
-            SM(r"\s*max\. CG steps in BS calc\s*\:\s*(?P<x_castep_band_max_cg>[-+0-9.eEdD]+)"),
+            SM(r"\s*max\. CG steps in BS calc\s*\:\s*(?P<x_castep_band_max_cg>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)"),
             SM(r"\s*number of bands \/ k\-point\s*\:\s*(?P<x_castep_band_n_bands>[0-9.]+)"),
-            SM(r"\s*band convergence tolerance\s*\:\s*(?P<x_castep_band_conv_tolerance__eV>[-+0-9.eEdD]+)"),
+            SM(r"\s*band convergence tolerance\s*\:\s*(?P<x_castep_band_conv_tolerance__eV>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)"),
             ])
     MDParameterSubMatcher = SM(name = 'MD_parameters' ,
         sections = ["section_sampling_method"],
@@ -1455,7 +1455,7 @@ def build_CastepMainFileSimpleMatcher():
             SM(r"\s*with characteristic cell time\s*\:\s*(?P<x_castep_barostat_tau>[-+0-9.eEd]+)"),
             SM(r"\s*using\s*\:\s*(?P<x_castep_thermostat_type>[A-Za-z]+\-[A-Za-z]+)\s+"),
             SM(r"\s*with characteristic ionic time\s*\:\s*(?P<x_castep_thermostat_tau>[-+0-9.eEd]+)"),
-            SM(r"\s*time\sstep\s*\:\s*(?P<x_castep_integrator_dt>[-+0-9.eEdD]+)"),
+            SM(r"\s*time\sstep\s*\:\s*(?P<x_castep_integrator_dt>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)"),
             SM(r"\s*number of MD steps\s*\:\s*(?P<x_castep_number_of_steps_requested>[0-9]+)"),
             SM(r"\s*MD SCF energy \/ atom convergence tol\.\s*\:\s*(?P<x_castep_frame_energy_tolerance>[-+0-9.eEd]+)"),
             SM(r"\s*MD SCF eigenenergies tolerance\s*\:\s*(?P<x_castep_frame_eigen_tolerance>[-+0-9.eEd]+)"),
@@ -1526,7 +1526,7 @@ def build_CastepMainFileSimpleMatcher():
               forwardMatch = True,
               sections = ["x_castep_section_cell"],
               subMatchers = [
-                  SM(r"\s*(?P<x_castep_cell_vector>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                  SM(r"\s*(?P<x_castep_cell_vector>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                  #SM(r"\s*(?P<castep_cell_vector>[\d\.]+\s+[\d\.]+\s+[\d\.]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                     endReStr = "\n",
                     repeats = True),
@@ -1554,7 +1554,7 @@ def build_CastepMainFileSimpleMatcher():
               forwardMatch = True,
               #sections = ["castep_section_atom_position"],
               subMatchers = [
-                 SM(r"\s*x\s*[A-Za-z0-9]+\s+[\d\.]+\s*[0-9]\s*(?P<x_castep_store_atom_ionic_velocities>[-+0-9.eEdD]+\s*[-+0-9.eEdD]+\s*[-+0-9.eEdD]+)",
+                 SM(r"\s*x\s*[A-Za-z0-9]+\s+[\d\.]+\s*[0-9]\s*(?P<x_castep_store_atom_ionic_velocities>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)",
                     endReStr = "\n",
                     repeats = True)
 
@@ -1668,7 +1668,7 @@ def build_CastepMainFileSimpleMatcher():
 
                     SM(r"Final energy = *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
                     SM(r"Final energy\,\s*E\s*= *(?P<energy_total__eV>[-+0-9.eEdD]*)"), # matching final converged total energy
-                    SM(r"\sTotal energy corrected for finite basis set\s\=\s*(?P<x_castep_total_energy_corrected_for_finite_basis_store>[-+0-9.eEdD]+)\s+"),
+                    SM(r"\sTotal energy corrected for finite basis set\s\=\s*(?P<x_castep_total_energy_corrected_for_finite_basis_store>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s+"),
                     SM(r"Dispersion corrected final energy\*\s=\s*(?P<x_castep_total_dispersion_corrected_energy__eV>[-+0-9.eEdD]*)"),#total energy including dispersion correction
 
                     SM(r"Final free energy\s*\(E\-TS\)\s*= *(?P<energy_free__eV>[-+0-9.eEdD]*)"), # matching final converged total free energy
@@ -1768,7 +1768,7 @@ def build_CastepMainFileSimpleMatcher():
                             forwardMatch = True,
                             sections = ["x_castep_section_cell_optim"],
                             subMatchers = [
-                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                                     endReStr = "\n",
                                     repeats = True),
 
@@ -1836,7 +1836,7 @@ def build_CastepMainFileSimpleMatcher():
                             forwardMatch = True,
                             sections = ["x_castep_section_cell_optim"],
                             subMatchers = [
-                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                                     endReStr = "\n",
                                     repeats = True),
 
@@ -1890,7 +1890,7 @@ def build_CastepMainFileSimpleMatcher():
                             subMatchers = [
                                 SM(r"\s*\+\s*TDDFT iteration\:\s*(?P<x_castep_tddft_iteration>[0-9.]+)\sof\s\(up\sto\)\s*[0-9.]*\,\sTime\:\s*(?P<x_castep_wall_time>[0-9.]*)s\s*\+TDDFT",
                                     repeats = True),
-                                SM(r"\s*\+\s*(?P<x_castep_state_number>[0-9.]+)\s*(?P<x_castep_state_energy>[-+0-9.eEdD]+)\s*(?P<x_castep_state_energy_error>[-+0-9.eEdD]+)\s*[a-z]+\s*\+TDDFT"),
+                                SM(r"\s*\+\s*(?P<x_castep_state_number>[0-9.]+)\s*(?P<x_castep_state_energy>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*(?P<x_castep_state_energy_error>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*[a-z]+\s*\+TDDFT"),
                                 SM(r"\s*\+\s*TDDFT calculation time\:\s*(?P<x_castep_tddft_calculation_time>[0-9.]*)\s*\+TDDFT"),
                                       ]),
 
@@ -1933,7 +1933,7 @@ def build_CastepMainFileSimpleMatcher():
                             forwardMatch = True,
                             sections = ["x_castep_section_cell_optim"],
                             subMatchers = [
-                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                                     endReStr = "\n",
                                     repeats = True),
 
@@ -1986,7 +1986,7 @@ def build_CastepMainFileSimpleMatcher():
                             subMatchers = [
                                 SM(r"\s*\+\s*TDDFT iteration\:\s*(?P<x_castep_tddft_iteration>[0-9.]+)\sof\s\(up\sto\)\s*[0-9.]*\,\sTime\:\s*(?P<x_castep_wall_time>[0-9.]*)s\s*\+TDDFT",
                                     repeats = True),
-                                SM(r"\s*\+\s*(?P<x_castep_state_number>[0-9.]+)\s*(?P<x_castep_state_energy>[-+0-9.eEdD]+)\s*(?P<x_castep_state_energy_error>[-+0-9.eEdD]+)\s*[a-z]+\s*\+TDDFT"),
+                                SM(r"\s*\+\s*(?P<x_castep_state_number>[0-9.]+)\s*(?P<x_castep_state_energy>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*(?P<x_castep_state_energy_error>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*[a-z]+\s*\+TDDFT"),
                                 SM(r"\s*\+\s*TDDFT calculation time\:\s*(?P<x_castep_tddft_calculation_time>[0-9.]*)\s*\+TDDFT"),
                                       ]),
 
@@ -2028,7 +2028,7 @@ def build_CastepMainFileSimpleMatcher():
                             forwardMatch = True,
                             sections = ["x_castep_section_cell_optim"],
                             subMatchers = [
-                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                                     endReStr = "\n",
                                     repeats = True),
 
@@ -2081,7 +2081,7 @@ def build_CastepMainFileSimpleMatcher():
                             subMatchers = [
                                 SM(r"\s*\+\s*TDDFT iteration\:\s*(?P<x_castep_tddft_iteration>[0-9.]+)\sof\s\(up\sto\)\s*[0-9.]*\,\sTime\:\s*(?P<x_castep_wall_time>[0-9.]*)s\s*\+TDDFT",
                                     repeats = True),
-                                SM(r"\s*\+\s*(?P<x_castep_state_number>[0-9.]+)\s*(?P<x_castep_state_energy>[-+0-9.eEdD]+)\s*(?P<x_castep_state_energy_error>[-+0-9.eEdD]+)\s*[a-z]+\s*\+TDDFT"),
+                                SM(r"\s*\+\s*(?P<x_castep_state_number>[0-9.]+)\s*(?P<x_castep_state_energy>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*(?P<x_castep_state_energy_error>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*[a-z]+\s*\+TDDFT"),
                                 SM(r"\s*\+\s*TDDFT calculation time\:\s*(?P<x_castep_tddft_calculation_time>[0-9.]*)\s*\+TDDFT"),
                                       ]),
 
@@ -2123,7 +2123,7 @@ def build_CastepMainFileSimpleMatcher():
                                     forwardMatch = True,
                                     sections = ["x_castep_section_cell_optim"],
                                     subMatchers = [
-                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+0-9.eEdD]+\s+[-+0-9.eEdD]+\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
+                                SM(r"\s*(?P<x_castep_cell_vector_optim>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s+[-+0-9.eEd]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                          #SM(r"\s*(?P<castep_cell_vector>[\d\.]+\s+[\d\.]+\s+[\d\.]+) \s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*\s*[-+0-9.eEdD]*",
                                         endReStr = "\n",
                                     repeats = True),
@@ -2149,8 +2149,8 @@ def build_CastepMainFileSimpleMatcher():
 
 
 
-                        SM(r"\s[A-Za-z]+\:\sFinal\sEnthalpy\s*\=\s(?P<x_castep_enthalpy__eV>[-+0-9.eEdD]+)"),
-                        SM(r"\s[A-Za-z]+\:\sFinal\s\<frequency\>\s*\=\s*(?P<x_castep_frequency>[-+0-9.eEdD]+)"),
+                        SM(r"\s[A-Za-z]+\:\sFinal\sEnthalpy\s*\=\s(?P<x_castep_enthalpy__eV>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)"),
+                        SM(r"\s[A-Za-z]+\:\sFinal\s\<frequency\>\s*\=\s*(?P<x_castep_frequency>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)"),
                         SM(#startReStr = r"\s\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* Forces \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\s*",
                                 startReStr = r"\s\*\*\*\*\** Forces \*\*\*\*\**\s*",
 
@@ -2230,7 +2230,7 @@ def build_CastepMainFileSimpleMatcher():
             #endReStr = r"\s*Bond\s*Population\s*Length\s\(A\)\s*",
             repeats = True,
             subMatchers = [
-                SM(r"\s*[a-zA-Z]+\s*[0-9.]+\s*(?P<x_castep_orbital_contributions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)\s*[-+0-9.eEdD]+\s*(?P<x_castep_mulliken_charge_store>[-+0-9.eEdD]+)\s*",
+                SM(r"\s*[a-zA-Z]+\s*[0-9.]+\s*(?P<x_castep_orbital_contributions>[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+\s*[-\d\.]+)\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*(?P<x_castep_mulliken_charge_store>[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)\s*",
                     endReStr = r"\s*Bond\s*Population\s*Length\s\(A\)\s*",
                     repeats = True),
                  ])
