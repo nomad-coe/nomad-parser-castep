@@ -1082,8 +1082,8 @@ class CastepParserContext(object):
 
 
     def onClose_section_run(self, backend, gIndex, section):
-        # self.basis_set_type = 'plane_waves'
-        backend.addValue('program_basis_set_type', self.basis_set_kind)
+        self.basis_set_type = 'plane waves'
+        backend.addValue('program_basis_set_type', self.basis_set_type)
         f_st_band = section['x_castep_store_atom_forces_band']
         evAtoN = float(1.6021766e-9)
         if f_st_band:
