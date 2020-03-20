@@ -2471,10 +2471,6 @@ def get_cachingLevelForMetaName(metaInfoEnv):
     return cachingLevelForMetaName
 
 
-import nomad_meta_info
-metaInfoPath = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(nomad_meta_info.__file__)), "castep.nomadmetainfo.json"))
-metaInfoEnv, warnings = loadJsonFile(filePath = metaInfoPath, dependencyLoader = None, extraArgsHandling = InfoKindEl.ADD_EXTRA_ARGS, uri = None)
-
 class CastepParser():
    """ A proper class envolop for running this parser from within python. """
    def __init__(self, backend, **kwargs):
@@ -2484,13 +2480,13 @@ class CastepParser():
        from unittest.mock import patch
        logging.info('castep parser started')
        logging.getLogger('nomadcore').setLevel(logging.WARNING)
-       backend = self.backend_factory(metaInfoEnv)
+       backend = self.backend_factory("castep.nomadmetainfo.json")
        with patch.object(sys, 'argv', ['<exe>', '--uri', 'nmd://uri', mainfile]):
            mainFunction(
                mainFileDescription=build_CastepMainFileSimpleMatcher(),
-               metaInfoEnv=metaInfoEnv,
+               metaInfoEnv=None,
                parserInfo = {'name':'castep-parser', 'version': '1.0'},
-               cachingLevelForMetaName = get_cachingLevelForMetaName(metaInfoEnv),
+               cachingLevelForMetaName = get_cachingLevelForMetaName(backend.metaInfoEnv()),
                superContext=CastepParserContext(),
                superBackend=backend,
                defaultSectionCachingLevel = True)
@@ -2505,8 +2501,8 @@ def main():
     """
     # get main file description
     CastepMainFileSimpleMatcher = build_CastepMainFileSimpleMatcher()
-    # loading metadata from nomad-meta-info/meta_info/nomad_meta_info/castep.nomadmetainfo.json
-    metaInfoPath = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../../../nomad-meta-info/meta_info/nomad_meta_info/castep.nomadmetainfo.json"))
+    # loading metadata from nomad-meta-info/metainfo/castep.nomadmetainfo.json
+    metaInfoPath = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../../../nomad-meta-info/metainfo/castep.nomadmetainfo.json"))
     metaInfoEnv = get_metaInfo(metaInfoPath)
     # set parser info
     parserInfo = {'name':'castep-parser', 'version': '1.0'}
