@@ -389,8 +389,21 @@ class CastepParserContext(object):
         if section['x_castep_smearing_kind'] and section['x_castep_smearing_width']:
             sm_kind = section['x_castep_smearing_kind']
             sm_width = section['x_castep_smearing_width']
-            backend.addValue('smearing_kind', sm_kind[0])
-            backend.addValue('smearing_width', sm_width[0])
+
+            # Translate CASTEP smearing options to NOMAD values
+            smear_map = {
+                "Gaussian": "gaussian",
+                "GaussianSplines": "gaussian-splines",
+                "FermiDirac": "fermi",
+                "HermitePolynomials": "methfessel-paxton",
+                "ColdSmearing": "marzari-vanderbilt",
+            }
+            sm_kind_nomad = smear_map.get(sm_kind[0])
+
+            if sm_kind_nomad is not None:
+                backend.addValue('smearing_kind', sm_kind_nomad)
+                backend.addValue('smearing_width', sm_width[0])
+
 # Here we add basis set name and kind for the plane wave code
     def onClose_section_basis_set_cell_dependent(self, backend, gIndex, section):
         ecut_str = section['x_castep_basis_set_planewave_cutoff']
