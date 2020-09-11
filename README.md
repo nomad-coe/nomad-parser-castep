@@ -13,7 +13,7 @@ in the same directory as files that also belong to that entry. Parsers
 might also read information from these auxillary files. This way you can add more files
 to an entry, even if the respective parser/code might not directly support it.
 
-For castep please provide at least the files from this table if applicable to your
+For CASTEP please provide at least the files from this table if applicable to your
 calculations (remember that you can provide more files if you want):
 
 
@@ -49,12 +49,12 @@ import sys
 from nomad.cli.parse import parse, normalize_all
 
 # match and run the parser
-backend = parse(sys.argv[1])
+archive = parse(sys.argv[1])
 # run all normalizers
-normalize_all(backend)
+normalize_all(archive)
 
 # get the 'main section' section_run as a metainfo object
-section_run = backend.resource.contents[0].section_run[0]
+section_run = archive.section_run[0]
 
 # get the same data as JSON serializable Python dict
 python_dict = section_run.m_to_dict()
@@ -76,3 +76,20 @@ pip install -e parser-castep
 ```
 
 Running the parser now, will use the parser's Python code from the clone project.
+
+---
+## Parser Specific
+### CASTEP output examples
+[Note: The list below is much shorter than the existing examples]
+A few output files to test the parser are provided in the directory `castep/test/examples/*/`.
+
+        FILE NAME     |              FILE DESCRIPTION
+    __________________|___________________________________________________
+    "Si2.castep_v_1" --> Single Point Calculation (minimum verbosity)
+    "Si2.castep_v_2" --> Single Point Calculation (medium verbosity)
+    "Si2.castep_v_3" --> Single Point Calculation (maximum verbosity)
+
+    "Si2.castep_b_v_1" --> Band Structure Calculation (minimum verbosity)
+    "Si2.castep_b_v_2" --> Band Structure Calculation (medium verbosity)
+    "Si2.castep_b_v_3" --> Band Structure Calculation (maximum verbosity)
+

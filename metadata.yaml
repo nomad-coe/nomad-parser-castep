@@ -1,9 +1,9 @@
-code-label: CASTEP
-code-label-style: all in capitals
-code-url: http://www.castep.org/
-parser-dir-name: dependencies/parsers/castep/
-parser-git-url: https://gitlab.mpcdf.mpg.de/nomad-lab/parser-castep
-parser-specific: |
+codeLabel: CASTEP
+codeLabelStyle: all in capitals
+codeUrl: http://www.castep.org/
+parserDirName: dependencies/parsers/castep/
+parserGitUrl: https://gitlab.mpcdf.mpg.de/nomad-lab/parser-castep
+parserSpecific: |
   ### CASTEP output examples
   [Note: The list below is much shorter than the existing examples]
   A few output files to test the parser are provided in the directory `castep/test/examples/*/`.
@@ -18,4 +18,4 @@ parser-specific: |
       "Si2.castep_b_v_2" --> Band Structure Calculation (medium verbosity)
       "Si2.castep_b_v_3" --> Band Structure Calculation (maximum verbosity)
 
-table-of-files: ''
+tableOfFiles: ''
