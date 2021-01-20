@@ -62,7 +62,15 @@ python_dict = section_run.m_to_dict()
 
 ## Developing the parser
 
-Also install NOMAD's pypi package:
+Create a virtual environment to install the parser in development mode:
+
+```
+pip install virtualenv
+virtualenv -p `which python3` .pyenv
+source .pyenv/bin/activate
+```
+
+Install NOMAD's pypi package:
 
 ```
 pip install nomad-lab
@@ -71,13 +79,12 @@ pip install nomad-lab
 Clone the parser project and install it in development mode:
 
 ```
-git clone https://gitlab.mpcdf.mpg.de/nomad-lab/parser-castep parser-castep
-pip install -e parser-castep
+git clone https://github.com/nomad-coe/nomad-parser-castep.git nomad-parser-castep
+pip install -e nomad-parser-castep
 ```
 
 Running the parser now, will use the parser's Python code from the clone project.
 
----
 ## Parser Specific
 ### CASTEP output examples
 [Note: The list below is much shorter than the existing examples]
@@ -92,4 +99,3 @@ A few output files to test the parser are provided in the directory `castep/test
     "Si2.castep_b_v_1" --> Band Structure Calculation (minimum verbosity)
     "Si2.castep_b_v_2" --> Band Structure Calculation (medium verbosity)
     "Si2.castep_b_v_3" --> Band Structure Calculation (maximum verbosity)
-
