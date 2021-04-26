@@ -1182,6 +1182,7 @@ class CastepParser(FairdiParser):
             sec_run.time_run_date_start = (date_start - datetime.utcfromtimestamp(0)).total_seconds()
 
         # basis set
+        sec_run.program_basis_set_type = 'plane_waves'
         basis_parameters = self.out_parser.get('title', {}).get('basis set parameters', {})
         sec_basis_set = sec_run.m_create(BasisSetCellDependent)
         sec_basis_set.basis_set_cell_dependent_kind = 'plane_waves'
