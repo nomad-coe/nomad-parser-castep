@@ -40,13 +40,21 @@ class x_castep_section_vibrational_frequencies(MSection):
 
     m_def = Section(validate=False, a_legacy=LegacyDefinition(name='x_castep_section_vibrational_frequencies'))
 
-    x_castep_vibrationl_frequencies = Quantity(
+    x_castep_number_vibrational_frequencies = Quantity(
+        type=np.dtype(np.int32),
+        shape=[],
+        description='''
+        Number of vibration frequenices
+        ''',
+        a_legacy=LegacyDefinition(name='x_castep_number_vibrational_frequencies'))
+
+    x_castep_vibrational_frequencies = Quantity(
         type=np.dtype(np.float64),
-        shape=['len(self.nr_iter)'],
+        shape=['x_castep_number_vibrational_frequencies'],
         description='''
         Vibration Frequenices (cm-1)
         ''',
-        a_legacy=LegacyDefinition(name='x_castep_vibrationl_frequencies'))
+        a_legacy=LegacyDefinition(name='x_castep_vibrational_frequencies'))
 
     x_castep_vibrationl_frequencies_store = Quantity(
         type=str,
@@ -66,7 +74,7 @@ class x_castep_section_vibrational_frequencies(MSection):
 
     x_castep_ir = Quantity(
         type=str,
-        shape=['len(self.nr_iter)'],
+        shape=['x_castep_number_vibrational_frequencies'],
         description='''
         Irreducible representation in the Point Group
         ''',
@@ -74,7 +82,7 @@ class x_castep_section_vibrational_frequencies(MSection):
 
     x_castep_raman_activity = Quantity(
         type=np.dtype(np.float64),
-        shape=['len(self.nr_iter)'],
+        shape=['x_castep_number_vibrational_frequencies'],
         description='''
         Raman activity (A**4/amu)
         ''',
@@ -82,7 +90,7 @@ class x_castep_section_vibrational_frequencies(MSection):
 
     x_castep_raman_active = Quantity(
         type=str,
-        shape=[],
+        shape=['x_castep_number_vibrational_frequencies'],
         description='''
         Raman activity (A**4/amu)
         ''',
@@ -106,7 +114,7 @@ class x_castep_section_vibrational_frequencies(MSection):
 
     x_castep_ir_intensity = Quantity(
         type=np.dtype(np.float64),
-        shape=['len(self.nr_iter)'],
+        shape=['x_castep_number_vibrational_frequencies'],
         description='''
         IR intensities (D/A)**2/amu
         ''',
@@ -1098,14 +1106,15 @@ class x_castep_section_raman_tensor(MSection):
         ''',
         a_legacy=LegacyDefinition(name='x_castep_store_raman_tensor'))
 
-    x_castep_ramen_tensor = Quantity(
+    x_castep_raman_tensor = Quantity(
         type=np.dtype(np.float64),
         shape=[3, 3],
-        unit='ampere / unified_atomic_mass_unit',
+        # TODO verify unit, original parser was ampere / amu
+        unit='angstrom / unified_atomic_mass_unit',
         description='''
-        Ramen tensor scaled by 0.5
+        Ramen tensor
         ''',
-        a_legacy=LegacyDefinition(name='x_castep_ramen_tensor'))
+        a_legacy=LegacyDefinition(name='x_castep_raman_tensor'))
 
 
 class x_castep_section_scf_parameters(MSection):
@@ -1115,21 +1124,21 @@ class x_castep_section_scf_parameters(MSection):
 
     m_def = Section(validate=False, a_legacy=LegacyDefinition(name='x_castep_section_scf_parameters'))
 
-    x_castep_energy_threshold_store = Quantity(
+    x_castep_energy_threshold = Quantity(
         type=np.dtype(np.float64),
         shape=[],
         description='''
-        Energy Threshold store
+        Energy Threshold
         ''',
-        a_legacy=LegacyDefinition(name='x_castep_energy_threshold_store'))
+        a_legacy=LegacyDefinition(name='x_castep_energy_threshold'))
 
-    x_castep_max_iter_store = Quantity(
+    x_castep_max_iter = Quantity(
         type=np.dtype(np.float64),
         shape=[],
         description='''
-        Number of maximum iterations steps store
+        Number of maximum iterations steps
         ''',
-        a_legacy=LegacyDefinition(name='x_castep_max_iter_store'))
+        a_legacy=LegacyDefinition(name='x_castep_max_iter'))
 
     x_castep_smearing_kind = Quantity(
         type=str,
@@ -2361,6 +2370,7 @@ class section_sampling_method(public.section_sampling_method):
     x_castep_geometry_stress_com_tolerance = Quantity(
         type=np.dtype(np.float64),
         shape=[],
+        unit='pascal',
         description='''
         tolerance for stress components in geometry optimisation (GPa)
         ''',
@@ -2369,6 +2379,7 @@ class section_sampling_method(public.section_sampling_method):
     x_castep_thermostat_target_temperature = Quantity(
         type=np.dtype(np.float64),
         shape=[],
+        unit='kelvin',
         description='''
         thermostat_target_temperature(K)
         ''',
@@ -2393,6 +2404,7 @@ class section_sampling_method(public.section_sampling_method):
     x_castep_thermostat_tau = Quantity(
         type=np.dtype(np.float64),
         shape=[],
+        unit='second',
         description='''
         thermostat_type
         ''',
@@ -2401,6 +2413,7 @@ class section_sampling_method(public.section_sampling_method):
     x_castep_barostat_tau = Quantity(
         type=np.dtype(np.float64),
         shape=[],
+        unit='second',
         description='''
         barostat_tau
         ''',
@@ -2409,6 +2422,7 @@ class section_sampling_method(public.section_sampling_method):
     x_castep_integrator_dt = Quantity(
         type=np.dtype(np.float64),
         shape=[],
+        unit='second',
         description='''
         MD_time_step (ps)
         ''',
@@ -2441,6 +2455,7 @@ class section_sampling_method(public.section_sampling_method):
     x_castep_frame_energy_tolerance = Quantity(
         type=np.dtype(np.float64),
         shape=[],
+        unit='joule',
         description='''
         MD_scf_energy tolerance (eV)
         ''',
@@ -2449,6 +2464,7 @@ class section_sampling_method(public.section_sampling_method):
     x_castep_frame_eigen_tolerance = Quantity(
         type=np.dtype(np.float64),
         shape=[],
+        unit='joule',
         description='''
         MD_scf_eigen tolerance (eV)
         ''',
