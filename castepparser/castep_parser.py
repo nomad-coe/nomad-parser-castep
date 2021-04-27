@@ -395,7 +395,7 @@ class OutParser(TextParser):
                         repeats=True, str_operation=str_to_energy, convert=False),
                     Quantity(
                         'shell',
-                        rf'(\d+\s+{re_float}\s+{re_float}\s+{re_float})', repeats=True)]))]
+                        rf'\%\s*(\d+\s+{re_float}\s+{re_float}\s+{re_float})', repeats=True)]))]
 
         bandstructure_quantities = [
             Quantity(
