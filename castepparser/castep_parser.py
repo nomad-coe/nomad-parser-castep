@@ -540,7 +540,7 @@ class OutParser(TextParser):
                         sub_parser=TextParser(quantities=bfgs_quantities)),
                     Quantity(
                         'final',
-                        r'Writing model to([\s\S]+?)(?:Writing model to|\Z)',
+                        r'Final Configuration([\s\S]+?)(?:Writing model to|\Z)',
                         sub_parser=TextParser(quantities=system_quantities + basic_quantities))])),
             Quantity(
                 'time',
@@ -1047,9 +1047,6 @@ class CastepParser(FairdiParser):
             sec_scc.single_configuration_calculation_to_system_ref = sec_system
             sec_scc.single_configuration_to_calculation_method_ref = sec_run.section_method[-1]
 
-        # single point calculation
-        parse_calculation(calculation)
-
         # basis set correction
         # TODO determine if there is a need to add this
         basis_set_correction = calculation.get('basis_set_correction')
@@ -1098,8 +1095,13 @@ class CastepParser(FairdiParser):
                     parse_calculation(iteration.get('iteration')[-1])
 
         # final configuration
-        if sec_run.section_sampling_method[0].sampling_method != 'single_point':
+        if calculation.get('final') is not None:
             parse_calculation(calculation.get('final'))
+
+        sampling_method = sec_run.section_sampling_method[0].sampling_method
+        if sampling_method in ['single_point', 'phonon']:
+            # single point calculation
+            parse_calculation(calculation)
 
     def parse_parameters(self):
         section_map = {
@@ -1179,7 +1181,7 @@ class CastepParser(FairdiParser):
         date_start = self.out_parser.get('run_start')
         if date_start is not None:
             date_start = datetime.strptime(date_start.strip(), '%d %b %Y %H:%M:%S')
-            sec_run.time_run_date_start = (date_start - datetime.utcfromtimestamp(0)).total_seconds()
+            sec_run.time_run_date_start = (date_start - datetime(1970, 1, 1)).total_seconds()
 
         # basis set
         sec_run.program_basis_set_type = 'plane_waves'
