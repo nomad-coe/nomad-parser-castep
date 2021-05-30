@@ -65,9 +65,9 @@ def test_single_point(parser):
 
     assert len(sec_run.section_topology[0].section_atom_type) == 1
 
-    sec_mulliken = sec_run.x_castep_section_population_analysis
-    assert len(sec_mulliken) == 8
-    assert sec_mulliken[4].x_castep_orbital_p == 2.66
+    sec_mulliken = sec_scc.atom_charges[0]
+    assert len(sec_mulliken.charges_total) == 8
+    assert sec_mulliken.charges_partial[17].charges_value.magnitude == 2.66
 
     assert sec_run.x_castep_section_density_mixing_parameters[0].x_castep_density_mixing_length == 20
     assert sec_run.x_castep_section_time[0].x_castep_finalisation_time == 0.01

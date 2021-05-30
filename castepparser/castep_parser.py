@@ -27,7 +27,7 @@ from nomad.parsing.parser import FairdiParser
 from nomad.parsing.file_parser import TextParser, Quantity
 from nomad.datamodel.metainfo.common_dft import Run, Method, XCFunctionals, System,\
     BasisSetCellDependent, SingleConfigurationCalculation, SamplingMethod, ScfIteration,\
-    Eigenvalues, KBand, KBandSegment, Topology, AtomType
+    Eigenvalues, KBand, KBandSegment, Topology, AtomType, Charges, ChargesValue
 
 from castepparser.metainfo import m_env
 from castepparser.metainfo.castep import x_castep_section_phonons, x_castep_section_scf_parameters,\
@@ -35,8 +35,8 @@ from castepparser.metainfo.castep import x_castep_section_phonons, x_castep_sect
     x_castep_section_core_parameters, x_castep_section_band_parameters,\
     x_castep_section_ts_parameters, x_castep_section_optics_parameters,\
     x_castep_section_electronic_spectroscpy_parameters, x_castep_section_tddft_parameters,\
-    x_castep_section_atom_positions, x_castep_section_population_analysis,\
-    x_castep_section_vibrational_frequencies, x_castep_section_tddft, x_castep_section_DFT_SEDC,\
+    x_castep_section_atom_positions, x_castep_section_vibrational_frequencies,\
+    x_castep_section_tddft, x_castep_section_DFT_SEDC,\
     x_castep_section_van_der_Waals_parameters, x_castep_section_time, x_castep_section_raman_tensor
 
 
@@ -925,15 +925,22 @@ class CastepParser(FairdiParser):
             if mulliken is not None:
                 # why mulliken section under section_run?
                 species = mulliken.get('Species', [])
+                sec_charges = sec_scc.m_create(Charges)
+                sec_charges.charges_analysis_method = 'mulliken'
+                orbitals = [o for o in 'spdf' if mulliken.get(o) is not None]
+                sec_charges.n_charges_orbitals = len(orbitals)
+                sec_charges.n_charges_atoms = len(species)
                 for n, specie in enumerate(species):
-                    sec_mulliken = sec_run.m_create(x_castep_section_population_analysis)
-                    sec_mulliken.x_castep_mulliken_atom = specie
-                    sec_mulliken.x_castep_total_orbital = mulliken['Total'][n]
-                    sec_mulliken.x_castep_mulliken_charge = mulliken['Charge'][n]
-                    for orbital in ('s', 'p', 'd', 'f'):
-                        if mulliken.get(orbital) is None:
-                            continue
-                        setattr(sec_mulliken, 'x_castep_orbital_%s' % orbital, mulliken[orbital][n])
+                    sec_charges_value = sec_charges.m_create(ChargesValue, Charges.charges_total)
+                    sec_charges_value.charges_atom_index = n
+                    sec_charges_value.charges_atom_label = specie
+                    sec_charges_value.charges_value = mulliken['Total'][n]
+                    for orbital in orbitals:
+                        sec_charges_value = sec_charges.m_create(ChargesValue, Charges.charges_partial)
+                        sec_charges_value.charges_orbital = orbital
+                        sec_charges_value.charges_atom_index = n
+                        sec_charges_value.charges_atom_label = specie
+                        sec_charges_value.charges_value = mulliken[orbital][n]
 
             # vibrational frequencies
             # why are vibrational frequencies section under section_run?
