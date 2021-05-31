@@ -125,21 +125,21 @@ def test_eigenvalues(parser):
     archive = EntryArchive()
     parser.parse('tests/data/Fe.castep', archive, None)
 
-    sec_eigenvalues = archive.section_run[0].section_single_configuration_calculation[0].section_eigenvalues[0]
-    assert np.shape(sec_eigenvalues.eigenvalues_values) == (2, 118, 6)
-    assert sec_eigenvalues.eigenvalues_values[1][38][4].magnitude == approx(1.30819997e-18)
-    assert sec_eigenvalues.eigenvalues_kpoints[22][1] == 0.289474
+    sec_eigenvalues = archive.section_run[0].section_single_configuration_calculation[0].eigenvalues[0]
+    assert np.shape(sec_eigenvalues.band_energies[235].band_energies_values) == (6,)
+    assert sec_eigenvalues.band_energies[156].band_energies_values[4].magnitude == approx(1.30819997e-18)
+    assert sec_eigenvalues.band_energies_kpoints[22][1] == 0.289474
 
 
 def test_bandstructure(parser):
     archive = EntryArchive()
     parser.parse('tests/data/Dispersions/Si2.castep', archive, None)
 
-    sec_band_segment = archive.section_run[0].section_single_configuration_calculation[0].section_k_band[0].section_k_band_segment
+    sec_band_segment = archive.section_run[0].section_single_configuration_calculation[0].band_structure_electronic[0].band_structure_segment
     assert len(sec_band_segment) == 5
-    assert sec_band_segment[3].band_segm_labels == ['X', 'W']
-    assert sec_band_segment[1].band_energies[0][-1][12].magnitude == approx(2.17418526e-18)
-    assert sec_band_segment[4].band_k_points[2][1] == 0.300000
+    assert sec_band_segment[3].band_energies_kpoints_labels == ['X', None, None, None, None, None, 'W']
+    assert sec_band_segment[1].band_energies[-1].band_energies_values[12].magnitude == approx(2.17418526e-18)
+    assert sec_band_segment[4].band_energies_kpoints[2][1] == 0.300000
 
 
 def test_vibration(parser):

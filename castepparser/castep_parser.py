@@ -27,7 +27,8 @@ from nomad.parsing.parser import FairdiParser
 from nomad.parsing.file_parser import TextParser, Quantity
 from nomad.datamodel.metainfo.common_dft import Run, Method, XCFunctionals, System,\
     BasisSetCellDependent, SingleConfigurationCalculation, SamplingMethod, ScfIteration,\
-    Eigenvalues, KBand, KBandSegment, Topology, AtomType, Charges, ChargesValue
+    BandEnergies, BandStructure, BandEnergiesValues, Topology, AtomType,\
+    Charges, ChargesValue
 
 from castepparser.metainfo import m_env
 from castepparser.metainfo.castep import x_castep_section_phonons, x_castep_section_scf_parameters,\
@@ -855,7 +856,7 @@ class CastepParser(FairdiParser):
 
                 n_spin = self.bands_parser.get('n_spins', 1)
                 band_energies = np.reshape(band_energies, (
-                    len(kpts), n_spin, len(band_energies[0]) // n_spin))
+                    len(kpts), n_spin, len(band_energies[0]) // n_spin)) * energy_unit
                 band_energies = np.transpose(band_energies, axes=(1, 0, 2)) * energy_unit
 
             # get path segment nodes from .cell
@@ -863,25 +864,41 @@ class CastepParser(FairdiParser):
             kpoint_path = self.cell_parser.get_value('bs_kpoint_path', [])
 
             if len(kpoint_path) == 0:
-                # write energies to section_eigenvalues
-                sec_eigenvalues = sec_scc.m_create(Eigenvalues)
-                sec_eigenvalues.eigenvalues_values = band_energies
-                sec_eigenvalues.eigenvalues_kpoints = kpts
+                # write energies to eigenvalues
+                sec_eigenvalues = sec_scc.m_create(BandEnergies)
+                sec_eigenvalues.band_energies_kpoints = kpts
+                for spin in range(len(band_energies)):
+                    for kpt in range(len(band_energies[spin])):
+                        sec_eigenvalues_values = sec_eigenvalues.m_create(BandEnergiesValues)
+                        sec_eigenvalues_values.band_energies_spin = spin
+                        sec_eigenvalues_values.band_energies_kpoints_index = kpt
+                        sec_eigenvalues_values.band_energies_values = band_energies[spin][kpt]
             else:
                 # write band energies on segments
                 nodes = np.array([path[:3] for path in kpoint_path], dtype=np.dtype(np.float64))
                 labels = ['\u0393' if path[-1].lower() == 'gamma' else path[-1] for path in kpoint_path]
-                sec_k_band = sec_scc.m_create(KBand)
+                sec_bandstructure = sec_scc.m_create(BandStructure, SingleConfigurationCalculation.band_structure_electronic)
                 start = 0
                 for n, node in enumerate(nodes[1:]):
                     node_index = np.where(kpts == node)[0]
                     for index in node_index:
                         if np.count_nonzero(node_index == index) == 3 and index > start:
                             break
-                    sec_band_segment = sec_k_band.m_create(KBandSegment)
-                    sec_band_segment.band_energies = band_energies[:, start:index + 1, :]
-                    sec_band_segment.band_k_points = kpts[start:index + 1]
-                    sec_band_segment.band_segm_labels = [labels[n], labels[n + 1]]
+                    sec_band_segment = sec_bandstructure.m_create(BandEnergies)
+                    sec_band_segment.n_bands = len(band_energies[0][start])
+                    sec_band_segment.n_band_energies_kpoints = int(index + 1 - start)
+                    sec_band_segment.band_energies_kpoints = kpts[start:index + 1]
+                    # assign labels at nodes
+                    labels_segment = [None] * sec_band_segment.n_band_energies_kpoints
+                    labels_segment[0] = labels[n]
+                    labels_segment[-1] = labels[n + 1]
+                    sec_band_segment.band_energies_kpoints_labels = labels_segment
+                    for spin in range(len(band_energies)):
+                        for kpt, energies in enumerate(band_energies[spin][start: index + 1]):
+                            sec_band_segment_values = sec_band_segment.m_create(BandEnergiesValues)
+                            sec_band_segment_values.band_energies_kpoints_index = kpt
+                            sec_band_segment_values.band_energies_spin = spin
+                            sec_band_segment_values.band_energies_values = energies
                     start = index
 
         def parse_scc(source):
