@@ -866,18 +866,20 @@ class CastepParser(FairdiParser):
             if len(kpoint_path) == 0:
                 # write energies to eigenvalues
                 sec_eigenvalues = sec_scc.m_create(BandEnergies)
-                sec_eigenvalues.band_energies_kpoints = kpts
+                sec_eigenvalues.n_kpoints = len(kpts)
+                sec_eigenvalues.kpoints = kpts
                 for spin in range(len(band_energies)):
                     for kpt in range(len(band_energies[spin])):
                         sec_eigenvalues_values = sec_eigenvalues.m_create(BandEnergiesValues)
-                        sec_eigenvalues_values.band_energies_spin = spin
-                        sec_eigenvalues_values.band_energies_kpoints_index = kpt
-                        sec_eigenvalues_values.band_energies_values = band_energies[spin][kpt]
+                        sec_eigenvalues_values.spin = spin
+                        sec_eigenvalues_values.kpoints_index = kpt
+                        sec_eigenvalues_values.value = band_energies[spin][kpt]
             else:
                 # write band energies on segments
                 nodes = np.array([path[:3] for path in kpoint_path], dtype=np.dtype(np.float64))
                 labels = ['\u0393' if path[-1].lower() == 'gamma' else path[-1] for path in kpoint_path]
-                sec_bandstructure = sec_scc.m_create(BandStructure, SingleConfigurationCalculation.band_structure_electronic)
+                sec_bandstructure = sec_scc.m_create(
+                    BandStructure, SingleConfigurationCalculation.band_structure_electronic)
                 start = 0
                 for n, node in enumerate(nodes[1:]):
                     node_index = np.where(kpts == node)[0]
@@ -886,19 +888,19 @@ class CastepParser(FairdiParser):
                             break
                     sec_band_segment = sec_bandstructure.m_create(BandEnergies)
                     sec_band_segment.n_bands = len(band_energies[0][start])
-                    sec_band_segment.n_band_energies_kpoints = int(index + 1 - start)
-                    sec_band_segment.band_energies_kpoints = kpts[start:index + 1]
+                    sec_band_segment.n_kpoints = int(index + 1 - start)
+                    sec_band_segment.kpoints = kpts[start:index + 1]
                     # assign labels at nodes
-                    labels_segment = [None] * sec_band_segment.n_band_energies_kpoints
+                    labels_segment = [None] * sec_band_segment.n_kpoints
                     labels_segment[0] = labels[n]
                     labels_segment[-1] = labels[n + 1]
-                    sec_band_segment.band_energies_kpoints_labels = labels_segment
+                    sec_band_segment.kpoints_labels = labels_segment
                     for spin in range(len(band_energies)):
                         for kpt, energies in enumerate(band_energies[spin][start: index + 1]):
                             sec_band_segment_values = sec_band_segment.m_create(BandEnergiesValues)
-                            sec_band_segment_values.band_energies_kpoints_index = kpt
-                            sec_band_segment_values.band_energies_spin = spin
-                            sec_band_segment_values.band_energies_values = energies
+                            sec_band_segment_values.kpoints_index = kpt
+                            sec_band_segment_values.spin = spin
+                            sec_band_segment_values.value = energies
                     start = index
 
         def parse_scc(source):
