@@ -50,9 +50,9 @@ def test_single_point(parser):
     assert sec_run.section_sampling_method[0].sampling_method == 'single_point'
 
     sec_scc = sec_run.section_single_configuration_calculation[0]
-    assert np.shape(sec_scc.atom_forces) == (8, 3)
-    assert np.count_nonzero(sec_scc.atom_forces) == 0
-    assert sec_scc.energy_total.magnitude == approx(-2.21372403e-16)
+    assert np.shape(sec_scc.forces_total.value) == (8, 3)
+    assert np.count_nonzero(sec_scc.forces_total.value) == 0
+    assert sec_scc.energy_total.value.magnitude == approx(-2.21372403e-16)
     sec_scfs = sec_scc.section_scf_iteration
     assert len(sec_scfs) == 12
     assert sec_scfs[3].energy_total_scf_iteration.magnitude == approx(-2.21530505e-16)
@@ -65,9 +65,9 @@ def test_single_point(parser):
 
     assert len(sec_run.section_topology[0].section_atom_type) == 1
 
-    sec_mulliken = sec_scc.atom_charges[0]
-    assert len(sec_mulliken.charges_total) == 8
-    assert sec_mulliken.charges_partial[17].charges_value.magnitude == 2.66
+    sec_mulliken = sec_scc.charges[0]
+    assert len(sec_mulliken.value) == 8
+    assert sec_mulliken.partial[17].value.magnitude == 2.66
 
     assert sec_run.x_castep_section_density_mixing_parameters[0].x_castep_density_mixing_length == 20
     assert sec_run.x_castep_section_time[0].x_castep_finalisation_time == 0.01
@@ -84,11 +84,11 @@ def test_dmd(parser):
 
     sec_sccs = archive.section_run[0].section_single_configuration_calculation
     assert len(sec_sccs) == 23
-    assert sec_sccs[7].energy_total.magnitude == approx(-3.67496146e-16)
+    assert sec_sccs[7].energy_total.value.magnitude == approx(-3.67496146e-16)
     assert len(sec_sccs[20].section_scf_iteration) == 13
     assert sec_sccs[17].section_scf_iteration[3].energy_total_scf_iteration.magnitude == approx(-3.67497215e-16)
-    assert sec_sccs[3].atom_forces[0][1].magnitude == approx(-4.49314415e-10,)
-    assert sec_sccs[22].energy_total.magnitude == approx(-3.67497218e-16)
+    assert sec_sccs[3].forces_total.value[0][1].magnitude == approx(-4.49314415e-10,)
+    assert sec_sccs[22].energy_total.value.magnitude == approx(-3.67497218e-16)
 
     sec_systems = archive.section_run[0].section_system
     assert sec_systems[12].atom_positions[3][0].magnitude == approx(9.074282e-11)
@@ -107,10 +107,10 @@ def test_md(parser):
 
     sec_sccs = archive.section_run[0].section_single_configuration_calculation
     assert len(sec_sccs) == 13
-    assert sec_sccs[2].energy_total.magnitude == approx(-1.37059981e-16)
-    assert sec_sccs[6].stress_tensor[2][1].magnitude == approx(4.06626e+09)
+    assert sec_sccs[2].energy_total.value.magnitude == approx(-1.37059981e-16)
+    assert sec_sccs[6].stress_total.value[2][1].magnitude == approx(4.06626e+09)
     assert sec_sccs[9].pressure.magnitude == approx(1.111e+09)
-    assert sec_sccs[11].energy_total_T0.magnitude == approx(-1.37069057e-16)
+    assert sec_sccs[11].energy_total_T0.value.magnitude == approx(-1.37069057e-16)
     assert len(sec_sccs[12].section_scf_iteration) == 7
     assert sec_sccs[7].section_scf_iteration[3].energy_change_scf_iteration.magnitude == approx(-1.90981043e-21)
 
@@ -166,7 +166,7 @@ def test_tss(parser):
 
     sec_sccs = archive.section_run[0].section_single_configuration_calculation
     assert len(sec_sccs) == 27
-    assert sec_sccs[20].energy_total.magnitude == approx(-4.72809265e-18)
+    assert sec_sccs[20].energy_total.value.magnitude == approx(-4.72809265e-18)
 
 
 def test_bfgs(parser):

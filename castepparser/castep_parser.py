@@ -28,7 +28,7 @@ from nomad.parsing.file_parser import TextParser, Quantity
 from nomad.datamodel.metainfo.common_dft import Run, Method, XCFunctionals, System,\
     BasisSetCellDependent, SingleConfigurationCalculation, SamplingMethod, ScfIteration,\
     BandEnergies, BandStructure, BandEnergiesValues, Topology, AtomType,\
-    Charges, ChargesValue
+    Energy, Forces, Stress, Charges, ChargesValue
 
 from castepparser.metainfo import m_env
 from castepparser.metainfo.castep import x_castep_section_phonons, x_castep_section_scf_parameters,\
@@ -908,26 +908,36 @@ class CastepParser(FairdiParser):
             energy_unit = self.units.get('energy', 1)
 
             if source.get('energy_total') is not None:
-                sec_scc.energy_total = source.get('energy_total') * energy_unit
+                sec_scc.m_add_sub_section(SingleConfigurationCalculation.energy_total, Energy(
+                    value=source.get('energy_total') * energy_unit))
 
             # energies
             for key, val in source.get('energy', []):
                 name = self._metainfo_map.get(key)
                 if name is not None:
-                    setattr(sec_scc, name, val.to('joule').magnitude)
+                    if name.startswith('x_castep_'):
+                        sec_scc.m_add_sub_section(
+                            SingleConfigurationCalculation.energy_contributions, Energy(
+                                kind=name.lstrip('x_castep_'), value=val))
+                        setattr(sec_scc, name, val.to('joule').magnitude)
+                    else:
+                        sec_scc.m_add_sub_section(getattr(
+                            SingleConfigurationCalculation, name), Energy(value=val))
 
             # forces
             forces = source.get('forces')
             if forces is not None:
-                sec_scc.atom_forces = forces[1] * self.units.get('force', 1)
+                sec_scc.m_add_sub_section(SingleConfigurationCalculation.forces_total, Forces(
+                    value=forces[1] * self.units.get('force', 1)))
 
             # stress tensor
             stress_tensor = source.get('stress_tensor')
             if stress_tensor is not None:
-                for key in ['stress_tensor', 'pressure']:
-                    val = stress_tensor.get(key)
-                    if val is not None:
-                        setattr(sec_scc, key, val * self.units.get('pressure', 1))
+                if stress_tensor.get('stress_tensor') is not None:
+                    sec_scc.m_add_sub_section(SingleConfigurationCalculation.stress_total, Stress(
+                        value=stress_tensor.get('stress_tensor') * self.units.get('pressure', 1)))
+                if stress_tensor.get('pressure') is not None:
+                    sec_scc.pressure = stress_tensor.get('pressure') * self.units.get('pressure', 1)
 
             # other properties
             for key in ['enthalpy', 'frequency']:
@@ -945,21 +955,18 @@ class CastepParser(FairdiParser):
                 # why mulliken section under section_run?
                 species = mulliken.get('Species', [])
                 sec_charges = sec_scc.m_create(Charges)
-                sec_charges.charges_analysis_method = 'mulliken'
+                sec_charges.analysis_method = 'mulliken'
                 orbitals = [o for o in 'spdf' if mulliken.get(o) is not None]
                 sec_charges.n_charges_orbitals = len(orbitals)
                 sec_charges.n_charges_atoms = len(species)
+                sec_charges.value = mulliken['Total']
                 for n, specie in enumerate(species):
-                    sec_charges_value = sec_charges.m_create(ChargesValue, Charges.charges_total)
-                    sec_charges_value.charges_atom_index = n
-                    sec_charges_value.charges_atom_label = specie
-                    sec_charges_value.charges_value = mulliken['Total'][n]
                     for orbital in orbitals:
-                        sec_charges_value = sec_charges.m_create(ChargesValue, Charges.charges_partial)
-                        sec_charges_value.charges_orbital = orbital
-                        sec_charges_value.charges_atom_index = n
-                        sec_charges_value.charges_atom_label = specie
-                        sec_charges_value.charges_value = mulliken[orbital][n]
+                        sec_charges_value = sec_charges.m_create(ChargesValue, Charges.partial)
+                        sec_charges_value.orbital = orbital
+                        sec_charges_value.atom_index = n
+                        sec_charges_value.atom_label = specie
+                        sec_charges_value.value = mulliken[orbital][n]
 
             # vibrational frequencies
             # why are vibrational frequencies section under section_run?
