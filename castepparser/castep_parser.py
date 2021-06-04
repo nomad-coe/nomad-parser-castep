@@ -27,7 +27,7 @@ from nomad.parsing.parser import FairdiParser
 from nomad.parsing.file_parser import TextParser, Quantity
 from nomad.datamodel.metainfo.common_dft import Run, Method, XCFunctionals, System,\
     BasisSetCellDependent, SingleConfigurationCalculation, SamplingMethod, ScfIteration,\
-    BandEnergies, BandStructure, BandEnergiesValues, Topology, AtomType,\
+    BandEnergies, BandStructure, Topology, AtomType,\
     Energy, Forces, Stress, Charges, ChargesValue
 
 from castepparser.metainfo import m_env
@@ -868,12 +868,7 @@ class CastepParser(FairdiParser):
                 sec_eigenvalues = sec_scc.m_create(BandEnergies)
                 sec_eigenvalues.n_kpoints = len(kpts)
                 sec_eigenvalues.kpoints = kpts
-                for spin in range(len(band_energies)):
-                    for kpt in range(len(band_energies[spin])):
-                        sec_eigenvalues_values = sec_eigenvalues.m_create(BandEnergiesValues)
-                        sec_eigenvalues_values.spin = spin
-                        sec_eigenvalues_values.kpoints_index = kpt
-                        sec_eigenvalues_values.value = band_energies[spin][kpt]
+                sec_eigenvalues.value = band_energies
             else:
                 # write band energies on segments
                 nodes = np.array([path[:3] for path in kpoint_path], dtype=np.dtype(np.float64))
@@ -895,12 +890,7 @@ class CastepParser(FairdiParser):
                     labels_segment[0] = labels[n]
                     labels_segment[-1] = labels[n + 1]
                     sec_band_segment.kpoints_labels = labels_segment
-                    for spin in range(len(band_energies)):
-                        for kpt, energies in enumerate(band_energies[spin][start: index + 1]):
-                            sec_band_segment_values = sec_band_segment.m_create(BandEnergiesValues)
-                            sec_band_segment_values.kpoints_index = kpt
-                            sec_band_segment_values.spin = spin
-                            sec_band_segment_values.value = energies
+                    sec_band_segment.value = band_energies[:, start:index + 1, :]
                     start = index
 
         def parse_scc(source):
