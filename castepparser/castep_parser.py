@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from math import frexp
 import os
 import numpy as np
 import logging
@@ -25,10 +26,10 @@ from datetime import datetime
 from nomad.units import ureg
 from nomad.parsing.parser import FairdiParser
 from nomad.parsing.file_parser import TextParser, Quantity
-from nomad.datamodel.metainfo.common_dft import Run, Method, XCFunctionals, System,\
+from nomad.datamodel.metainfo.common_dft import ChargesValue, Run, Method, XCFunctionals, System,\
     BasisSetCellDependent, SingleConfigurationCalculation, SamplingMethod, ScfIteration,\
-    BandEnergies, BandStructure, Topology, AtomType,\
-    Energy, Forces, Stress, Charges, ChargesValue
+    BandEnergies, BandStructure, Topology, AtomType, Energy, Forces, Stress, Charges,\
+    ChargesValue, Thermodynamics
 
 from castepparser.metainfo import m_env
 from castepparser.metainfo.castep import x_castep_section_phonons, x_castep_section_scf_parameters,\
@@ -920,6 +921,7 @@ class CastepParser(FairdiParser):
                 sec_scc.m_add_sub_section(SingleConfigurationCalculation.forces_total, Forces(
                     value=forces[1] * self.units.get('force', 1)))
 
+            sec_thermo = sec_scc.m_create(Thermodynamics)
             # stress tensor
             stress_tensor = source.get('stress_tensor')
             if stress_tensor is not None:
@@ -927,14 +929,16 @@ class CastepParser(FairdiParser):
                     sec_scc.m_add_sub_section(SingleConfigurationCalculation.stress_total, Stress(
                         value=stress_tensor.get('stress_tensor') * self.units.get('pressure', 1)))
                 if stress_tensor.get('pressure') is not None:
-                    sec_scc.pressure = stress_tensor.get('pressure') * self.units.get('pressure', 1)
+                    sec_thermo.pressure = stress_tensor.get('pressure') * self.units.get('pressure', 1)
 
             # other properties
-            for key in ['enthalpy', 'frequency']:
-                val = source.get(key, ['', None])[1]
-                if val is not None:
-                    val = val.to('joule') if key == 'enthalpy' else val
-                    setattr(sec_scc, 'x_castep_%s' % key, val.magnitude)
+            enthalpy = source.get('enthalpy')
+            if enthalpy is not None:
+                sec_thermo.enthalpy = enthalpy[1]
+
+            freq = source.get('frequency')
+            if freq is not None:
+                sec_scc.x_castep_frequency = val.magnitude
 
             # eigenvalues
             parse_eigenvalues(source)
@@ -952,7 +956,7 @@ class CastepParser(FairdiParser):
                 sec_charges.value = mulliken['Total']
                 for n, specie in enumerate(species):
                     for orbital in orbitals:
-                        sec_charges_value = sec_charges.m_create(ChargesValue, Charges.partial)
+                        sec_charges_value = sec_charges.m_create(ChargesValue, Charges.orbital_projected)
                         sec_charges_value.orbital = orbital
                         sec_charges_value.atom_index = n
                         sec_charges_value.atom_label = specie
@@ -997,12 +1001,12 @@ class CastepParser(FairdiParser):
             # scf iteration
             for scf in source.get('scf', []):
                 sec_scf = sec_scc.m_create(ScfIteration)
-                sec_scf.energy_total_scf_iteration = scf[0] * energy_unit
+                sec_scf.energy_total = Energy(value=scf[0] * energy_unit)
                 if len(scf) == 4:
                     fermi_energy = [scf[1]] * self.n_spin_channels
-                    sec_scf.energy_reference_fermi_iteration = fermi_energy * energy_unit
-                sec_scf.energy_change_scf_iteration = scf[-2] * energy_unit
-                sec_scf.time_scf_iteration = scf[-1]
+                    sec_scf.energy_reference_fermi = fermi_energy * energy_unit
+                sec_scf.energy_change = scf[-2] * energy_unit
+                sec_scf.time_calculation = scf[-1]
 
             return sec_scc
 

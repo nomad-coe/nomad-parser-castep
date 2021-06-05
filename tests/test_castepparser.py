@@ -53,11 +53,11 @@ def test_single_point(parser):
     assert np.shape(sec_scc.forces_total.value) == (8, 3)
     assert np.count_nonzero(sec_scc.forces_total.value) == 0
     assert sec_scc.energy_total.value.magnitude == approx(-2.21372403e-16)
-    sec_scfs = sec_scc.section_scf_iteration
+    sec_scfs = sec_scc.scf_iteration
     assert len(sec_scfs) == 12
-    assert sec_scfs[3].energy_total_scf_iteration.magnitude == approx(-2.21530505e-16)
-    assert sec_scfs[8].energy_reference_fermi_iteration[0].magnitude == approx(8.53007633e-19)
-    assert sec_scfs[6].time_scf_iteration.magnitude == 12.70
+    assert sec_scfs[3].energy_total.value.magnitude == approx(-2.21530505e-16)
+    assert sec_scfs[8].energy_reference_fermi[0].magnitude == approx(8.53007633e-19)
+    assert sec_scfs[6].time_calculation.magnitude == 12.70
 
     sec_system = sec_run.section_system[0]
     assert sec_system.atom_positions[2][1].magnitude == approx(2.715e-10)
@@ -67,7 +67,7 @@ def test_single_point(parser):
 
     sec_mulliken = sec_scc.charges[0]
     assert len(sec_mulliken.value) == 8
-    assert sec_mulliken.partial[17].value.magnitude == 2.66
+    assert sec_mulliken.orbital_projected[17].value.magnitude == 2.66
 
     assert sec_run.x_castep_section_density_mixing_parameters[0].x_castep_density_mixing_length == 20
     assert sec_run.x_castep_section_time[0].x_castep_finalisation_time == 0.01
@@ -85,8 +85,8 @@ def test_dmd(parser):
     sec_sccs = archive.section_run[0].section_single_configuration_calculation
     assert len(sec_sccs) == 23
     assert sec_sccs[7].energy_total.value.magnitude == approx(-3.67496146e-16)
-    assert len(sec_sccs[20].section_scf_iteration) == 13
-    assert sec_sccs[17].section_scf_iteration[3].energy_total_scf_iteration.magnitude == approx(-3.67497215e-16)
+    assert len(sec_sccs[20].scf_iteration) == 13
+    assert sec_sccs[17].scf_iteration[3].energy_total.value.magnitude == approx(-3.67497215e-16)
     assert sec_sccs[3].forces_total.value[0][1].magnitude == approx(-4.49314415e-10,)
     assert sec_sccs[22].energy_total.value.magnitude == approx(-3.67497218e-16)
 
@@ -109,10 +109,10 @@ def test_md(parser):
     assert len(sec_sccs) == 13
     assert sec_sccs[2].energy_total.value.magnitude == approx(-1.37059981e-16)
     assert sec_sccs[6].stress_total.value[2][1].magnitude == approx(4.06626e+09)
-    assert sec_sccs[9].pressure.magnitude == approx(1.111e+09)
+    assert sec_sccs[9].thermodynamics[0].pressure.magnitude == approx(1.111e+09)
     assert sec_sccs[11].energy_total_T0.value.magnitude == approx(-1.37069057e-16)
-    assert len(sec_sccs[12].section_scf_iteration) == 7
-    assert sec_sccs[7].section_scf_iteration[3].energy_change_scf_iteration.magnitude == approx(-1.90981043e-21)
+    assert len(sec_sccs[12].scf_iteration) == 7
+    assert sec_sccs[7].scf_iteration[3].energy_change.magnitude == approx(-1.90981043e-21)
 
     sec_systems = archive.section_run[0].section_system
     assert len(sec_systems) == 13
@@ -177,7 +177,7 @@ def test_bfgs(parser):
 
     sec_sccs = archive.section_run[0].section_single_configuration_calculation
     assert len(sec_sccs) == 9
-    sec_sccs[7].pressure.magnitude == approx(400000.0)
+    sec_sccs[7].thermodynamics[0].pressure.magnitude == approx(400000.0)
 
 
 def test_di(parser):
