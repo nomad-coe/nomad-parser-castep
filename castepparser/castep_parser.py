@@ -16,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from math import frexp
 import os
 import numpy as np
 import logging
@@ -909,7 +908,7 @@ class CastepParser(FairdiParser):
                     if name.startswith('x_castep_'):
                         sec_scc.m_add_sub_section(
                             SingleConfigurationCalculation.energy_contributions, Energy(
-                                kind=name.lstrip('x_castep_'), value=val))
+                                kind=name.replace('x_castep_', ''), value=val))
                         setattr(sec_scc, name, val.to('joule').magnitude)
                     else:
                         sec_scc.m_add_sub_section(getattr(
