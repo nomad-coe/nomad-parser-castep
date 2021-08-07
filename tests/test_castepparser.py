@@ -36,34 +36,34 @@ def test_single_point(parser):
     archive = EntryArchive()
     parser.parse('tests/data/Si8.castep', archive, None)
 
-    sec_run = archive.section_run[0]
-    assert sec_run.program_version == '16.1'
+    sec_run = archive.run[0]
+    assert sec_run.program.version == '16.1'
     assert sec_run.x_castep_constants_reference == 'CODATA 2010'
-    assert sec_run.time_run_date_start.magnitude == 1455286325.0
-    assert sec_run.section_basis_set_cell_dependent[0].basis_set_cell_dependent_name == 'PW_7'
+    assert sec_run.time_run.date_start.magnitude == 1455286325.0
 
-    sec_method = sec_run.section_method[0]
-    assert sec_method.number_of_spin_channels == 1
-    assert sec_method.section_XC_functionals[1].XC_functional_name == 'GGA_C_PBE'
-    assert sec_method.smearing_kind == 'gaussian'
+    sec_method = sec_run.method[0]
+    assert sec_method.basis_set[0].cell_dependent.name == 'PW_7'
+    assert sec_method.electronic.n_spin_channels == 1
+    assert sec_method.dft.xc_functional.correlation[0].name == 'GGA_C_PBE'
+    assert sec_method.electronic.smearing.kind == 'gaussian'
 
-    assert sec_run.section_sampling_method[0].sampling_method == 'single_point'
+    assert archive.workflow[0].type == 'single_point'
 
-    sec_scc = sec_run.section_single_configuration_calculation[0]
-    assert np.shape(sec_scc.forces_total.value) == (8, 3)
-    assert np.count_nonzero(sec_scc.forces_total.value) == 0
-    assert sec_scc.energy_total.value.magnitude == approx(-2.21372403e-16)
+    sec_scc = sec_run.calculation[0]
+    assert np.shape(sec_scc.forces.total.value) == (8, 3)
+    assert np.count_nonzero(sec_scc.forces.total.value) == 0
+    assert sec_scc.energy.total.value.magnitude == approx(-2.21372403e-16)
     sec_scfs = sec_scc.scf_iteration
     assert len(sec_scfs) == 12
-    assert sec_scfs[3].energy_total.value.magnitude == approx(-2.21530505e-16)
-    assert sec_scfs[8].energy_reference_fermi[0].magnitude == approx(8.53007633e-19)
+    assert sec_scfs[3].energy.total.value.magnitude == approx(-2.21530505e-16)
+    assert sec_scfs[8].energy.fermi.magnitude == approx(8.53007633e-19)
     assert sec_scfs[6].time_calculation.magnitude == 12.70
 
-    sec_system = sec_run.section_system[0]
-    assert sec_system.atom_positions[2][1].magnitude == approx(2.715e-10)
+    sec_system = sec_run.system[0]
+    assert sec_system.atoms.positions[2][1].magnitude == approx(2.715e-10)
     assert sec_system.x_castep_section_atom_positions[0].x_castep_cell_length_a == approx(5.43e-10)
 
-    assert len(sec_run.section_topology[0].section_atom_type) == 1
+    assert len(sec_method.atom_parameters) == 1
 
     sec_mulliken = sec_scc.charges[0]
     assert len(sec_mulliken.value) == 8
@@ -77,21 +77,21 @@ def test_dmd(parser):
     archive = EntryArchive()
     parser.parse('tests/data/TiO2-geom.castep', archive, None)
 
-    sec_sampling = archive.section_run[0].section_sampling_method[0]
-    assert sec_sampling.sampling_method == 'geometry_optimization'
-    assert sec_sampling.geometry_optimization_method == 'damped MD'
-    assert sec_sampling.geometry_optimization_threshold_force.magnitude == approx(8.01088317e-11)
+    sec_workflow = archive.workflow[0]
+    assert sec_workflow.type == 'geometry_optimization'
+    assert sec_workflow.geometry_optimization.method == 'damped MD'
+    assert sec_workflow.geometry_optimization.input_force_maximum_tolerance.magnitude == approx(8.01088317e-11)
 
-    sec_sccs = archive.section_run[0].section_single_configuration_calculation
+    sec_sccs = archive.run[0].calculation
     assert len(sec_sccs) == 23
-    assert sec_sccs[7].energy_total.value.magnitude == approx(-3.67496146e-16)
+    assert sec_sccs[7].energy.total.value.magnitude == approx(-3.67496146e-16)
     assert len(sec_sccs[20].scf_iteration) == 13
-    assert sec_sccs[17].scf_iteration[3].energy_total.value.magnitude == approx(-3.67497215e-16)
-    assert sec_sccs[3].forces_total.value[0][1].magnitude == approx(-4.49314415e-10,)
-    assert sec_sccs[22].energy_total.value.magnitude == approx(-3.67497218e-16)
+    assert sec_sccs[17].scf_iteration[3].energy.total.value.magnitude == approx(-3.67497215e-16)
+    assert sec_sccs[3].forces.total.value[0][1].magnitude == approx(-4.49314415e-10,)
+    assert sec_sccs[22].energy.total.value.magnitude == approx(-3.67497218e-16)
 
-    sec_systems = archive.section_run[0].section_system
-    assert sec_systems[12].atom_positions[3][0].magnitude == approx(9.074282e-11)
+    sec_systems = archive.run[0].system
+    assert sec_systems[12].atoms.positions[3][0].magnitude == approx(9.074282e-11)
     assert sec_systems[0].x_castep_number_of_electrons == 32
 
 
@@ -99,33 +99,33 @@ def test_md(parser):
     archive = EntryArchive()
     parser.parse('tests/data/Si8-md-NPT.castep', archive, None)
 
-    sec_sampling = archive.section_run[0].section_sampling_method[0]
-    assert sec_sampling.sampling_method == 'molecular_dynamics'
-    assert sec_sampling.ensemble_type == 'NPT'
-    assert sec_sampling.x_castep_thermostat_type == 'Nose-Hoover chain thermostat'
-    assert sec_sampling.x_castep_frame_energy_tolerance.magnitude == approx(1.60217663e-24)
+    sec_workflow = archive.workflow[0]
+    assert sec_workflow.type == 'molecular_dynamics'
+    assert sec_workflow.molecular_dynamics.ensemble_type == 'NPT'
+    assert sec_workflow.molecular_dynamics.x_castep_thermostat_type == 'Nose-Hoover chain thermostat'
+    assert sec_workflow.molecular_dynamics.x_castep_frame_energy_tolerance.magnitude == approx(1.60217663e-24)
 
-    sec_sccs = archive.section_run[0].section_single_configuration_calculation
+    sec_sccs = archive.run[0].calculation
     assert len(sec_sccs) == 13
-    assert sec_sccs[2].energy_total.value.magnitude == approx(-1.37059981e-16)
-    assert sec_sccs[6].stress_total.value[2][1].magnitude == approx(4.06626e+09)
-    assert sec_sccs[9].thermodynamics[0].pressure.magnitude == approx(1.111e+09)
-    assert sec_sccs[11].energy_total_T0.value.magnitude == approx(-1.37069057e-16)
+    assert sec_sccs[2].energy.total.value.magnitude == approx(-1.37059981e-16)
+    assert sec_sccs[6].stress.total.value[2][1].magnitude == approx(4.06626e+09)
+    assert sec_sccs[9].thermodynamics.pressure.magnitude == approx(1.111e+09)
+    assert sec_sccs[11].energy.total_t0.value.magnitude == approx(-1.37069057e-16)
     assert len(sec_sccs[12].scf_iteration) == 7
-    assert sec_sccs[7].scf_iteration[3].energy_change.magnitude == approx(-1.90981043e-21)
+    assert sec_sccs[7].scf_iteration[3].energy.change.magnitude == approx(-1.90981043e-21)
 
-    sec_systems = archive.section_run[0].section_system
+    sec_systems = archive.run[0].system
     assert len(sec_systems) == 13
-    assert sec_systems[0].atom_positions[7][2].magnitude == approx(1.3575e-10)
-    assert sec_systems[1].atom_velocities[1][1].magnitude == approx(324.536)
-    assert sec_systems[12].lattice_vectors[2][2].magnitude == approx(5.5475876e-10)
+    assert sec_systems[0].atoms.positions[7][2].magnitude == approx(1.3575e-10)
+    assert sec_systems[1].atoms.velocities[1][1].magnitude == approx(324.536)
+    assert sec_systems[12].atoms.lattice_vectors[2][2].magnitude == approx(5.5475876e-10)
 
 
 def test_eigenvalues(parser):
     archive = EntryArchive()
     parser.parse('tests/data/Fe.castep', archive, None)
 
-    sec_eigenvalues = archive.section_run[0].section_single_configuration_calculation[0].eigenvalues[0]
+    sec_eigenvalues = archive.run[0].calculation[0].eigenvalues
     assert np.shape(sec_eigenvalues.value[1][117]) == (6,)
     assert sec_eigenvalues.value[1][38][4].magnitude == approx(1.30819997e-18)
     assert sec_eigenvalues.kpoints[22][1] == 0.289474
@@ -135,7 +135,7 @@ def test_bandstructure(parser):
     archive = EntryArchive()
     parser.parse('tests/data/Dispersions/Si2.castep', archive, None)
 
-    sec_band_segment = archive.section_run[0].section_single_configuration_calculation[0].band_structure_electronic[0].band_structure_segment
+    sec_band_segment = archive.run[0].calculation[0].band_structure_electronic.band_structure_segment
     assert len(sec_band_segment) == 5
     assert sec_band_segment[3].kpoints_labels == ['X', None, None, None, None, None, 'W']
     assert sec_band_segment[1].value[0][-1][12].magnitude == approx(2.17418526e-18)
@@ -146,14 +146,14 @@ def test_vibration(parser):
     archive = EntryArchive()
     parser.parse('tests/data/BC2N-Pmm2-Raman.castep', archive, None)
 
-    sec_vibration = archive.section_run[0].x_castep_section_vibrational_frequencies
+    sec_vibration = archive.run[0].x_castep_section_vibrational_frequencies
     assert len(sec_vibration) == 2
     assert sec_vibration[1].x_castep_vibrational_frequencies[2] == approx(0.461821)
     assert sec_vibration[0].x_castep_raman_activity[3] == approx(21.0162567)
     assert sec_vibration[1].x_castep_ir_intensity[6] == approx(2.7078705)
     assert sec_vibration[0].x_castep_raman_active[10] == 'Y'
 
-    sec_raman = archive.section_run[0].x_castep_section_raman_tensor
+    sec_raman = archive.run[0].x_castep_section_raman_tensor
     assert len(sec_raman) == 12
     assert sec_raman[9].x_castep_raman_tensor[2][0].magnitude == approx(0.1834 * 0.5)
 
@@ -162,22 +162,22 @@ def test_tss(parser):
     archive = EntryArchive()
     parser.parse('tests/data/h2-lst.castep', archive, None)
 
-    assert archive.section_run[0].section_sampling_method[0].sampling_method == 'geometry_optimization'
+    assert archive.workflow[0].type == 'geometry_optimization'
 
-    sec_sccs = archive.section_run[0].section_single_configuration_calculation
+    sec_sccs = archive.run[0].calculation
     assert len(sec_sccs) == 27
-    assert sec_sccs[20].energy_total.value.magnitude == approx(-4.72809265e-18)
+    assert sec_sccs[20].energy.total.value.magnitude == approx(-4.72809265e-18)
 
 
 def test_bfgs(parser):
     archive = EntryArchive()
     parser.parse('tests/data/Si2_opt.castep', archive, None)
 
-    assert archive.section_run[0].section_sampling_method[0].sampling_method == 'geometry_optimization'
+    assert archive.workflow[0].type == 'geometry_optimization'
 
-    sec_sccs = archive.section_run[0].section_single_configuration_calculation
+    sec_sccs = archive.run[0].calculation
     assert len(sec_sccs) == 9
-    sec_sccs[7].thermodynamics[0].pressure.magnitude == approx(400000.0)
+    sec_sccs[7].thermodynamics.pressure.magnitude == approx(400000.0)
 
 
 def test_di(parser):

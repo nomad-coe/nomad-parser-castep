@@ -25,12 +25,22 @@ from datetime import datetime
 from nomad.units import ureg
 from nomad.parsing.parser import FairdiParser
 from nomad.parsing.file_parser import TextParser, Quantity
-from nomad.datamodel.metainfo.common_dft import ChargesValue, Run, Method, XCFunctionals, System,\
-    BasisSetCellDependent, SingleConfigurationCalculation, SamplingMethod, ScfIteration,\
-    BandEnergies, BandStructure, Topology, AtomType, Energy, Forces, Stress, Charges,\
-    ChargesValue, Thermodynamics
+from nomad.datamodel.metainfo.run.run import Run, Program, TimeRun
+from nomad.datamodel.metainfo.run.method import (
+    Functional, Method, DFT, Electronic, XCFunctional, Smearing, MethodReference,
+    BasisSetCellDependent, BasisSet, AtomParameters
+)
+from nomad.datamodel.metainfo.run.system import (
+    System, Atoms, SystemReference
+)
+from nomad.datamodel.metainfo.run.calculation import (
+    Calculation, Energy, EnergyEntry, Forces, ForcesEntry, Thermodynamics, Stress,
+    StressEntry, Charges, ChargesValue, ScfIteration, BandStructure, BandEnergies
+)
+from nomad.datamodel.metainfo.workflow import (
+    Workflow, GeometryOptimization, MolecularDynamics
+)
 
-from castepparser.metainfo import m_env
 from castepparser.metainfo.castep import x_castep_section_phonons, x_castep_section_scf_parameters,\
     x_castep_section_density_mixing_parameters, x_castep_section_population_analysis_parameters,\
     x_castep_section_core_parameters, x_castep_section_band_parameters,\
@@ -554,7 +564,6 @@ class CastepParser(FairdiParser):
         super().__init__(
             name='parsers/castep', code_name='CASTEP', code_homepage='http://www.castep.org/',
             mainfile_contents_re=(r'\s\|\s*CCC\s*AA\s*SSS\s*TTTTT\s*EEEEE\s*PPPP\s*\|\s*'))
-        self._metainfo_env = m_env
         self.out_parser = OutParser()
         self.cell_parser = CellParser()
         self.bands_parser = BandsParser()
@@ -605,7 +614,7 @@ class CastepParser(FairdiParser):
             'Total energy corrected for finite basis set': 'x_castep_total_energy_corrected_for_finite_basis',
             'Final free energy (E-TS)': 'energy_free',
             'Dispersion corrected final energy*': 'x_castep_total_dispersion_corrected_energy',
-            'NB est. 0K energy (E-0.5TS)': 'energy_total_T0',
+            'NB est. 0K energy (E-0.5TS)': 'energy_total_t0',
             "'TS'/PBE structure energy corr.'": 'x_castep_structure_energy_corr',
             "'TS'/PBE PBC image interaction corr.": 'x_castep_PBC_image_inter_corr',
             "'TS'/PBE total energy correction": 'x_castep_total_energy_correction',
@@ -623,11 +632,11 @@ class CastepParser(FairdiParser):
                 'dfpt solver method': 'x_castep_DFPT_solver_method',
                 'band convergence tolerance': 'x_castep_band_tolerance'},
             'geometry optimization parameters': {
-                'optimization method': 'geometry_optimization_method',
-                'total energy convergence tolerance': 'geometry_optimization_energy_change',
+                'optimization method': 'method',
+                'total energy convergence tolerance': 'input_energy_difference_tolerance',
                 'max. number of steps': 'x_castep_max_number_of_steps',
-                'max ionic |force| tolerance': 'geometry_optimization_threshold_force',
-                'max ionic |displacement| tolerance': 'geometry_optimization_geometry_change',
+                'max ionic |force| tolerance': 'input_force_maximum_tolerance',
+                'max ionic |displacement| tolerance': 'input_displacement_maximum_tolerance',
                 'max |stress component| tolerance': 'x_castep_geometry_stress_com_tolerance'},
             'electronic parameters': {
                 'number of  electrons': 'x_castep_number_of_electrons',
@@ -738,12 +747,21 @@ class CastepParser(FairdiParser):
                     return os.path.join(self.maindir, path)
 
     def parse_method(self):
-        sec_method = self.archive.section_run[0].m_create(Method)
+        sec_method = self.archive.run[0].m_create(Method)
         title = self.out_parser.get('title', {})
 
-        method = 'DFT+U' if self.out_parser.get('dft_u') is not None else 'DFT'
-        sec_method.electronic_structure_method = method
-        sec_method.number_of_spin_channels = self.n_spin_channels
+        # basis set
+        basis_parameters = self.out_parser.get('title', {}).get('basis set parameters', {})
+        sec_basis = sec_method.m_create(BasisSet)
+        sec_basis_cell_dependent = sec_basis.m_create(BasisSetCellDependent)
+        sec_method.basis_set[0].cell_dependent.kind = 'plane_waves'
+        cutoff = basis_parameters.get('plane wave basis set cut-off')
+        if cutoff:
+            sec_basis_cell_dependent.planewave_cutoff = cutoff
+            sec_basis_cell_dependent.name = 'PW_%d' % (round(cutoff.to('rydberg').magnitude))
+
+        sec_dft = sec_method.m_create(DFT)
+        sec_method.electronic = Electronic(n_spin_channels=self.n_spin_channels)
 
         xc_parameters = title.get('exchange-correlation parameters', {})
 
@@ -753,40 +771,56 @@ class CastepParser(FairdiParser):
             xc_functionals = xc_parameters.get('using custom xc functional definition', [])
         xc_functionals = xc_functionals if isinstance(xc_functionals, list) else [xc_functionals]
 
+        sec_xc_functional = sec_dft.m_create(XCFunctional)
         for xc_functional in xc_functionals:
             # when custom, a weight is attached
             xc_weight = None
             if xc_parameters.get('using custom xc functional definition') is not None:
                 xc_functional, xc_weight = xc_functional.rsplit(' ', 1)
             for functional in self._xc_functional_map.get(xc_functional, []):
-                sec_xc_functional = sec_method.m_create(XCFunctionals)
-                sec_xc_functional.XC_functional_name = functional
+                sec_functional = Functional(name=functional)
                 if xc_weight is not None:
-                    sec_xc_functional.XC_functional_weight = float(xc_weight)
+                    sec_functional.weight = float(xc_weight)
+                if '_X_' in functional or functional.endswith('_X'):
+                    sec_xc_functional.exchange.append(sec_functional)
+                elif '_C_' in functional or functional.endswith('_C'):
+                    sec_xc_functional.correlation.append(sec_functional)
+                elif 'HYB' in functional:
+                    sec_xc_functional.hybrid.append(sec_functional)
+                else:
+                    sec_xc_functional.contributions.append(sec_functional)
 
         # relativistic treatment
         relativistic = self._relativistic_map.get(xc_parameters.get('relativistic treatment'))
         if relativistic is not None:
-            sec_method.relativity_method = relativistic
+            sec_method.electronic.relativity_method = relativistic
 
         # dispersion correction
         dispersion = xc_parameters.get('sedc with')
         if dispersion is not None:
-            sec_method.van_der_Waals_method = dispersion.split()[0]
+            sec_method.electronic.van_der_waals_method = dispersion.split()[0]
 
         # smearing scheme
         electronic_parameters = title.get('electronic minimization parameters', {})
         smearing = electronic_parameters.get('smearing scheme')
         if smearing is not None:
-            sec_method.smearing_kind = smearing.lower()
+            sec_smearing = sec_method.electronic.m_create(Smearing)
+            sec_smearing.kind = smearing.lower()
             width = electronic_parameters.get('smearing width')
             if width is not None:
-                sec_method.smearing_width = width.to('joule').magnitude
+                sec_smearing.width = width.to('joule').magnitude
 
-    def parse_sampling_method(self):
-        sec_run = self.archive.section_run[0]
-        sec_sampling_method = sec_run.section_sampling_method
-        sec_sampling_method = sec_sampling_method[-1] if sec_sampling_method else sec_run.m_create(SamplingMethod)
+        species = self.out_parser.get('species')
+        if species is None:
+            return
+
+        for name, mass in species.get('mass', []):
+            sec_atom_parameters = sec_method.m_create(AtomParameters)
+            sec_atom_parameters.label = name
+            sec_atom_parameters.mass = mass
+
+    def parse_workflow(self):
+        sec_workflow = self.archive.m_create(Workflow)
 
         title = self.out_parser.get('title', {})
 
@@ -795,45 +829,36 @@ class CastepParser(FairdiParser):
         if method is None:
             self.logger.warn('Sampling method cannot be resolved.')
             method = 'single_point'
-        sec_sampling_method.sampling_method = method
+        sec_workflow.type = method
 
         if method == 'geometry_optimization':
+            sec_geometry_opt = sec_workflow.m_create(GeometryOptimization)
             for key, val in title.get('geometry optimization parameters', {}).items():
                 key = self._metainfo_map.get('geometry optimization parameters').get(key)
                 if key is None or val is None:
                     continue
-                setattr(sec_sampling_method, key, val)
+                setattr(sec_geometry_opt, key, val)
         elif method == 'molecular_dynamics':
+            sec_md = sec_workflow.m_create(MolecularDynamics)
             for key, val in title.get('molecular dynamics parameters', {}).items():
                 key = self._metainfo_map.get('molecular dynamics parameters').get(key)
                 if key is None or val is None:
                     continue
                 if isinstance(key, list):
                     for i, key_i in enumerate(key):
-                        setattr(sec_sampling_method, key_i, val[i])
+                        setattr(sec_md, key_i, val[i])
                 else:
-                    setattr(sec_sampling_method, key, val)
-
-    def parse_topology(self):
-        species = self.out_parser.get('species')
-        if species is None:
-            return
-
-        sec_topology = self.archive.section_run[0].m_create(Topology)
-        for name, mass in species.get('mass', []):
-            sec_atom_type = sec_topology.m_create(AtomType)
-            sec_atom_type.atom_type_name = name
-            sec_atom_type.atom_type_mass = mass
+                    setattr(sec_md, key, val)
 
     def parse_configurations(self):
         calculation = self.out_parser.get('calculation')
         if calculation is None:
             return
 
-        sec_run = self.archive.section_run[0]
+        sec_run = self.archive.run[0]
 
         def parse_eigenvalues(source):
-            sec_scc = sec_run.section_single_configuration_calculation[-1]
+            sec_scc = sec_run.calculation[-1]
 
             energy_unit = self.units.get('energy', 1)
             bandstructure = source.get('bandstructure')
@@ -874,7 +899,7 @@ class CastepParser(FairdiParser):
                 nodes = np.array([path[:3] for path in kpoint_path], dtype=np.dtype(np.float64))
                 labels = ['\u0393' if path[-1].lower() == 'gamma' else path[-1] for path in kpoint_path]
                 sec_bandstructure = sec_scc.m_create(
-                    BandStructure, SingleConfigurationCalculation.band_structure_electronic)
+                    BandStructure, Calculation.band_structure_electronic)
                 start = 0
                 for n, node in enumerate(nodes[1:]):
                     node_index = np.where(kpts == node)[0]
@@ -894,39 +919,40 @@ class CastepParser(FairdiParser):
                     start = index
 
         def parse_scc(source):
-            sec_scc = sec_run.m_create(SingleConfigurationCalculation)
+            sec_scc = sec_run.m_create(Calculation)
             energy_unit = self.units.get('energy', 1)
 
+            sec_energy = sec_scc.m_create(Energy)
             if source.get('energy_total') is not None:
-                sec_scc.m_add_sub_section(SingleConfigurationCalculation.energy_total, Energy(
-                    value=source.get('energy_total') * energy_unit))
+                sec_energy.total = EnergyEntry(value=source.get('energy_total') * energy_unit)
 
             # energies
             for key, val in source.get('energy', []):
                 name = self._metainfo_map.get(key)
                 if name is not None:
                     if name.startswith('x_castep_'):
-                        sec_scc.m_add_sub_section(
-                            SingleConfigurationCalculation.energy_contributions, Energy(
+                        sec_energy.m_add_sub_section(
+                            Energy.contributions, EnergyEntry(
                                 kind=name.replace('x_castep_', ''), value=val))
                         setattr(sec_scc, name, val.to('joule').magnitude)
                     else:
-                        sec_scc.m_add_sub_section(getattr(
-                            SingleConfigurationCalculation, name), Energy(value=val))
+                        sec_energy.m_add_sub_section(getattr(
+                            Energy, name.replace('energy_', '')), EnergyEntry(value=val))
 
             # forces
             forces = source.get('forces')
             if forces is not None:
-                sec_scc.m_add_sub_section(SingleConfigurationCalculation.forces_total, Forces(
-                    value=forces[1] * self.units.get('force', 1)))
+                sec_forces = sec_scc.m_create(Forces)
+                sec_forces.total = ForcesEntry(value=forces[1] * self.units.get('force', 1))
 
             sec_thermo = sec_scc.m_create(Thermodynamics)
             # stress tensor
             stress_tensor = source.get('stress_tensor')
             if stress_tensor is not None:
                 if stress_tensor.get('stress_tensor') is not None:
-                    sec_scc.m_add_sub_section(SingleConfigurationCalculation.stress_total, Stress(
-                        value=stress_tensor.get('stress_tensor') * self.units.get('pressure', 1)))
+                    sec_stress = sec_scc.m_create(Stress)
+                    sec_stress.total = StressEntry(
+                        value=stress_tensor.get('stress_tensor') * self.units.get('pressure', 1))
                 if stress_tensor.get('pressure') is not None:
                     sec_thermo.pressure = stress_tensor.get('pressure') * self.units.get('pressure', 1)
 
@@ -945,7 +971,6 @@ class CastepParser(FairdiParser):
             # mulliken population analysis
             mulliken = source.get('mulliken')
             if mulliken is not None:
-                # why mulliken section under section_run?
                 species = mulliken.get('Species', [])
                 sec_charges = sec_scc.m_create(Charges)
                 sec_charges.analysis_method = 'mulliken'
@@ -1000,30 +1025,31 @@ class CastepParser(FairdiParser):
             # scf iteration
             for scf in source.get('scf', []):
                 sec_scf = sec_scc.m_create(ScfIteration)
-                sec_scf.energy_total = Energy(value=scf[0] * energy_unit)
+                sec_scf_energy = sec_scf.m_create(Energy)
+                sec_scf.energy.total = EnergyEntry(value=scf[0] * energy_unit)
                 if len(scf) == 4:
-                    fermi_energy = [scf[1]] * self.n_spin_channels
-                    sec_scf.energy_reference_fermi = fermi_energy * energy_unit
-                sec_scf.energy_change = scf[-2] * energy_unit
+                    sec_scf_energy.fermi = scf[1] * energy_unit
+                sec_scf_energy.change = scf[-2] * energy_unit
                 sec_scf.time_calculation = scf[-1]
 
             return sec_scc
 
         def parse_system(source):
             sec_system = sec_run.m_create(System)
+            sec_atoms = sec_system.m_create(Atoms)
             length_unit = self.units.get('length', 1)
 
             unit_cell = source.get('unit_cell', self.out_parser.get('unit_cell', {}))
             if unit_cell.get('lattice_vectors') is not None:
-                sec_system.lattice_vectors = unit_cell.get('lattice_vectors')[0] * length_unit
-                sec_system.configuration_periodic_dimensions = [True, True, True]
+                sec_atoms.lattice_vectors = unit_cell.get('lattice_vectors')[0] * length_unit
+                sec_atoms.periodic = [True, True, True]
 
             cell_contents = source.get('cell_contents', self.out_parser.get('cell_contents', {}))
             if cell_contents.get('positions') is not None:
-                sec_system.atom_labels = cell_contents.get('positions')[0]
-                sec_system.atom_positions = np.dot(cell_contents.get('positions')[1], sec_system.lattice_vectors)
+                sec_atoms.labels = cell_contents.get('positions')[0]
+                sec_atoms.positions = np.dot(cell_contents.get('positions')[1], sec_system.atoms.lattice_vectors)
             if cell_contents.get('velocities') is not None:
-                sec_system.atom_velocities = cell_contents.get('velocities')[1] * (
+                sec_atoms.velocities = cell_contents.get('velocities')[1] * (
                     length_unit / self.units.get('time', 1))
 
             # miscellaneous quantities
@@ -1056,7 +1082,7 @@ class CastepParser(FairdiParser):
                 sec_tddft.x_castep_tddft_iteration = tddft.get('iteration', [0, 0])[-1][0]
 
             # add miscellaneos stuff to first instance
-            if len(sec_run.section_system) == 1:
+            if len(sec_run.system) == 1:
                 for key, val in self.out_parser.get('title', {}).get('electronic parameters', {}).items():
                     key = self._metainfo_map.get('electronic parameters', {}).get(key)
                     if key is None:
@@ -1070,8 +1096,8 @@ class CastepParser(FairdiParser):
                 return
             sec_scc = parse_scc(source)
             sec_system = parse_system(source)
-            sec_scc.single_configuration_calculation_to_system_ref = sec_system
-            sec_scc.single_configuration_to_calculation_method_ref = sec_run.section_method[-1]
+            sec_scc.system_ref.append(SystemReference(value=sec_system))
+            sec_scc.method_ref.append(MethodReference(value=sec_run.method[-1]))
 
         # basis set correction
         # TODO determine if there is a need to add this
@@ -1124,14 +1150,12 @@ class CastepParser(FairdiParser):
         if calculation.get('final') is not None:
             parse_calculation(calculation.get('final'))
 
-        sampling_method = sec_run.section_sampling_method[0].sampling_method
-        if sampling_method in ['single_point', 'phonon']:
+        if self.archive.workflow[0].type in ['single_point', 'phonon']:
             # single point calculation
             parse_calculation(calculation)
 
     def parse_parameters(self):
         section_map = {
-            'basis set parameters': BasisSetCellDependent,
             'phonon parameters': x_castep_section_phonons,
             'electronic minimization parameters': x_castep_section_scf_parameters,
             'density mixing parameters': x_castep_section_density_mixing_parameters,
@@ -1144,7 +1168,7 @@ class CastepParser(FairdiParser):
             'time-dependent dft parameters': x_castep_section_tddft_parameters}
 
         # TODO map all castep parameters
-        sec_run = self.archive.section_run[0]
+        sec_run = self.archive.run[0]
         title = self.out_parser.get('title', {})
 
         def create_section(definition):
@@ -1188,13 +1212,13 @@ class CastepParser(FairdiParser):
 
         sec_run = self.archive.m_create(Run)
         version = self.out_parser.get('program_version', ['CASTEP', ''])
-        sec_run.program_name = version[0]
+        sec_run.program = Program(name=version[0])
         if version[1]:
-            sec_run.program_version = str(version[1])
+            sec_run.program.version = str(version[1])
 
         compilation = self.out_parser.get('program_compilation', '').strip().split(' ', 1)
         if len(compilation) == 2:
-            sec_run.program_compilation_host = compilation[0]
+            sec_run.program.compilation_host = compilation[0]
             date, time = compilation[1].rsplit(' ', 1)
             sec_run.x_castep_program_compilation_date = date
             sec_run.x_castep_program_compilation_time = time
@@ -1207,23 +1231,12 @@ class CastepParser(FairdiParser):
         date_start = self.out_parser.get('run_start')
         if date_start is not None:
             date_start = datetime.strptime(date_start.strip(), '%d %b %Y %H:%M:%S')
-            sec_run.time_run_date_start = (date_start - datetime(1970, 1, 1)).total_seconds()
-
-        # basis set
-        sec_run.program_basis_set_type = 'plane_waves'
-        basis_parameters = self.out_parser.get('title', {}).get('basis set parameters', {})
-        sec_basis_set = sec_run.m_create(BasisSetCellDependent)
-        sec_basis_set.basis_set_cell_dependent_kind = 'plane_waves'
-        cutoff = basis_parameters.get('plane wave basis set cut-off')
-        if cutoff:
-            sec_basis_set.basis_set_planewave_cutoff = cutoff
-            sec_basis_set.basis_set_cell_dependent_name = 'PW_%d' % (round(cutoff.to('rydberg').magnitude))
+            sec_run.time_run = TimeRun(
+                date_start=(date_start - datetime(1970, 1, 1)).total_seconds())
 
         self.parse_method()
 
-        self.parse_sampling_method()
-
-        self.parse_topology()
+        self.parse_workflow()
 
         self.parse_configurations()
 
