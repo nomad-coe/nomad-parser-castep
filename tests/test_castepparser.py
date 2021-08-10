@@ -109,7 +109,7 @@ def test_md(parser):
     assert len(sec_sccs) == 13
     assert sec_sccs[2].energy.total.value.magnitude == approx(-1.37059981e-16)
     assert sec_sccs[6].stress.total.value[2][1].magnitude == approx(4.06626e+09)
-    assert sec_sccs[9].thermodynamics.pressure.magnitude == approx(1.111e+09)
+    assert sec_sccs[9].thermodynamics[0].pressure.magnitude == approx(1.111e+09)
     assert sec_sccs[11].energy.total_t0.value.magnitude == approx(-1.37069057e-16)
     assert len(sec_sccs[12].scf_iteration) == 7
     assert sec_sccs[7].scf_iteration[3].energy.change.magnitude == approx(-1.90981043e-21)
@@ -125,7 +125,7 @@ def test_eigenvalues(parser):
     archive = EntryArchive()
     parser.parse('tests/data/Fe.castep', archive, None)
 
-    sec_eigenvalues = archive.run[0].calculation[0].eigenvalues
+    sec_eigenvalues = archive.run[0].calculation[0].eigenvalues[0]
     assert np.shape(sec_eigenvalues.value[1][117]) == (6,)
     assert sec_eigenvalues.value[1][38][4].magnitude == approx(1.30819997e-18)
     assert sec_eigenvalues.kpoints[22][1] == 0.289474
@@ -135,7 +135,7 @@ def test_bandstructure(parser):
     archive = EntryArchive()
     parser.parse('tests/data/Dispersions/Si2.castep', archive, None)
 
-    sec_band_segment = archive.run[0].calculation[0].band_structure_electronic.band_structure_segment
+    sec_band_segment = archive.run[0].calculation[0].band_structure_electronic[0].band_structure_segment
     assert len(sec_band_segment) == 5
     assert sec_band_segment[3].kpoints_labels == ['X', None, None, None, None, None, 'W']
     assert sec_band_segment[1].value[0][-1][12].magnitude == approx(2.17418526e-18)
@@ -177,7 +177,7 @@ def test_bfgs(parser):
 
     sec_sccs = archive.run[0].calculation
     assert len(sec_sccs) == 9
-    sec_sccs[7].thermodynamics.pressure.magnitude == approx(400000.0)
+    sec_sccs[7].thermodynamics[0].pressure.magnitude == approx(400000.0)
 
 
 def test_di(parser):
