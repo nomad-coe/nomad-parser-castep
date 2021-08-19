@@ -35,7 +35,8 @@ from nomad.datamodel.metainfo.run.system import (
 )
 from nomad.datamodel.metainfo.run.calculation import (
     Calculation, Energy, EnergyEntry, Forces, ForcesEntry, Thermodynamics, Stress,
-    StressEntry, Charges, ChargesValue, ScfIteration, BandStructure, BandEnergies
+    StressEntry, Charges, ChargesValue, ScfIteration, BandStructure, BandEnergies,
+    Vibrations, VibrationsValues
 )
 from nomad.datamodel.metainfo.workflow import (
     Workflow, GeometryOptimization, MolecularDynamics
@@ -633,10 +634,10 @@ class CastepParser(FairdiParser):
                 'band convergence tolerance': 'x_castep_band_tolerance'},
             'geometry optimization parameters': {
                 'optimization method': 'method',
-                'total energy convergence tolerance': 'input_energy_difference_tolerance',
+                'total energy convergence tolerance': 'convergence_tolerance_energy_difference',
                 'max. number of steps': 'x_castep_max_number_of_steps',
-                'max ionic |force| tolerance': 'input_force_maximum_tolerance',
-                'max ionic |displacement| tolerance': 'input_displacement_maximum_tolerance',
+                'max ionic |force| tolerance': 'convergence_tolerance_force_maximum',
+                'max ionic |displacement| tolerance': 'convergence_tolerance_displacement_maximum',
                 'max |stress component| tolerance': 'x_castep_geometry_stress_com_tolerance'},
             'electronic parameters': {
                 'number of  electrons': 'x_castep_number_of_electrons',
@@ -761,7 +762,8 @@ class CastepParser(FairdiParser):
             sec_basis_cell_dependent.name = 'PW_%d' % (round(cutoff.to('rydberg').magnitude))
 
         sec_dft = sec_method.m_create(DFT)
-        sec_method.electronic = Electronic(n_spin_channels=self.n_spin_channels)
+        method = 'DFT+U' if self.out_parser.get('dft_u') is not None else 'DFT'
+        sec_method.electronic = Electronic(method=method, n_spin_channels=self.n_spin_channels)
 
         xc_parameters = title.get('exchange-correlation parameters', {})
 
@@ -893,7 +895,7 @@ class CastepParser(FairdiParser):
                 sec_eigenvalues = sec_scc.m_create(BandEnergies)
                 sec_eigenvalues.n_kpoints = len(kpts)
                 sec_eigenvalues.kpoints = kpts
-                sec_eigenvalues.value = band_energies
+                sec_eigenvalues.energies = band_energies
             else:
                 # write band energies on segments
                 nodes = np.array([path[:3] for path in kpoint_path], dtype=np.dtype(np.float64))
@@ -915,7 +917,7 @@ class CastepParser(FairdiParser):
                     labels_segment[0] = labels[n]
                     labels_segment[-1] = labels[n + 1]
                     sec_band_segment.kpoints_labels = labels_segment
-                    sec_band_segment.value = band_energies[:, start:index + 1, :]
+                    sec_band_segment.energies = band_energies[:, start:index + 1, :]
                     start = index
 
         def parse_scc(source):
@@ -990,7 +992,20 @@ class CastepParser(FairdiParser):
             # why are vibrational frequencies section under section_run?
             for vibrational_frequencies in source.get('vibrational_frequencies', []):
                 sec_frequencies = sec_run.m_create(x_castep_section_vibrational_frequencies)
+                sec_vibrations = sec_scc.m_create(Vibrations)
                 for key, val in vibrational_frequencies.items():
+                    if key == 'vibrational_frequencies':
+                        sec_vibrations.value = val * (1 / ureg.cm)
+                    elif key == 'ir_intensity':
+                        sec_ir = sec_vibrations.m_create(VibrationsValues, Vibrations.infrared)
+                        sec_ir.intensity = val
+                        if vibrational_frequencies.get('ir_active') is not None:
+                            sec_ir.activity = vibrational_frequencies.get('ir_active')
+                    elif key == 'raman_activity':
+                        sec_raman = sec_vibrations.m_create(VibrationsValues, Vibrations.raman)
+                        sec_raman.intensity = val
+                        if vibrational_frequencies.get('raman_active') is not None:
+                            sec_raman.activity = vibrational_frequencies.get('raman_active')
                     setattr(sec_frequencies, 'x_castep_%s' % key, val)
 
             # raman tensors

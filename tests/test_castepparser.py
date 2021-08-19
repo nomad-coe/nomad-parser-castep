@@ -80,7 +80,7 @@ def test_dmd(parser):
     sec_workflow = archive.workflow[0]
     assert sec_workflow.type == 'geometry_optimization'
     assert sec_workflow.geometry_optimization.method == 'damped MD'
-    assert sec_workflow.geometry_optimization.input_force_maximum_tolerance.magnitude == approx(8.01088317e-11)
+    assert sec_workflow.geometry_optimization.convergence_tolerance_force_maximum.magnitude == approx(8.01088317e-11)
 
     sec_sccs = archive.run[0].calculation
     assert len(sec_sccs) == 23
@@ -126,8 +126,8 @@ def test_eigenvalues(parser):
     parser.parse('tests/data/Fe.castep', archive, None)
 
     sec_eigenvalues = archive.run[0].calculation[0].eigenvalues[0]
-    assert np.shape(sec_eigenvalues.value[1][117]) == (6,)
-    assert sec_eigenvalues.value[1][38][4].magnitude == approx(1.30819997e-18)
+    assert np.shape(sec_eigenvalues.energies[1][117]) == (6,)
+    assert sec_eigenvalues.energies[1][38][4].magnitude == approx(1.30819997e-18)
     assert sec_eigenvalues.kpoints[22][1] == 0.289474
 
 
@@ -135,10 +135,10 @@ def test_bandstructure(parser):
     archive = EntryArchive()
     parser.parse('tests/data/Dispersions/Si2.castep', archive, None)
 
-    sec_band_segment = archive.run[0].calculation[0].band_structure_electronic[0].band_structure_segment
+    sec_band_segment = archive.run[0].calculation[0].band_structure_electronic[0].segment
     assert len(sec_band_segment) == 5
     assert sec_band_segment[3].kpoints_labels == ['X', None, None, None, None, None, 'W']
-    assert sec_band_segment[1].value[0][-1][12].magnitude == approx(2.17418526e-18)
+    assert sec_band_segment[1].energies[0][-1][12].magnitude == approx(2.17418526e-18)
     assert sec_band_segment[4].kpoints[2][1] == 0.300000
 
 
@@ -146,12 +146,12 @@ def test_vibration(parser):
     archive = EntryArchive()
     parser.parse('tests/data/BC2N-Pmm2-Raman.castep', archive, None)
 
-    sec_vibration = archive.run[0].x_castep_section_vibrational_frequencies
+    sec_vibration = archive.run[0].calculation[0].vibrational_frequencies
     assert len(sec_vibration) == 2
-    assert sec_vibration[1].x_castep_vibrational_frequencies[2] == approx(0.461821)
-    assert sec_vibration[0].x_castep_raman_activity[3] == approx(21.0162567)
-    assert sec_vibration[1].x_castep_ir_intensity[6] == approx(2.7078705)
-    assert sec_vibration[0].x_castep_raman_active[10] == 'Y'
+    assert sec_vibration[1].value[2].to('1/cm').magnitude == approx(0.461821)
+    assert sec_vibration[0].raman.intensity[3] == approx(21.0162567)
+    assert sec_vibration[1].infrared.intensity[6] == approx(2.7078705)
+    assert sec_vibration[0].raman.activity[10] == 'Y'
 
     sec_raman = archive.run[0].x_castep_section_raman_tensor
     assert len(sec_raman) == 12
