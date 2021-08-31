@@ -25,15 +25,15 @@ from datetime import datetime
 from nomad.units import ureg
 from nomad.parsing.parser import FairdiParser
 from nomad.parsing.file_parser import TextParser, Quantity
-from nomad.datamodel.metainfo.run.run import Run, Program, TimeRun
-from nomad.datamodel.metainfo.run.method import (
-    Functional, Method, DFT, Electronic, XCFunctional, Smearing, MethodReference,
+from nomad.datamodel.metainfo.simulation.run import Run, Program, TimeRun
+from nomad.datamodel.metainfo.simulation.method import (
+    Functional, Method, DFT, Electronic, XCFunctional, Smearing,
     BasisSetCellDependent, BasisSet, AtomParameters
 )
-from nomad.datamodel.metainfo.run.system import (
-    System, Atoms, SystemReference
+from nomad.datamodel.metainfo.simulation.system import (
+    System, Atoms
 )
-from nomad.datamodel.metainfo.run.calculation import (
+from nomad.datamodel.metainfo.simulation.calculation import (
     Calculation, Energy, EnergyEntry, Forces, ForcesEntry, Thermodynamics, Stress,
     StressEntry, Charges, ChargesValue, ScfIteration, BandStructure, BandEnergies,
     Vibrations, VibrationsValues
@@ -914,10 +914,7 @@ class CastepParser(FairdiParser):
                     sec_band_segment.n_kpoints = int(index + 1 - start)
                     sec_band_segment.kpoints = kpts[start:index + 1]
                     # assign labels at nodes
-                    labels_segment = [None] * sec_band_segment.n_kpoints
-                    labels_segment[0] = labels[n]
-                    labels_segment[-1] = labels[n + 1]
-                    sec_band_segment.kpoints_labels = labels_segment
+                    sec_band_segment.endpoints_labels = [labels[n], labels[n + 1]]
                     sec_band_segment.energies = band_energies[:, start:index + 1, :]
                     start = index
 
@@ -1112,8 +1109,8 @@ class CastepParser(FairdiParser):
                 return
             sec_scc = parse_scc(source)
             sec_system = parse_system(source)
-            sec_scc.system_ref.append(SystemReference(value=sec_system))
-            sec_scc.method_ref.append(MethodReference(value=sec_run.method[-1]))
+            sec_scc.system_ref = sec_system
+            sec_scc.method_ref = sec_run.method[-1]
 
         # basis set correction
         # TODO determine if there is a need to add this

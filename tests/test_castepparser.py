@@ -137,7 +137,7 @@ def test_bandstructure(parser):
 
     sec_band_segment = archive.run[0].calculation[0].band_structure_electronic[0].segment
     assert len(sec_band_segment) == 5
-    assert sec_band_segment[3].kpoints_labels == ['X', None, None, None, None, None, 'W']
+    assert sec_band_segment[3].endpoints_labels == ['X', 'W']
     assert sec_band_segment[1].energies[0][-1][12].magnitude == approx(2.17418526e-18)
     assert sec_band_segment[4].kpoints[2][1] == 0.300000
 

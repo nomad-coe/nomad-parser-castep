@@ -22,7 +22,7 @@ from nomad.metainfo import (  # pylint: disable=unused-import
     MSection, MCategory, Category, Package, Quantity, Section, SubSection, SectionProxy,
     Reference
 )
-from nomad.datamodel.metainfo import run
+from nomad.datamodel.metainfo import simulation
 from nomad.datamodel.metainfo import workflow
 
 
@@ -1576,7 +1576,7 @@ class x_castep_section_van_der_Waals_parameters(MSection):
         ''')
 
 
-class Run(run.Run):
+class Run(simulation.run.Run):
 
     m_def = Section(validate=False, extends_base_section=True)
 
@@ -1815,7 +1815,7 @@ class Run(run.Run):
         repeats=True)
 
 
-class System(run.system.System):
+class System(simulation.system.System):
 
     m_def = Section(validate=False, extends_base_section=True)
 
@@ -1949,7 +1949,7 @@ class System(run.system.System):
         repeats=True)
 
 
-class BasisSetCellDependent(run.method.BasisSetCellDependent):
+class BasisSetCellDependent(simulation.method.BasisSetCellDependent):
 
     m_def = Section(validate=False, extends_base_section=True)
 
@@ -1975,7 +1975,7 @@ class BasisSetCellDependent(run.method.BasisSetCellDependent):
         ''')
 
 
-class Calculation(run.calculation.Calculation):
+class Calculation(simulation.calculation.Calculation):
 
     m_def = Section(validate=False, extends_base_section=True)
 
@@ -2079,7 +2079,7 @@ class Calculation(run.calculation.Calculation):
         repeats=True)
 
 
-class Method(run.method.Method):
+class Method(simulation.method.Method):
 
     m_def = Section(validate=False, extends_base_section=True)
 
@@ -2204,7 +2204,7 @@ class GeometryOptimization(workflow.GeometryOptimization):
         ''')
 
 
-class BandStructure(run.calculation.BandStructure):
+class BandStructure(simulation.calculation.BandStructure):
 
     m_def = Section(validate=False, extends_base_section=True)
 
