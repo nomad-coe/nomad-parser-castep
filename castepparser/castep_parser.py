@@ -189,7 +189,9 @@ class OutParser(TextParser):
                 val_unit = val.rsplit(' ', 1)
                 if len(val_unit) == 2:
                     try:
-                        unit = resolve_unit(val_unit[1].strip())
+                        val_str = val_unit[1].strip()
+                        unit = resolve_unit(val_str)
+                        units_map[val_str] = unit
                         val = float(val_unit[0]) * unit
                     except Exception:
                         pass
@@ -240,7 +242,7 @@ class OutParser(TextParser):
 
         def str_to_array(val_in):
             val = [v.strip().strip('x').strip('*').split() for v in val_in.split('\n')]
-            val = np.transpose([v for v in val if len(v) == 5])
+            val = np.transpose([[vi.split('(')[0] for vi in v] for v in val if len(v) == 5])
             array = np.array(val[-3:], dtype=np.dtype(np.float64)).T
             return val[0], array
 
@@ -282,6 +284,7 @@ class OutParser(TextParser):
             val = val.split()
             try:
                 unit = resolve_unit(val[1])
+                units_map[val[1]] = unit
                 unit = unit if unit else 1
             except Exception:
                 unit = 1
@@ -517,8 +520,7 @@ class OutParser(TextParser):
                             np.array(x.split(), dtype=np.dtype(np.float64)), (3, 3))),
                     Quantity(
                         'bandstructure',
-                        r'(\={50}[\s\S]+?B A N D   S T R U C T U R E   C A L C U L A T I O N)'
-                        r'([\s\S]+?Spin\=1[\s\S]+?)(?:\={50}|\Z)',
+                        r'(Fermi energy for spin[\s\S]+?Spin\=1[\s\S]+?)\=\=',
                         sub_parser=TextParser(quantities=bandstructure_quantities)),
                     Quantity(
                         'basis_set_correction',
@@ -884,7 +886,7 @@ class CastepParser(FairdiParser):
 
                 n_spin = self.bands_parser.get('n_spins', 1)
                 band_energies = np.reshape(band_energies, (
-                    len(kpts), n_spin, len(band_energies[0]) // n_spin)) * energy_unit
+                    len(kpts), n_spin, len(band_energies[0]) // n_spin))
                 band_energies = np.transpose(band_energies, axes=(1, 0, 2)) * energy_unit
 
             # get path segment nodes from .cell
@@ -963,7 +965,7 @@ class CastepParser(FairdiParser):
 
             freq = source.get('frequency')
             if freq is not None:
-                sec_scc.x_castep_frequency = val.magnitude
+                sec_scc.x_castep_frequency = freq[1].magnitude
 
             # eigenvalues
             parse_eigenvalues(source)
